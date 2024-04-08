@@ -2,19 +2,24 @@
 export default {
   // The project’s title; used in the sidebar and webpage titles.
   title: "Beyond Notability",
+	cleanUrls: false, // 
 
   // The pages and sections in the sidebar. If you don’t specify this option,
   // all pages will be listed in alphabetical order. Listing pages explicitly
   // lets you organize them into sections and have unlisted pages.
-  pages: [
-    {
-      name: "Pages",
-      pages: [
-       // {name: "Events", path: "/example-dashboard"},
-        {name: "Women at Events", path: "/women-event-types.html"}
-      ]
-    }
-  ],
+  // shouldn't need this if the cleanUrls setting works, it doesn't seem to work
+  
+//  pages: [
+//    {
+//      name: "Pages",
+//      pages: [
+//      //  {name: "Events", path: "/example-dashboard"},
+//        {name: "Women at Events", path: "/women-event-types.html"},
+//        {name: "Event Types", path: "/event-types.html"}
+//      ]
+//    }
+//  ],
+
 
   // Some additional configuration options and their defaults:
   // theme: "default", // try "light", "dark", "slate", etc.

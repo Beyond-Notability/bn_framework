@@ -1,6 +1,6 @@
 ---
 theme: dashboard
-title: BN Women Participation in Events
+title: Participation in Events
 toc: false
 ---
 
