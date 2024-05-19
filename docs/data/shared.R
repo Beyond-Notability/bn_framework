@@ -80,6 +80,20 @@ make_date_year <-function(data){
 
 
 
+# add date property labels inside a mutate
+date_property_labels <- function(v) {
+  case_when(
+    {{v}}=="P1" ~ "point in time",
+    {{v}}=="P27" ~ "start time",
+    {{v}}=="P28" ~ "end time",
+    {{v}}=="P53" ~ "earliest date",
+    {{v}}=="P51" ~ "latest date"
+  )
+}
+
+
+
+
 #mutate(across(c(a, b), ~str_extract(., "([^/]*$)") )) 
 # previous: \\bQ\\d+$
 
@@ -112,27 +126,36 @@ make_bn_ids <- function(data, across_cols=NULL, ...) {
 
 ## dates of birth/death. - using this a lot now and it's not a heavy query, so it seems worth adding to the shared file.
 
-bn_women_dob_dod_sparql <-
-  'SELECT distinct ?person ?bn_dob ?bn_dod
+bn_women_list_sparql <-
+  'SELECT distinct ?person ?personLabel ?statements ?dob ?dod
 WHERE {
    ?person bnwdt:P3 bnwd:Q3 ;
          wikibase:statements ?statements .
-  FILTER NOT EXISTS {?person bnwdt:P4 bnwd:Q12 .}
-  optional { ?person bnwdt:P15 ?bn_dod .   }
-  optional { ?person bnwdt:P26 ?bn_dob .   }
-  FILTER ( EXISTS { ?person bnwdt:P15 ?bn_dod .} || EXISTS { ?person bnwdt:P26 ?bn_dob .  } ) . #  date of birth OR date of death.
+   FILTER NOT EXISTS {?person bnwdt:P4 bnwd:Q12 .}
+
+      optional { ?person bnwdt:P15 ?dod .   }
+      optional { ?person bnwdt:P26 ?dob .   }
+
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en,en-gb". } 
 }'
 
-bn_women_dob_dod_query <-
-  bn_std_query(bn_women_dob_dod_sparql) |>
+# minimal processing to use as is or for dob/dod
+bn_women_list <-
+  bn_std_query(bn_women_list_sparql) |>
   make_bn_item_id(person) |>
-  mutate(across(c(bn_dob, bn_dod), ~na_if(., ""))) |>
-  select(-person) 
+  relocate(bn_id, personLabel) |>
+  mutate(across(c(dob, dod), ~na_if(., ""))) |>
+  arrange(parse_number(str_remove(bn_id, "Q")))
+
 
 bn_women_dob_dod <-
-  bn_women_dob_dod_query |>
-  mutate(across(c(bn_dob, bn_dod), ~parse_date_time(., "ymdHMS"))) |>
+  bn_women_list |>
+  filter(!is.na(dob) | !is.na(dod)) |>
+  #bn_women_dob_dod_query |>
+  mutate(across(c(dob, dod), ~parse_date_time(., "ymdHMS"), .names = "bn_{.col}")) |>
   mutate(across(c(bn_dob, bn_dod), year, .names = "{.col}_yr")) |>
+  select(-dob, -dod) |>
+  # only one row per person please
   group_by(bn_id) |>
   top_n(1, row_number()) |>
   ungroup() 

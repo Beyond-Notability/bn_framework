@@ -45,7 +45,7 @@ toc: false
 </style>
 
 <div class="hero">
-  <h1>Hello</h1>
+  <h1>Beyond Notability</h1>
 
   
 </div>
@@ -53,6 +53,6 @@ toc: false
 
 ---
 
-## More to come...
+Experimenting with Observable Framework.
 
 

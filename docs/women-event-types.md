@@ -1,5 +1,5 @@
 ---
-theme: dashboard
+theme: parchment
 title: Participation in Events
 toc: false
 ---
@@ -7,7 +7,7 @@ toc: false
 # Most frequent event attenders
 
 ```js
-const events = FileAttachment("./data/women_events.json").json();
+const events = FileAttachment("./data/women_events.json").json({typed:true});
 ```
 
 

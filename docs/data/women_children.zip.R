@@ -84,28 +84,18 @@ bn_had_children_query |>
   #add_count(bn_id, date_value) |> filter(n>1)
   left_join(bn_women_dob_dod, by="bn_id") |>
   mutate(age = year-bn_dob_yr) |>
-  filter(!is.na(age))
-
-
-
-bn_had_children_ages_barcode <-
-bn_had_children_ages |>
+  filter(!is.na(age)) |>
   # first and last dates overall, for limits if doing by date
   mutate(start_date = min(date_value)- years(1), end_date = max(date_value) + years(1))  |>
   # don't need group_id/lower/upper for this version, only earliest and latest.
   group_by(personLabel) |> 
   mutate(earliest = min(date_value), latest=max(date_value)) |>
-  ungroup() 
-  # and do fct_ reordering as needed
-
-
-bn_had_children_ages_sorted_by_start_age <-
-bn_had_children_ages_barcode |> 
-   mutate(start_age = min(age)-1) |>
-   mutate(last_age = max(age), .by = bn_id) |>
+  ungroup() |> 
+   mutate(start_age = min(age)-1, last_age = max(age), .by = bn_id) |>
+   mutate(latest_year = year(latest) ) |>
+   mutate(first_year=year(earliest) ) |>
    arrange(personLabel, bn_dob)
-   #mutate(personLabel = fct_rev(fct_reorder(personLabel, bn_dob)))  
-	# hmm, this will lose the fct_reorder when it's saved to csv, shurely. do arrange and see what if anything Obs Plot does with that...
+  #sorting has to happen in Obs Plot
 
 
 ## make a zip now even though you only have one file to start with? why not...
@@ -113,7 +103,7 @@ bn_had_children_ages_barcode |>
 
 # Add to zip archive, write to stdout
 setwd(tempdir())
-write_csv(bn_had_children_ages_sorted_by_start_age, "had-children-ages-by-age.csv", na="")
+write_csv(bn_had_children_ages, "had-children-ages.csv", na="")
 #write_csv(var_loadings_scaled, "var-loadings.csv") etc etc
 system("zip - -r .")
 
