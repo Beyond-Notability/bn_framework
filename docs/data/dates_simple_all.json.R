@@ -71,10 +71,19 @@ bind_rows(bn_simple_main_date_query,
     mutate(date = parse_date_time(date, "ymdHMS"))  |>
     filter(!is.na(date)) |>
     mutate(year = year(date))  |>
+    mutate(month = month(date)) |>
+    mutate(day = yday(date)) |> # numeric day of year
     #filter(between(year, 1900, 1910)) |>
   mutate(date = as.character(date)) |>
+  # add some date categories for colours
+  mutate(category = case_when(
+    prop %in% c("P26", "P15") ~ "birth/death",
+    prop %in% c("P17", "P48", "P105") ~ "work",
+    prop %in% c("P94", "P59") ~ "education",
+    .default = "other"
+  )) |>
   #relocate(psvLabel, qual_dateLabel, prop_label, .after = propLabel) |>
-  arrange(personLabel, prop_label, psvLabel, date_value)
+  arrange(year, day, category, prop_label, psvLabel)
   
 
 

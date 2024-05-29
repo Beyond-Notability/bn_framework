@@ -29,7 +29,7 @@ library(ggalt)
 library(SPARQLchunks) # can't get chunks working! but it's fine for inline queries.
 
 
-# standard query using bn_prefixes and bn_endpoint. sparql= 'query string'
+# standard query using bn_prefixes and bn_endpoint. sparql= 'query string (excluding prefixes)'
 bn_std_query <- function(sparql){
   c(paste(
     bn_prefixes,
@@ -161,6 +161,25 @@ bn_women_dob_dod <-
   ungroup() 
 
 
+
+
+## all the properties in the wikibase with label 
+bn_properties <-
+  c("SELECT DISTINCT ?property ?propertyType ?propertyLabel 
+      WHERE {
+        ?property a wikibase:Property ;
+              rdfs:label ?propertyLabel ;
+              wikibase:propertyType ?propertyType .
+  
+      FILTER(LANG(?propertyLabel) = 'en') 
+    }
+    order by ?propertyLabel") |>
+  sparql2df(endpoint=bn_endpoint) |>
+  make_bn_prop_id(property) |>
+  mutate(property_type = str_extract(propertyType, "[A-Za-z]+$")) |>
+  relocate(property_type, .after = bn_prop_id) |>
+  relocate(property, propertyType, .after = last_col())  |>
+  arrange(parse_number(str_extract(bn_prop_id, "\\d+"))) 
 
 
 ## labels and display ####
