@@ -8,7 +8,7 @@ toc: false
 
 ```js
 //got it!
-const hadChildrenAges = FileAttachment("data/women_children/had-children-ages.csv").csv({typed: true});
+const hadChildrenAges = FileAttachment("data/l_women_children/had-children-ages.csv").csv({typed: true});
 
 ```
 

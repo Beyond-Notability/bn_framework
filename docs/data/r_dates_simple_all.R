@@ -1,9 +1,4 @@
 
-# shared libraries, functions etc ####
-
-source("./docs/data/shared.R") 
-
-
 bn_simple_main_date_sparql <-
 'SELECT distinct   ?person ?personLabel ?propLabel  ?date_value ?s   ?prop 
 WHERE {
@@ -77,7 +72,8 @@ bind_rows(bn_simple_main_date_query,
   mutate(date = as.character(date)) |>
   # add some date categories for colours
   mutate(category = case_when(
-    prop %in% c("P26", "P15") ~ "birth/death",
+    prop =="P26" ~ "birth",
+    prop=="P15" ~ "death",
     prop %in% c("P17", "P48", "P105") ~ "work",
     prop %in% c("P94", "P59") ~ "education",
     .default = "other"
@@ -87,6 +83,3 @@ bind_rows(bn_simple_main_date_query,
   
 
 
-
-bn_simple_dates |>
-   jsonlite::toJSON()

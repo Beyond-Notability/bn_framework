@@ -8,7 +8,7 @@ toc: false
 # All The Dates
 
 ```js
-const dates = FileAttachment("./data/dates_simple_all.json").json({typed: true});
+const dates = FileAttachment("./data/l_dates_simple_all.json").json({typed: true});
 ```
 
 
@@ -35,61 +35,11 @@ data variables
 
  -->
 
-```js
-function datesChartX(data, {width}) {
-  return Plot.plot({
-    title: "v1 top to bottom, centred",
-    width,
-    height: 800,
-    marginTop: 0,
-    marginLeft: 0,
-    y: {label: null, type: "point", axis:null}, //, round: true, nice: d3.utcYear
-    x: {label: null},
-    color: {legend: true, 
-    				range: ["#1f77b4", "#ff7f0e",  "#8c564b", "#bdbdbd"],
-    				domain: ["birth/death", "education", "work", "other"]
-    				},
-    marks: [
-    	Plot.dotY(data, 
-    		Plot.dodgeX({
-    			y: "date", 
-    			//title:"personLabel", // can't have this and tips!
-    			anchor:"middle", 
-    			fill:"category", 
-    			padding:0.4, r:3, 
-    			sort:"day",
-    			reverse:true, 
-    			// idk if it's possible to sort by multiple variables...
-    			tip:true,
-    			channels: {
-      		// label:colname
-      			property: "propLabel",
-      			//year:"year",  
-      			woman: "personLabel"
-      		} , 
-      	 // tooltip
-  				tip: {
-  					fontSize:13,
-  					lineHeight:1.3,
-    				format: {
-    					woman: true, // added channel for label.
-    					//"year": (d) => `${d}`,  
-      				property:true,
-      				category:true
-    				}
-    			}
-    		 })
-    		)    
-  ]
-  });
-}
-
-```
 
 ```js
 function datesChartY(data, {width}) {
   return Plot.plot({
-    title: "v2 left to right",
+    title: "Every date as a dot",
     width,
     height: 1300,
     marginTop: 0,
@@ -97,24 +47,26 @@ function datesChartY(data, {width}) {
     x: {label: null, type: "point", axis:null}, //, round: true, nice: d3.utcYear
     y: {label: null},
     color: {legend: true, 
-    				range: ["#1f77b4", "#ff7f0e", "#8c564b", "#bdbdbd"],
-    				domain: ["birth/death", "education", "work", "other"]
+    				range: ["#1f77b4", "green", "#ff7f0e", "#8c564b", "#bdbdbd"],
+    				domain: ["birth", "death", "education", "work", "other"]
     				},
     marks: [
+    	//Plot.text(data, Plot.selectFirst({x:0, text:"date", anchor:"top"})), // y and x make no difference to positioning? nor does anchor.
+    	//Plot.text([`some text\nnewline`], {frameAnchor: "bottom-right", fontSize:20}), // this is right at the bottom.
+    	//Plot.axisX({anchor: "top"}), 
     	Plot.dot(data, 
     		Plot.dodgeY({
     			x: "date", 
     			anchor:"top", 
     			fill:"category", 
-    			padding:0.6, r:3, 
+    			padding:0.6, 
+    			r:3, 
     			sort:"day",
     			reverse:true, 
     			tip:true,
     			channels: {
       		// label:colname
       			property: "propLabel",
-      			//year:"year",  
-      			//month: "month",
       			woman: "personLabel"
       		} , 
       	 // tooltip
@@ -136,11 +88,6 @@ function datesChartY(data, {width}) {
 
 ```
 
-<div class="grid grid-cols-1">
-  <div class="card">
-    ${resize((width) => datesChartX(dates, {width}))}
-  </div>
-</div>
 
 
 <div class="grid grid-cols-1">
@@ -148,3 +95,4 @@ function datesChartY(data, {width}) {
     ${resize((width) => datesChartY(dates, {width}))}
   </div>
 </div>
+

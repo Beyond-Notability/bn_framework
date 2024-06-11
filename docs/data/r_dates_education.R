@@ -1,10 +1,3 @@
-
-# shared libraries, functions etc ####
-
-## need absolute path to share this with r_sandpit
-## source("./docs/data/shared.R") 
-source("~/r_projects/beyond_notability/bn_observable/bn_framework/docs/data/shared.R")
-
 # need date types and probably precise values as well?
 # in fact nearly all year only
 
@@ -80,9 +73,11 @@ bn_women_educated_dates_query |>
     !is.na(date_start_time) ~ "3 start",
     !is.na(date_end_time) ~ "4 end"
   ))  |>
+  # no point in keeping women who don't have dob...
   left_join(
     bn_women_dob_dod |> select(bn_id, statements, bn_dob, bn_dod, bn_dob_yr, bn_dod_yr), by="bn_id"
-  )
+  ) |>
+  filter(!is.na(bn_dob_yr))
 
 
 
@@ -98,13 +93,10 @@ bn_women_educated_dates_wide |>
   relocate(year, year_type, age, age_death, .after = college_label)
   
   
-
-bn_women_educated_ages_long <-
-bn_women_educated_dates_long |>
-	filter(!is.na(bn_dob_yr)) |>
-  group_by(bn_id) |>
-  mutate(age_last = max(age)) |>
-  ungroup() 
+# don't need this if you've already filtered ages...
+#bn_women_educated_ages_long <-
+#bn_women_educated_dates_long |>
+#	filter(!is.na(bn_dob_yr))
 
 
 
@@ -166,10 +158,11 @@ bn_academic_degrees_query |>
   # make a date type for latest v others
   mutate(year_type = case_when(
     is.na(date_prop) ~ NA,
-    date_prop=="P51"~ date_propLabel, 
-    .default = "point")) |>
+    date_prop=="P51"~ "latest_date", 
+    .default = "point_in_time")) |>
   relocate(year_type, .after = date) |>
   left_join(bn_women_dob_dod |> select(bn_id, bn_dob_yr, bn_dod_yr), by="bn_id") |>
+  filter(!is.na(bn_dob_yr)) |>
   mutate(age= year-bn_dob_yr, age_death=bn_dod_yr-bn_dob_yr)
 
 
@@ -184,27 +177,101 @@ bn_academic_degrees |>
   # make colnames match
   clean_names("snake")|>
   filter(!is.na(year)) |>
-	filter(!is.na(bn_dob_yr)) |> # only drop 8 rows
-  group_by(bn_id) |>
-  mutate(age_last = max(age)) |>
-  ungroup() |>
+	#filter(!is.na(bn_dob_yr)) |> # only drop 8 rows
+#  group_by(bn_id) |>
+#  mutate(age_last = max(age), year_last=max(year)) |>
+#  ungroup() |>
   mutate(date_pairs = "1 single")
 
 
 
 bn_women_education_degrees <-
 bind_rows(
-  bn_academic_degrees_ages |> mutate(src="degrees") ,
-  bn_women_educated_ages_long |> mutate(src="educated") |> select(-university_label, -college_label)
+  bn_women_educated_dates_long |> 
+  	mutate(src="educated") |> 		
+  	select(-university_label, -college_label) ,
+  bn_academic_degrees_ages |> 
+  mutate(src="degrees") 
 ) |>
   relocate(s, .after = last_col()) |>
   relocate(src, .after = bn_id) |>
-  arrange(bn_id, year, by_label) 
+  arrange(bn_id, year, by_label)  |>
+  # surely this needs to go in after combining all dates?
+  group_by(bn_id) |>
+  mutate(age_last = max(age), year_last=max(year)) |>
+  ungroup() 
+
+
+
+# start-end interval years filled in. start-end pairs only.
+bn_women_educated_start_end_years <-
+bn_women_educated_dates_wide |>
+  # not sure where this should go? see if you have any problems
+	#filter(!is.na(bn_dob_yr)) |>
+  filter(date_pairs=="2 both") |>
+  # purrr::map2 and seq() to fill out a list from a start number to given end number. then unnest to put each one on a new row.
+  mutate(year = map2(year_start_time, year_end_time, ~seq(.x, .y, by=1))) |>
+  unnest(year)  |>
+  mutate(age = year-bn_dob_yr)  |>
+  mutate(src="educated")   |>
+  mutate(age_death = bn_dod_yr-bn_dob_yr)  
+#  group_by(bn_id) |>
+#  mutate(age_last = max(age)) |>
+#  ungroup()  
   
   
   
-bn_women_education_degrees |>
-	filter(!is.na(year_type)) |>
-	#filter(src=="educated") |>
-#bn_women_educated_ages_long |>
-   jsonlite::toJSON()
+  
+# version with start-end interval years filled in. start/end only treated like point
+bn_women_educated_ages_long <-
+bn_women_educated_dates_wide |>
+  mutate(start_year = case_when(
+    date_pairs=="2 both" ~ year_start_time,
+    date_pairs=="1 single" ~ year_point_in_time,
+    date_pairs=="3 start" ~ year_start_time,
+    date_pairs=="4 end" ~ year_end_time
+  )) |>
+  mutate(end_year = case_when(
+    date_pairs=="2 both" ~ year_end_time,
+    date_pairs=="1 single" ~ year_point_in_time,
+    date_pairs=="3 start" ~ year_start_time,
+    date_pairs=="4 end" ~ year_end_time
+  ))  |>
+  # purrr::map2 and seq() to fill out a list from a start number to given end number. then unnest to put each one on a new row.
+  mutate(year = map2(start_year, end_year, ~seq(.x, .y, by=1))) |>
+  unnest(year)  |>
+    # no latest in educated...?
+  mutate(year_type= case_when(
+    date_pairs=="1 single" ~ "point_in_time",
+    date_pairs=="4 end" ~ "end_time",
+    date_pairs=="3 start" ~ "start_time",
+    date_pairs=="2 both" & year_start_time==year ~ "start_time",
+    date_pairs=="2 both" & year_end_time==year ~ "end_time",
+    date_pairs=="2 both" ~ "filled"
+  )) |>
+  mutate(age = year-bn_dob_yr) |>
+  # not sure if this should be before doing start/end years? see if you have any problems. but how can you do age_last before adding degrees?
+	#filter(!is.na(bn_dob_yr)) |>
+  mutate(age_death = bn_dod_yr-bn_dob_yr)  |>
+#  group_by(bn_id) |>
+#  mutate(age_last = max(age), year_last=max(year)) |>
+#  ungroup()  |>
+  select(bn_id, person_label, by_label, year, age, date_pairs, year_type,
+  # age_last, year_last, 
+  bn_dob_yr, bn_dod_yr, age_death, start_year, end_year, s) |>
+  mutate(src="educated") |>
+  arrange(bn_id, start_year, year)
+  
+  
+# ## to go with v2 of educated
+bn_academic_degrees_ages2 <-
+bn_academic_degrees_ages |>
+  mutate(src="degrees") |>
+  relocate(age, date_pairs, .after = year)
+  
+
+bn_women_education_degrees2 <-
+	bind_rows(bn_women_educated_ages_long, bn_academic_degrees_ages2)  |>
+  group_by(bn_id) |>
+  mutate(age_last = max(age), year_last=max(year)) |>
+  ungroup() 

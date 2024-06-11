@@ -1,9 +1,3 @@
-# shared libraries, functions etc ####
-
-source("./docs/data/shared.R") 
-
-
-
 ## children data
 
 # union a) unnamed kids in had child in; b) named child
@@ -82,7 +76,7 @@ bn_had_children_query |>
   top_n(-1, row_number()) |>
   ungroup() |>
   #add_count(bn_id, date_value) |> filter(n>1)
-  left_join(bn_women_dob_dod, by="bn_id") |>
+  left_join(bn_women_dob_dod |> select(bn_id, bn_dob_yr, bn_dod_yr, bn_dob, bn_dod), by="bn_id") |>
   mutate(age = year-bn_dob_yr) |>
   filter(!is.na(age)) |>
   # first and last dates overall, for limits if doing by date
@@ -96,35 +90,3 @@ bn_had_children_query |>
    mutate(first_year=year(earliest) ) |>
    arrange(personLabel, bn_dob)
   #sorting has to happen in Obs Plot
-
-
-## make a zip now even though you only have one file to start with? why not...
-## not sure from docs if .zip. naming of this file matters but makes sense for clarity anyway.
-
-# Add to zip archive, write to stdout
-setwd(tempdir())
-write_csv(bn_had_children_ages, "had-children-ages.csv", na="")
-#write_csv(var_loadings_scaled, "var-loadings.csv") etc etc
-system("zip - -r .")
-
-
-#cat(format_csv(bn_had_children_ages_sorted_by_start_age, na=""))
-
-
-
-# code for age at birth barcode chart, sorted by birth date
-
-# bn_had_children_ages_barcode |> 
-#   mutate(start_age = min(age)-1) |>
-#   mutate(last = max(age), .by = bn_id) |>
-#   mutate(personLabel = fct_rev(fct_reorder(personLabel, bn_dob))) |>
-# 
-#   ggplot(aes(y=personLabel, x=age)) +
-#   geom_segment( aes(x=start_age, xend=last, yend=personLabel), linewidth=0.2, colour="lightgrey") +
-# 
-#   geom_point(shape = 124, size = 2.2, colour="black") +
-#   scale_x_continuous(expand = expansion(mult = c(0, .01))) + # remove/reduce gap.
-#   theme(axis.ticks.y=element_blank() ) +
-#   #scale_color_colorblind() +
-#   #theme(legend.position = "bottom") +
-#   labs(y=NULL, x=NULL)
