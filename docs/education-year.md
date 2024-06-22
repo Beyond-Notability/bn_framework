@@ -34,9 +34,11 @@ function educatedYearsChart(data, {width}) {
     height: 6000,
     marginTop: 10,
     marginLeft: 180,
+    	//TODO a bit more space between top X axis labels and first rule
+    	//TODO year of event label at both top and bottom?
+    	//TODO custom shapes
     x: {
     	grid: true, 
-    	//padding:50, // ?
     	label: "year of event", 
     	tickFormat: d3.format('d'),
     	axis: "both" // "both" top and bottom of graph. null for nothing.
@@ -47,28 +49,34 @@ function educatedYearsChart(data, {width}) {
     color: color_time,
     marks: [
     	
-      Plot.ruleX([1830]), // makes X start at 1830. TODO earliest_year rather than hard coded.
-      
-      // 1920 etc highlight? hmm. 1878=UoL degrees. need tip/label of some sort.
-     // Plot.ruleX([1878], {stroke:"pink"}),
-      Plot.ruleX([1920], {stroke: "lightgreen"}),
-    //  Plot.ruleX([1948], {stroke: "lightblue"}),
-      
+    	// RULES
       
     	// turn into separate rule for education? needs separate year_last as well
-    	// TODO maybe split rule earliest/birth>start and start>end with different styling?
+    	
+    	// TODO split rule so that first segment between 1830 and birth is de-emphasised but still acts as a guide. just thinner atm but will look at other possible styling.
       Plot.ruleY(data, {
       	// x1 to start this at 1830 as well. 
       	x1:1830, // TODO variable not hard coding
+      	x2:"bn_dob_yr", 
+      	y: "person_label", 
+      	//dy:-6, // if separate
+      	stroke: "lightgray" , 
+      	strokeWidth: 1,
+      channels: {yob: 'bn_dob_yr', "year":"year"}, sort: {y: 'yob'} // you only need to do this once?
+      }),
+      
+      Plot.ruleY(data, {
+      	// x1 to start this at 1830 as well. 
+      	x1:"bn_dob_yr", // TODO variable not hard coding
       	x2:"year_last", 
       	y: "person_label", 
       	//dy:-6, // if separate
       	stroke: "lightgray" , 
       	strokeWidth: 2,
-      channels: {yob: 'bn_dob_yr', "year":"year"}, sort: {y: 'yob'} // you only need to do this once?
+      //channels: {yob: 'bn_dob_yr', "year":"year"}, sort: {y: 'yob'} // you only need to do this once?
       }),
       
-      // make separate rule for degrees? needs separate year_last - if no degrees, don't want it to draw anything
+      // make separate rule for degrees? would need separate year_last - if no degrees, don't want it to draw anything
     //  Plot.ruleY(data, {
       	// x1 to start this at 1830 as well.
     //  	x1:1830, // TODO variable
@@ -79,6 +87,17 @@ function educatedYearsChart(data, {width}) {
     //  	strokeWidth: 1,
     //  channels: {yob: 'bn_dob_yr', "year":"year"}, sort: {y: 'yob'}
     //  }),
+    
+    	// this should be *after* (on top of) left-most Y rule 
+      Plot.ruleX([1830]), // makes X start at 1830. TODO earliest_year rather than hard coded? but needs to be 0 or 5. leave it for the moment.
+      
+    // 1920 etc highlight? hmm. 1878=UoL degrees. need tip/label of some sort.
+     // Plot.ruleX([1878], {stroke:"pink"}),
+      Plot.ruleX([1920], {stroke: "lightgreen"}),
+    //  Plot.ruleX([1948], {stroke: "lightblue"}),
+      
+      
+      // DOTS
       
  			// educated at fill years, no tips. draw BEFORE single points.
       Plot.dot(
@@ -96,7 +115,7 @@ function educatedYearsChart(data, {width}) {
       ),
     	
 			// educated at single points
-			// can include filled years, but easier to control their appearance if separate
+			// can include filled years, but easier to control appearance separately
 			// highlight start-end pairs cf start/end only?
       Plot.dot(
       	data, {
@@ -125,9 +144,7 @@ function educatedYearsChart(data, {width}) {
       	//		x: (d) => `${d}`, // TODO handle year-dates properly...
       	//		age: true
     		//	},
-    			//pointerSize:4,
-    			//textPadding:4,
-    			//anchor:"top-left", // dont think this does quite what you expected...
+    			
   		  //} // /tip
     	}), // /dot
  
@@ -141,9 +158,7 @@ function educatedYearsChart(data, {width}) {
       	filter: (d) =>	d.src!="educated" , 
       	dy:6, // vertical offset. negative=above line.
 
-      //sort: {y: 'yob'} , // sorting here as well doesn't seem to be needed
       // tooltip stuff removed
-      //tips separately on plot.dots seems to cause all sorts of confusion
 
     	}), // /plot.dot
     	
@@ -152,7 +167,7 @@ function educatedYearsChart(data, {width}) {
       	data, {
       	x: "bn_dob_yr", 
       	y: "person_label" , 
-      	dx: 6,
+      	//dx: 6, // oops putting this here moves the dot not the tip!
       	channels: {
       		"year of birth":"bn_dob_yr", 
       		} , 
@@ -164,21 +179,35 @@ function educatedYearsChart(data, {width}) {
     				"year of birth": (d) => `${d}`,
     			},
   				anchor: "right", 
+  				dx: -3,
   		  }
     	}), // /dot
     	
-    	// only show one tip at a time, less mess.
-    	// TODO but now if you have educated/degree in the same year it only shows degree. 
-    	// could filter and have separate educated/degrees? but probably have collision problems again.
-      // problem seems to be how far around a dot the tip works; could "padding" be reduced? 
-      // or maybe the problem is that it treats the rule as its middle spot, not the dots. ? even if you use dx. could ?px work instead?
+    	// only show one tip at a time, less mess. but if you have educated/degree in the same year it only shows degree. 
+    	// try X or Y variant. NOT X! bad things! Y doesn't solve the problem and behaviour can be slightly confusing. pointer without X/Y is most precise, just not quite precise enough...
+    	// separated but... 
+    	// could filter and have separate educated/degrees? (might want that inthe end anyway...) but will almost certainly have collision problems again.
+    	// it could be something unintuitive like options for the point mark (padding/margin etc), not the tip/pointer. "only the point closest to the pointer is rendered" - so where it thinks the edges of the point are might be crucial
+      // is the problem how far around a dot the tip works; could padding/margin be reduced? if so then might be fixable within dot and not need separate pointer stuff at all. but i don't think it is. in examples, precision is tight.
+      // maybe the problem is what it thinks is the middle spot. think about where it puts the pointer arrow. it's not the offset dots. even if you use dx. could ?px work instead?
+      //have a feeling i tried to use dy with a variable and it didn't work. it moves with a fixed number so if you separate the degrees/education into different tips you *might* fix this problem. ?
+      // i think it's working better now you've got the anchors pointing different directions as well. only thing is when there's two they hide the timeline itself what if you move them up as well? but too much space makes confusing situations... i wonder if more dx would be good or bad... overlaps; apart from the weirdness it doesn't really solve the problem because now you can see there are two tips but you can still only read the top one ok change anchor position fixes that. is it possible to get rid of the pointy bit? that sort of makes you expect the point to be next to the dot it refers to. the px/py example doesn't have pointy bits or a box either... ahh it's just Pointer, not Tip. hmm.
+      // The px and py channels may be used to specify pointing target positions independent of the displayed mark. px and py = completely fixed. but cna use px and y / x and py. however i think not quite right for this chart
+      //they seem sort of confused almost? can get them showing when nowehre near the dot (will show for dots on person above or below, even when nowhere near on X axis). and sometimes seem to freeze. and they didn't do that when single.
+      
+      // TOOLTIPS
+      
+      // tip degrees
     	Plot.tip(data, Plot.pointer({
     			x: "year", 
     			y: "person_label", // can you really not give this a label?
     			//title: "person_label", // *only* shows person_label.
-    			filter: (d) => d.year_type !="filled", // no tips on filled years!
-    			anchor:"right",
-    			dx:-6,
+      	filter: (d) =>  d.year_type !="filled"  &	d.src=="degrees", 
+    			//filter: (d) => d.year_type !="filled", // no tips on filled years!
+    			anchor:"top-left",
+    			//frameAnchor:"right",
+    			dx:6,
+    			dy:6,
     			channels: {
       		//woman: "person_label",
     			"event type":"src",
@@ -200,7 +229,38 @@ function educatedYearsChart(data, {width}) {
     			}
     		)	
     	), // /tip
-
+      
+      // tip education negative offset
+    	Plot.tip(data, Plot.pointer({
+    			x: "year", 
+    			y: "person_label", // can you really not give this a label?
+    			//title: "person_label", // *only* shows person_label.
+      	  filter: (d) =>  d.year_type !="filled"  &	d.src=="educated", 
+    			//filter: (d) => d.year_type !="filled", // no tips on filled years!
+    			anchor:"top-right",
+    			dx:-6,
+    			dy:-6,
+    			channels: {
+      		//woman: "person_label",
+    			"event type":"src",
+    			"event year": "year",
+      		"year of birth":"bn_dob_yr", 
+      		"age at event":"age",
+      		where:"by_label",
+      		qualification:"degree_label", 
+      		} , 
+      		format: {
+      			x:false, 
+      			y:false,
+      			//woman: true,
+      			// make these go first, do formatting
+      			"event type":true,
+      			"event year": (d) => `${d}`, 
+      			"year of birth": (d) => `${d}`,
+      			}
+    			}
+    		)	
+    	), // /tip
     ]  // /marks
   });
 }

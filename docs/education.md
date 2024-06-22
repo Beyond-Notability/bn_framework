@@ -46,26 +46,29 @@ function educatedAgesChart(data, {width}) {
     x: {
     	grid: true, 
     	//padding:20,
-    	label: "age at event", // TODO only showing at bottom, why? year version shows both.
+    	label: "age at event", // TODO only showing at bottom, why? year version shows both. or does it.
     	axis: "both" // "both" top and bottom of graph. null for nothing.
     	}, 
     y: {label: null}, // this affects tooltip label too  
     symbol: {legend:true, 
-    				range: ["diamond", "triangle", "wye", "star", "square"], 
+    				range: ["triangle", "diamond2", "diamond2", "star", "square"], 
 						domain: ["point_in_time", "start_time", "end_time", "latest_date", "filled"]},
     color: color_time,
     marks: [
     	
-      Plot.ruleX([0]), // makes X start at 0. 
+       
       Plot.ruleY(data, {
       	// x1 to start this at 0 as well. maybe you need an age_first as well as last. but then what happens to women with only one event?
       	x1:0, 
       	x2:"age_last", 
       	y: "person_label", 
       	stroke: "lightgray" , 
-      	strokeWidth: 1,
+      	strokeWidth: 2,
       channels: {yob: 'bn_dob_yr', "year":"year"}, sort: {y: 'yob'}
       }),
+      
+      // this should be after (on top of) leftmost ruleY
+      Plot.ruleX([0]), // makes X start at 0.
  
  			// educated at fill years, no tips. draw before single points.
       Plot.dot(
@@ -75,8 +78,8 @@ function educatedAgesChart(data, {width}) {
       	//filter: (d) => d.date_pairs=="2 both", //keeps start and end as well
       	filter: (d) => d.year_type=="filled",
       	dy:-6,
-      	symbol: "square",
-      	fill:"lightgray",
+      	symbol: "year_type",
+      	fill:"year_type",
       	r:4,
       	tip:false,
        }

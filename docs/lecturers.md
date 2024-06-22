@@ -1,5 +1,5 @@
 ---
-theme: [cotton, wide]
+theme: wide
 title: Lecturers
 toc: false
 ---
@@ -7,29 +7,10 @@ toc: false
 # Lecturing
 
 ```js
-//got it!
 const lecturersDates = FileAttachment("data/women_lecturing/lecturers-dates.csv").csv({typed: true});
 
 ```
 
-<!-- 
-bn_lecturers_dates |>
-  count(organisation_ext, position_label, sort = T) |> 
-  mutate(organisation_ext = fct_reorder(organisation_ext, n)) |>
-  ggplot(aes(n, organisation_ext, fill=position_label)) 
-  
- -->
- 
-<!--
-faceted bars ?
-
-bn_lecturers_dates |>
-  count(position_label, year1) |>
-  ggplot(aes(year1, n)) +
-  geom_col() +
-  facet_wrap(~position_label)
-
--->
 
 ```js
 function lecturersDatesChart(data, {width}) {
@@ -73,26 +54,31 @@ title: "Organisations",
 }
 ```
 
+```js
+const search = view( Inputs.search(lecturersDates, {placeholder: "Search..."}) );
 
-<div class="grid grid-cols-1">
-  <div class="card">
-    ${resize((width) => lecturersDatesChart(lecturersDates, {width}))}
-  </div>
-</div>
+// TODO
+// code in the lecturers inputs md in _stuff
+// select with all rows shwoing
+// multiple inputs
+// i think you can't use concat with d3.group because it's not an array, but idk what you're supposed to do instead.
 
-<div class="grid grid-cols-1">
-  <div class="card">
-    ${resize((width) => lecturersOrgsChart(lecturersDates, {width}))}
-  </div>
-</div>
+// this might help with at least part of the problem... https://talk.observablehq.com/t/conditional-filtering-with-inputs-select/8280
+// goes with https://observablehq.com/d/60dc128e129abd86 which i might have forked already
+// maybe this? https://talk.observablehq.com/t/d3-group-join-on-nytimes-covid-19-data/3366
+// or https://talk.observablehq.com/t/nested-input-dynamic-selection/7783
+
+// https://talk.observablehq.com/t/two-questions-about-input-select/6639
+```
+
 
 
 
 ```js
-Inputs.table(lecturersDates, {
+Inputs.table(search, {
 	layout: "auto",
 	format: {
-		bn_id:   id => htl.html`<a href=https://beyond-notability.wikibase.cloud/entity/${id} target=_blank>${id}</a>`,
+		bn_id: id => htl.html`<a href=https://beyond-notability.wikibase.cloud/entity/${id} target=_blank>${id}</a>`,
 		"nice_date": (d) => `${d}`,
 		"year1": d3.format(".0f")
 	},
@@ -118,3 +104,19 @@ Inputs.table(lecturersDates, {
 // year gets treated as number in date col.
 // d3.format(".0f") only works for years, screws up other dates.
 ```
+
+
+<div class="grid grid-cols-1">
+  <div class="card">
+    ${resize((width) => lecturersDatesChart(lecturersDates, {width}))}
+  </div>
+</div>
+
+<div class="grid grid-cols-1">
+  <div class="card">
+    ${resize((width) => lecturersOrgsChart(lecturersDates, {width}))}
+  </div>
+</div>
+
+
+

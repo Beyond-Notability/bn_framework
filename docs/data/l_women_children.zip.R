@@ -11,13 +11,13 @@ source("./docs/data/r_women_children.R")
 # Add to zip archive, write to stdout
 setwd(tempdir())
 write_csv(bn_had_children_ages, "had-children-ages.csv", na="")
-#write_csv(var_loadings_scaled, "var-loadings.csv") etc etc
-system("zip - -r .")
-
+write_csv(bn_work_years_children, "work-years-with-children.csv", na="")
+write_csv(bn_served_years_children, "served-years-with-children.csv", na="")
+write_csv(bn_last_ages, "consolidated-last-ages.csv", na="")
+system("zip - -r .")  
 
 #cat(format_csv(bn_had_children_ages_sorted_by_start_age, na=""))
-
-
+   
 
 # code for age at birth barcode chart, sorted by birth date
 
