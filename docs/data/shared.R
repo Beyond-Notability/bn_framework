@@ -5,8 +5,9 @@ library(knitr)
 library(kableExtra)
 
 library(readxl) 
-library(writexl)
+#library(writexl)
 
+library(jsonlite)
 library(janitor)
 library(scales)
 library(glue)
@@ -23,10 +24,10 @@ library(ggthemes)
 library(ggalt)
 
 
-
 # wikidata/sparql etc
-
 library(SPARQLchunks) # can't get chunks working! but it's fine for inline queries.
+
+
 
 
 # standard query using bn_prefixes and bn_endpoint. sparql= 'query string (excluding prefixes)'
