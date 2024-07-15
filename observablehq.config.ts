@@ -2,12 +2,12 @@
 export default {
   // The project’s title; used in the sidebar and webpage titles.
   title: "Beyond Notability",
-	cleanUrls: false, // 
+	cleanUrls: false,  
 
   // The pages and sections in the sidebar. If you don’t specify this option,
   // all pages will be listed in alphabetical order. Listing pages explicitly
   // lets you organize them into sections and have unlisted pages.
-  // shouldn't need this if the cleanUrls setting works, it doesn't seem to work
+  // not essential if the cleanUrls setting works (not available in early versions)
   
 //  pages: [
 //    {
@@ -27,7 +27,9 @@ export default {
   // footer: "Built with Observable.", // what to show in the footer (HTML)
   // toc: true, // whether to show the table of contents
   // pager: true, // whether to show previous & next links in the footer
-  // root: "docs", // path to the source root for preview
-  // output: "dist", // path to the output root for build
+  
+  root: "docs", // path to the source root for preview
+  output: "dist", // path to the output root for build
+  
   // search: true, // activate search
 };

@@ -12,6 +12,7 @@ const lecturersDates = FileAttachment("data/women_lecturing/lecturers-dates.csv"
 ```
 
 
+
 ```js
 function lecturersDatesChart(data, {width}) {
  return Plot.plot({
@@ -56,19 +57,6 @@ title: "Organisations",
 
 ```js
 const search = view( Inputs.search(lecturersDates, {placeholder: "Search..."}) );
-
-// TODO
-// code in the lecturers inputs md in _stuff
-// select with all rows shwoing
-// multiple inputs
-// i think you can't use concat with d3.group because it's not an array, but idk what you're supposed to do instead.
-
-// this might help with at least part of the problem... https://talk.observablehq.com/t/conditional-filtering-with-inputs-select/8280
-// goes with https://observablehq.com/d/60dc128e129abd86 which i might have forked already
-// maybe this? https://talk.observablehq.com/t/d3-group-join-on-nytimes-covid-19-data/3366
-// or https://talk.observablehq.com/t/nested-input-dynamic-selection/7783
-
-// https://talk.observablehq.com/t/two-questions-about-input-select/6639
 ```
 
 
