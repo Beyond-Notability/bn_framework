@@ -9,6 +9,21 @@ toc: false
 
 Using [Observable Plot](https://observablehq.com/plot/) / [dodge transform](https://observablehq.com/plot/transforms/dodge)
 
+
+
+
+
+<div class="grid grid-cols-1">
+  <div class="card">
+    ${resize((width) => datesChartY(dates, {width}))}
+  </div>
+</div>
+
+
+
+
+
+
 ```js
 // Import components
 import {datesChartY} from "./components/allTheDates.js";
@@ -31,13 +46,4 @@ precise
 "prop_valueLabel"  "prop_value" 
 "s"  
 -->
-
-
-
-
-<div class="grid grid-cols-1">
-  <div class="card">
-    ${resize((width) => datesChartY(dates, {width}))}
-  </div>
-</div>
 

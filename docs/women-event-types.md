@@ -6,13 +6,9 @@ toc: false
 
 # Most frequent event attenders
 
-```js
-const events = FileAttachment("./data/l_women_events.json").json({typed:true});
-```
 
 
 ```js
-
 const checkCategories = view(   
 		Inputs.checkbox(
     //lecturersDates.map((d) => d.position_label),
@@ -27,7 +23,6 @@ const checkCategories = view(
 );
 
 //(if you put the const in the same code chunk as table get data is not iterable error)
-// when using flat() changes to a "is not a function" error
 ```
 
 ```js
@@ -69,7 +64,21 @@ Inputs.table(checkCategories.flat(), {
 ```
 
 
-[table is not yet linked to chart]
+[table is not linked to chart]
+
+<div class="grid grid-cols-1">
+  <div class="card">
+    ${resize((width) => eventsChart(events, {width}))}
+  </div>
+</div>
+
+
+
+
+
+```js
+const events = FileAttachment("./data/l_women_events.json").json({typed:true});
+```
 
 
 <!-- A shared color scale for consistency, sorted by the number of launches -->
@@ -108,8 +117,6 @@ function eventsChart(data, {width}) {
 }
 ```
 
-<div class="grid grid-cols-1">
-  <div class="card">
-    ${resize((width) => eventsChart(events, {width}))}
-  </div>
-</div>
+
+
+

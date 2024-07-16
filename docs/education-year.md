@@ -7,19 +7,6 @@ toc: false
 # Timelines of higher education
 
 
-```js
-// Import components
-import {educatedYearsChart} from "./components/education.js";
-```
-
-```js
-// load data
-const education2 = FileAttachment("data/l_dates_education/educated_degrees2.json").json({typed: true});
-
-```
-
-
-
 
 
 <div class="grid grid-cols-1">
@@ -30,6 +17,19 @@ const education2 = FileAttachment("data/l_dates_education/educated_degrees2.json
 
 
 
+
+
+
+```js
+// Import components
+import {educatedYearsChart} from "./components/education.js";
+```
+
+```js
+// load data
+const education2 = FileAttachment("data/l_dates_education/educated_degrees2.json").json({typed: true});
+
+```
 
 
 

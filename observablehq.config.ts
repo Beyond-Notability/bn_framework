@@ -1,3 +1,5 @@
+import MarkdownItFootnote from "markdown-it-footnote";
+
 // See https://observablehq.com/framework/config for documentation.
 export default {
   // The project’s title; used in the sidebar and webpage titles.
@@ -32,4 +34,8 @@ export default {
   output: "dist", // path to the output root for build
   
   // search: true, // activate search
+
+	// markdown extension
+  markdownIt: (md) => md.use(MarkdownItFootnote)
+
 };
