@@ -1,6 +1,9 @@
 import * as Plot from "npm:@observablehq/plot";
 import * as d3 from "npm:d3";
 
+	
+// share as much as possible between the two versions of the chart
+
 const color_time = Plot.scale({
 		color: {
 			range: ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "lightgray"], 
@@ -8,19 +11,41 @@ const color_time = Plot.scale({
 		}
 	});
 
+
+
+// not using this yet....
+const shape_time = Plot.scale({ 	
+    symbol: {legend:true, 
+    				range: ["triangle", "diamond2", "diamond2", "star", "square"], 
+						domain: ["point_in_time", "start_time", "end_time", "latest_date", "filled"]
+		}
+	});
+	
+	
+	
+const plot_height = 6000;
+const plot_marginTop = 10;
+const plot_marginLeft = 180;
+
+    	//TODO a bit more space between top X axis labels and first rule?
+    	//TODO year of event label at both top and bottom?
+    	//TODO custom shapes?
+    	
+    	
+    	
+    	
+    	
 export function educatedYearsChart(data, {width}) {
 
   return Plot.plot({
   
-    title: "higher education chronology, sorted by date of birth",
+    title: "higher education chronology, by date of birth",
     
     width,
-    height: 6000,
-    marginTop: 10,
-    marginLeft: 180,
-    	//TODO a bit more space between top X axis labels and first rule?
-    	//TODO year of event label at both top and bottom?
-    	//TODO custom shapes
+    height: plot_height,
+    marginTop: plot_marginTop,
+    marginLeft: plot_marginLeft,
+
     	
     x: {
     	grid: true, 
@@ -28,6 +53,7 @@ export function educatedYearsChart(data, {width}) {
     	tickFormat: d3.format('d'),
     	axis: "both" // "both" top and bottom of graph. null for nothing.
     	}, 
+    	
     y: {label: null}, // this affects tooltip label too  
     
     symbol: {legend:true, range: ["diamond", "triangle", "wye", "star", "square"], 
@@ -256,13 +282,19 @@ export function educatedYearsChart(data, {width}) {
 
 
 
+
+
+
 export function educatedAgesChart(data, {width}) {
+
   return Plot.plot({
-    title: "higher education and age, sorted by date of birth",
+    title: "higher education and age, by date of birth",
     width,
-    height: 6000,
-    marginTop: 10,
-    marginLeft: 180,
+    height: plot_height,
+    marginTop: plot_marginTop,
+    marginLeft: plot_marginLeft,
+    
+    
     x: {
     	grid: true, 
     	//padding:20,
@@ -394,3 +426,5 @@ export function educatedAgesChart(data, {width}) {
 
 // channels to reference more data variables; can be called anything
 // seems clunky to make y label empty then define same variable as a channel for tooltip then exclude y again! 
+
+

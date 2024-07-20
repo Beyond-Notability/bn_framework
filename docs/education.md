@@ -1,6 +1,6 @@
 ---
 theme: dashboard
-title: Education by age
+title: Education
 toc: false
 ---
 
@@ -10,9 +10,14 @@ toc: false
 
 
 
+
+```js
+// toggle baby! 8-)
+const makeToggleView = view(makeToggle);
+```
 <div class="grid grid-cols-1">
   <div class="card">
-    ${resize((width) => educatedAgesChart(education, {width}))}
+    ${makeChart(makeToggleView) }
   </div>
 </div>
 
@@ -25,7 +30,7 @@ toc: false
 
 ```js
 // Import components
-import {educatedAgesChart} from "./components/education.js";
+import {educatedAgesChart, educatedYearsChart} from "./components/education.js";
 ```
 
 ```js
@@ -34,3 +39,25 @@ const education = FileAttachment("data/l_dates_education/educated_degrees2.json"
 ```
 
 
+```js
+// make the radio button for the toggle
+const makeToggle =
+		Inputs.radio(
+			["dates", "ages"],  
+			{
+				label: "View by: ", 
+				value:"dates", // preference
+				}
+			)
+
+
+// toggle function
+//i'd quite like less repetition in here but i can live with it.
+const makeChart = (selection) => {
+  return selection === "dates" ?  
+  resize((width) => educatedYearsChart(education, {width})) : 
+  resize((width) => educatedAgesChart(education, {width})) 
+}
+
+
+```
