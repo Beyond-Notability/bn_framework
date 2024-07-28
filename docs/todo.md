@@ -37,6 +37,19 @@ Education
 --------
 
 - custom d3 shapes?
-- check: did I add earliest/latest dates for educated at?
+- add earliest/latest dates for educated at
 - code for the two tables needs review and cleanup now the toggle is working
 
+
+
+Residence
+--------
+
+?????????
+
+
+Networks
+-------
+
+- will need d3 for any network graphs
+- analysis of SAL elections started but work to do on change over time (excavation networks mostly done)

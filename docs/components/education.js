@@ -39,7 +39,7 @@ export function educatedYearsChart(data, {width}) {
 
   return Plot.plot({
   
-    title: "higher education chronology, by date of birth",
+    title: "higher education chronology (ordered by date of birth)",
     
     width,
     height: plot_height,
@@ -68,26 +68,24 @@ export function educatedYearsChart(data, {width}) {
     	
     	// TODO split rule so that first segment between 1830 and birth is de-emphasised but still acts as a guide. just thinner atm but will look at other possible styling.
     	
-      Plot.ruleY(data, {
-      	// x1 to start this at 1830 as well. 
-      	x1:1830, // TODO variable not hard coding?
+      Plot.ruleY(data, { 
+      	x1:1830, // TODO variable not hard coding? in case anything earlier gets added to the database... or just filter the data.
       	x2:"bn_dob_yr", 
       	y: "person_label", 
       	//dy:-6, // if separate
       	stroke: "lightgray" , 
       	strokeWidth: 1,
-      channels: {yob: 'bn_dob_yr', "year":"year"}, sort: {y: 'yob'} // only need to do this once?
+      channels: {yob: 'bn_dob_yr', "year":"year"}, sort: {y: 'yob'} // only need to do this once
       }),
       
       Plot.ruleY(data, {
-      	// x1 to start this at 1830 as well. 
-      	x1:"bn_dob_yr", // TODO variable not hard coding
+      	x1:"bn_dob_yr", 
       	x2:"year_last", 
       	y: "person_label", 
       	//dy:-6, // if separate
       	stroke: "lightgray" , 
       	strokeWidth: 2,
-      //channels: {yob: 'bn_dob_yr', "year":"year"}, sort: {y: 'yob'} // you only need to do this once?
+      
       }),
       
       // make separate rule for degrees? would need separate year_last - if no degrees, don't want it to draw anything
@@ -103,18 +101,18 @@ export function educatedYearsChart(data, {width}) {
     //  }),
     
     	// this should be *after* left-most Y rule 
-      Plot.ruleX([1830]), // makes X start at 1830. TODO earliest_year rather than hard coded? but needs to be 0 or 5. leave it for the moment.
+      Plot.ruleX([1830]), // makes X start at 1830. TODO earliest_year rather than hard coded? but needs to be 0 (or 5). leave it for the moment.
       
-    // 1920 etc highlight? hmm. 1878=UoL degrees. need tip/label of some sort.
-     // Plot.ruleX([1878], {stroke:"pink"}),
-     
-      Plot.ruleX([1920], {stroke: "lightgreen"}),
-    //  Plot.ruleX([1948], {stroke: "lightblue"}),
+    // notable degree dates (1920 etc) highlight? hmm.
+    // TODO tip/label of some sort.
+     // Plot.ruleX([1878], {stroke:"pink"}), // UoL degrees. 
+      Plot.ruleX([1920], {stroke: "lightgreen"}), // oxford
+    //  Plot.ruleX([1948], {stroke: "lightblue"}), // cambridge
       
-      
-      // DOTS
+      // PLACE THE DOTS
       
  			// educated at fill years, no tips. draw BEFORE single points.
+ 			// Q is there any way to do this so the fill is joined up bars rather than dots? esp. as spacing is different in the two views
       Plot.dot(
       	data, {
       	x: "year", 
@@ -129,9 +127,8 @@ export function educatedYearsChart(data, {width}) {
        }
       ),
     	
-			// educated at single points
-			// can include filled years, but easier to control appearance separately
-			// highlight start-end pairs cf start/end only?
+			// educated at single points (point in time, start/end only)
+			// TODO [i think] earliest and latest
       Plot.dot(
       	data, {
       	x: "year", 
@@ -173,7 +170,7 @@ export function educatedYearsChart(data, {width}) {
       	filter: (d) =>	d.src!="educated" , 
       	dy:6, // vertical offset. negative=above line.
 
-      // tooltip stuff removed
+      // tooltip stuff moved
 
     	}), // /plot.dot
     	
@@ -198,17 +195,14 @@ export function educatedYearsChart(data, {width}) {
   		  }
     	}), // /dot
     	
-    	// only show one tip at a time, less mess. but if you have educated/degree in the same year it only shows degree. 
-    	// try X or Y variant. NOT X! bad things! Y doesn't solve the problem and behaviour can be slightly confusing. pointer without X/Y is most precise, just not quite precise enough...
-    	// separated but... 
-    	// could filter and have separate educated/degrees? (might want that inthe end anyway...) but will almost certainly have collision problems again.
-    	// it could be something unintuitive like options for the point mark (padding/margin etc), not the tip/pointer. "only the point closest to the pointer is rendered" - so where it thinks the edges of the point are might be crucial
-      // is the problem how far around a dot the tip works; could padding/margin be reduced? if so then might be fixable within dot and not need separate pointer stuff at all. but i don't think it is. in examples, precision is tight.
+      //tips behaviour not quite optimal. they seem sort of confused almost? can get them showing when nowehre near the dot (will show for dots on person above or below, even when nowhere near on X axis). and sometimes seem to freeze. and they didn't do that when single.
+    	// only show one tip at a time, less mess BUT if you have educated/degree in the same year it only shows degree. so that's no good.
+    	// try X or Y variant. def NOT X! bad things happen! Y doesn't solve the problem and behaviour can be slightly confusing. pointer without X/Y is most precise, just not quite precise enough...
+    	// it could be something unintuitive like options for the point mark (padding/margin etc?), not the tip/pointer. "only the point closest to the pointer is rendered" - so where it thinks the edges of the point are might be crucial. but in examples, precision is tight so why not here?
       // maybe the problem is what it thinks is the middle spot. think about where it puts the pointer arrow. it's not the offset dots. even if you use dx. could ?px work instead?
       //have a feeling i tried to use dy with a variable and it didn't work. it moves with a fixed number so if you separate the degrees/education into different tips you *might* fix this problem. ?
       // i think it's working better now you've got the anchors pointing different directions as well. only thing is when there's two they hide the timeline itself what if you move them up as well? but too much space makes confusing situations... i wonder if more dx would be good or bad... overlaps; apart from the weirdness it doesn't really solve the problem because now you can see there are two tips but you can still only read the top one ok change anchor position fixes that. is it possible to get rid of the pointy bit? that sort of makes you expect the point to be next to the dot it refers to. the px/py example doesn't have pointy bits or a box either... ahh it's just Pointer, not Tip. hmm.
       // The px and py channels may be used to specify pointing target positions independent of the displayed mark. px and py = completely fixed. but cna use px and y / x and py. however i think not quite right for this chart
-      //they seem sort of confused almost? can get them showing when nowehre near the dot (will show for dots on person above or below, even when nowhere near on X axis). and sometimes seem to freeze. and they didn't do that when single.
       
       // TOOLTIPS
       
@@ -288,7 +282,7 @@ export function educatedYearsChart(data, {width}) {
 export function educatedAgesChart(data, {width}) {
 
   return Plot.plot({
-    title: "higher education and age, by date of birth",
+    title: "higher education and age (ordered by date of birth)",
     width,
     height: plot_height,
     marginTop: plot_marginTop,
@@ -311,7 +305,7 @@ export function educatedAgesChart(data, {width}) {
        
       Plot.ruleY(data, {
       	// x1 to start this at 0 as well. maybe you need an age_first as well as last. but then what happens to women with only one event?
-      	x1:0, 
+      	x1:10, 
       	x2:"age_last", 
       	y: "person_label", 
       	stroke: "lightgray" , 
@@ -320,7 +314,7 @@ export function educatedAgesChart(data, {width}) {
       }),
       
       // this should be after (on top of) leftmost ruleY
-      Plot.ruleX([0]), // makes X start at 0.
+      Plot.ruleX([10]), // makes X start at 0.
  
  			// educated at fill years, no tips. draw before single points.
       Plot.dot(
