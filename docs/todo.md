@@ -21,7 +21,7 @@ All the dates
 ------------
  
 - category filters
-- date labels on top axis
+- date labels on top axis - worked this out, but it changes the chart significantly; made both versions available for a decision.
 
 
 

@@ -19,34 +19,39 @@ const symbol_time = Plot.scale({
 		}
 	});
 	
-const plot_height = 6000;
-const plot_marginTop = 10;
-const plot_marginLeft = 180;
+const plotHeight = 6000;
+const plotMarginTop = 10;
+const plotMarginLeft = 180;
 
     	//TODO a bit more space between top X axis labels and first rule?
     	//TODO year of event label at both top and bottom?
     	//TODO custom shapes?
-    	
+    
+
+const plotTitle = "Higher education [TODO (dates|ages)] "
+
+const eventLabel = {label: "year of event"}
     	   	
-    	
+ 
+// BY DATE   	
     	
 export function educatedYearsChart(data, {width}) {
 
   return Plot.plot({
   
-    title: "higher education chronology (ordered by date of birth)",
+    title: plotTitle, //"higher education chronology (ordered by date of birth)",
     
     width,
-    height: plot_height,
-    marginTop: plot_marginTop,
-    marginLeft: plot_marginLeft,
+    height: plotHeight,
+    marginTop: plotMarginTop,
+    marginLeft: plotMarginLeft,
 
     	
     x: {
     	grid: true, 
-    	label: "year of event", 
+    	//label: "year of event", 
     	tickFormat: d3.format('d'),
-    	axis: "both" // "both" top and bottom of graph. null for nothing.
+    	//axis: "both" // "both" top and bottom of graph. null for nothing. when this = "both" the label only shows at the bottom, but when set to "top" the label is at the top...  seems you have to do Plot.axis to get it the way you want.
     	}, 
     	
     y: {label: null}, // this affects tooltip label too  
@@ -59,7 +64,18 @@ export function educatedYearsChart(data, {width}) {
     color: color_time,
     
     marks: [
-    	
+     
+     // NEAR REPETITION
+      Plot.axisX({anchor: "top", 
+      						label: "year of event", 
+      						tickFormat: d3.format('d')}
+      						),
+      Plot.axisX({anchor: "bottom", 
+      						label: "year of event", 
+      						tickFormat: d3.format('d')}
+      						),
+      
+      
     	// GUIDE LINES
       
     	// turn into separate rule for education? needs separate year_last as well
@@ -86,17 +102,6 @@ export function educatedYearsChart(data, {width}) {
       
       }),
       
-      // make separate rule for degrees? would need separate year_last - if no degrees, don't want it to draw anything. hmm.
-    //  Plot.ruleY(data, {
-      	// x1 to start this at 1830 as well.
-    //  	x1:1830, // TODO variable
-    //  	x2:"year_last", // would need its own end year
-    //  	y: "person_label", 
-    //  	dy:6,
-    //  	stroke: "lightgray" , 
-    //  	strokeWidth: 1,
-    //  channels: {yob: 'bn_dob_yr', "year":"year"}, sort: {y: 'yob'}
-    //  }),
     
     //  VERTICAL RULES
     
@@ -110,7 +115,7 @@ export function educatedYearsChart(data, {width}) {
     //  Plot.ruleX([1948], {stroke: "lightblue"}), // cambridge
       
       
-      // PLACE THE DOTS
+      // DOTS
       
  			// educated at fill years for start/end pairs. draw BEFORE single points.
  			// Q is there any way to do this so the fill looks like joined up lines rather than dots? esp. as spacing is different in the two views
@@ -244,24 +249,24 @@ export function educatedYearsChart(data, {width}) {
 
 
 
-
+// BY AGE
 
 
 export function educatedAgesChart(data, {width}) {
 
   return Plot.plot({
-    title: "higher education and age (ordered by date of birth)",
+    title: plotTitle, // "higher education and age (ordered by date of birth)",
     width,
-    height: plot_height,
-    marginTop: plot_marginTop,
-    marginLeft: plot_marginLeft,
+    height: plotHeight,
+    marginTop: plotMarginTop,
+    marginLeft: plotMarginLeft,
     
     
     x: {
     	grid: true, 
-    	//padding:20,
-    	label: "age at event", // TODO only showing at bottom, why? 
-    	axis: "both" // "both" top and bottom of graph. null for nothing.
+    	//padding:20, // does nothing
+    	//label: "age at event", // using Plot.axis instead 
+    	//axis: "both" // "both" top and bottom of graph. null for nothing.
     	}, 
     y: {label: null}, // this affects tooltip label too  
     //symbol: symbol_time,
@@ -272,6 +277,15 @@ export function educatedAgesChart(data, {width}) {
     color: color_time,
     marks: [
     	
+    	// NEAR REPETITION
+    	Plot.axisX({anchor: "top", 
+      						label: "age at event", 
+      						tickFormat: d3.format('d')}
+      						),
+      Plot.axisX({anchor: "bottom", 
+      						label: "age at event", 
+      						tickFormat: d3.format('d')}
+      						),
        
       Plot.ruleY(data, {
       	x1:10, 

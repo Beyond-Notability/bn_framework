@@ -1,17 +1,16 @@
 ---
 theme: dashboard
-title: All the Dates
+title: All the Dates (v2)
 toc: false
 ---
 
 
-# All The Dates
+# (Almost) All The Dates
 
 Using [Observable Plot](https://observablehq.com/plot/) / [dodge transform](https://observablehq.com/plot/transforms/dodge)
 
 
-NOTE: this version is doing dates all wrong (they are correctly sorted but not parsed as dates), but it produces a much more compact chart than the properly formatted version. However, I don't know if it's possible to make better X axis year labels with this version.
-
+NOTE: in this version dates are correctly parsed, but it causes the chart to be both more spread out and longer. (About three dates between 1718 and 1790 have been filtered out.) 
 
 <div class="grid grid-cols-1">
   <div class="card">
@@ -30,12 +29,12 @@ lorem ipsum etc etc.
 
 ```js
 // Import components
-import {datesChartY} from "./components/allTheDates.js";
+import {datesChartY} from "./components/allTheDates2.js";
 ```
 
 ```js
 // load data
-const dates = FileAttachment("./data/l_dates_precise_all.json").json({typed: true});
+const dates = FileAttachment("./data/l_dates_precise_all.csv").csv({typed: true});
 ```
 
 <!-- 

@@ -7,11 +7,11 @@ export function datesChartY(data, {width}) {
     title: "Every date as a dot",
     
     width,
-    height: 1200,
+    height: 2000,
     marginTop: 10,
     marginLeft: 0,
     
-    x: {label: null, type: "point", axis:null}, //round: true, nice: d3.utcYear
+   x: {label: "year",  axis:"top"}, //round: true, nice: d3.utcYeartype: "point",
     y: {label: null},
     
     color: {legend: true, 
@@ -21,25 +21,13 @@ export function datesChartY(data, {width}) {
     				
     marks: [
     	
-    	// 1. how to make this use data? 2. how to put in the right place?
-    	// is there any option other than plot.text? 
-    	// tick mark? if you can work out the grouping it feels like it should be possible... and yet... https://observablehq.com/plot/marks/tick
-    	
-    	// the first/middle/last dates can be fixed location. 
- 
-    	Plot.text([`2016`], {frameAnchor: "top-right", fontSize:12, dy:-15, dx:10}), // top; dy to move above the plot area.
-    	Plot.text([`1907`], {frameAnchor: "top", fontSize:12, dy:-15}), //centre
-    	Plot.text([`1718`], {frameAnchor: "top-left", fontSize:12, dy:-15, dx:-10}), 
-    	
-    	// in between locations...  ?????
-    	//Plot.text([`FIXME`], {frameAnchor: "top-left", fontSize:12, dy:-15, dx:250}), 
-      //Plot.text([`FIXME`], {frameAnchor: "top-right", fontSize:12, dy:-15, dx:-250}), 
-    	    	
-    	//Plot.text(data, Plot.selectMinX({x:"date", frameAnchor: "top", fontSize:12, dy:-15}) ),  // shows 0 but at least it shows something. selectFirst is the same.
 
     	// dots
     	
-    	Plot.dot(data, 
+    	Plot.dot(
+    	
+    	data.filter((d) => d.year>1790), 
+    	//data, 
     	
     		Plot.dodgeY({
     			x: "date", 
@@ -63,7 +51,8 @@ export function datesChartY(data, {width}) {
   					lineHeight:1.3,
     				format: {
     					name: true, // added channel for label.
-    					x: false, 
+    					x: false,
+      				"date precision": (d) => `${d}`, 
     					//"year": (d) => `${d}`,  
       				property:true,
       				category:true
