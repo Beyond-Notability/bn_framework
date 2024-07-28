@@ -29,7 +29,7 @@ Childbirth
 ----------
 
 - tooltips need some work
-- a bit more activity data? (RAI/SAL elections?)
+- a bit more activity data? (RAI/SAL elections? spoke at?)
 
 
 
@@ -37,9 +37,7 @@ Education
 --------
 
 - custom d3 shapes?
-- add earliest/latest dates for educated at
 - code for the two tables needs review and cleanup now the toggle is working
-
 
 
 Residence
