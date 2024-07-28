@@ -19,4 +19,4 @@ jsonlite::write_json(bn_women_educated_start_end_years, "start_end_pairs.json")
 write_csv(bn_women_education_degrees2, "educated_degrees2.csv")
 write_csv(bn_women_educated_start_end_years, "educated_degrees2.csv")
 system("zip - -r .")
-  
+    

@@ -13,9 +13,8 @@ WHERE {
       optional {?s bnpq:P109 ?organised . } # some extension centres
       optional {?s bnpq:P60 ?subject . } 
    
-   # CHANGE: add P51 (latest). #### 
-   # CHANGE: simple dates instead of precision. ####
-   # no sign of any P53; seems unlikely to change so late in the day (but keep an eye on it?)
+   # CHANGE: add P51 (latest).  
+   # CHANGE: simple dates instead of precision. 
   # dates. 
          # pit/start/end/latest. there are no earliest at present
       ?s (bnpq:P1 | bnpq:P27 | bnpq:P28 | bnpq:P51  ) ?date . 
@@ -32,12 +31,9 @@ bn_women_educated_dates_query <-
   mutate(across(c(university, organised, subject, universityLabel, organisedLabel, subjectLabel), ~na_if(., ""))) |>
   mutate(date_label = date_property_labels(date_prop)) |>
   # CHANGES ####
-  # precision dropped
   # use make date function; filter NAs 
   make_date_year() |>
   filter(!is.na(date)) |>
-  # mutate(date = parse_date_time(date, "ymdHMS"))  |>
-  # mutate(year = year(date)) |>
   relocate(person, s, .after = last_col())
 
 
@@ -49,7 +45,6 @@ bn_women_educated_dates_query |>
   # drop all alternative provision including extension centres for now. then don't need date_precision as all are year.
   filter(college != "Q2485") |>
   # distinct fixes dups caused by subjects 
-  # CHANGE dropped original date_qual ####
   distinct(bn_id, personLabel, collegeLabel, college, universityLabel, university, date, year, date_label, s) |>
   # c() in values_from. that's all folks
   pivot_wider(names_from = date_label, values_from = c(date, year)) |>
@@ -65,7 +60,7 @@ bn_women_educated_dates_query |>
   )) |>
   # col names are long... if renaming, need to be careful that new col names will be unique.
   #rename_with(~str_remove(., "^date_"), starts_with("date_")) |>
-  # CHANGE include latest date ####
+  # CHANGE include latest date
   mutate(date_pairs = case_when(
     !is.na(date_point_in_time) ~ "1 single",
     !is.na(date_start_time) & !is.na(date_end_time) ~ "2 both",
@@ -80,10 +75,10 @@ bn_women_educated_dates_query |>
   filter(!is.na(bn_dob_yr))
 
 
-# not sure this is used anywhere now.
+# [not sure this is used anywhere now.]
 bn_women_educated_dates_long <-
 bn_women_educated_dates_wide |>
-  # CHANGE add year_latest_date ####
+  # CHANGE add year_latest_date 
   select(bn_id, person_label, college_label, university_label, by_label, year_start_time, year_end_time, year_point_in_time, year_latest_date,
          date_pairs, bn_dob_yr, bn_dod_yr, s ) |>
   pivot_longer(c(year_start_time, year_end_time, year_point_in_time, year_latest_date ), names_to = "year_type", values_to = "year", values_drop_na = TRUE) |>
@@ -168,6 +163,7 @@ bn_academic_degrees |>
 #   add_count(s) |> filter(n>1)
 
 
+# simple version without filling in between start and end pairs
 bn_women_education_degrees <-
 bind_rows(
   bn_women_educated_dates_long |>	mutate(src="educated") |> 		
@@ -185,7 +181,7 @@ bind_rows(
 
 
 
-# start-end interval years filled in. start-end pairs only.
+# start-end interval years filled in. start-end pairs only. is this used?
 bn_women_educated_start_end_years <-
 bn_women_educated_dates_wide |>
   filter(date_pairs=="2 both") |>
@@ -201,7 +197,7 @@ bn_women_educated_dates_wide |>
 # version with start-end interval years filled in. start/end only treated like point
 bn_women_educated_ages_long <-
 bn_women_educated_dates_wide |>
-  # CHANGE add latest date ####
+  # CHANGE add latest date 
   mutate(start_year = case_when(
     !is.na(year_latest_date) ~ year_latest_date,
     date_pairs=="2 both" ~ year_start_time,
@@ -219,8 +215,8 @@ bn_women_educated_dates_wide |>
   # purrr::map2 and seq() to fill out a list from a start number to given end number. then unnest to put each one on a new row.
   mutate(year = map2(start_year, end_year, ~seq(.x, .y, by=1))) |>
   unnest(year)  |>
-  # CHANGE add latest_date ####
-  # CHANGE _ to space in year type #### 
+  # CHANGE add latest_date 
+  # CHANGE _ to space in year type 
   mutate(year_type= case_when(
     !is.na(year_latest_date) ~ "latest date",
     date_pairs=="1 single" ~ "point in time",

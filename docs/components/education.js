@@ -7,21 +7,16 @@ import * as d3 from "npm:d3";
 const color_time = Plot.scale({
 		color: {
 			range: ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "lightgray"], 
-			domain: ["point_in_time", "start_time", "end_time", "latest_date", "filled"]
+			domain: ["point in time", "start time", "end time", "latest date", "filled"]
 		}
 	});
 
-
-
-// not using this yet....
-const shape_time = Plot.scale({ 	
+const symbol_time = Plot.scale({ 	
     symbol: {legend:true, 
     				range: ["triangle", "diamond2", "diamond2", "star", "square"], 
-						domain: ["point_in_time", "start_time", "end_time", "latest_date", "filled"]
+						domain: ["point in time", "start time", "end time", "latest date", "filled"]
 		}
 	});
-	
-	
 	
 const plot_height = 6000;
 const plot_marginTop = 10;
@@ -56,13 +51,12 @@ export function educatedYearsChart(data, {width}) {
     	
     y: {label: null}, // this affects tooltip label too  
     
-    symbol: {legend:true, range: ["diamond", "triangle", "wye", "star", "square"], 
-		domain: ["point_in_time", "start_time", "end_time", "latest_date", "filled"]},	
+    symbol: symbol_time,
     color: color_time,
     
     marks: [
     	
-    	// RULES
+    	// GUIDE LINES
       
     	// turn into separate rule for education? needs separate year_last as well
     	
@@ -296,9 +290,7 @@ export function educatedAgesChart(data, {width}) {
     	axis: "both" // "both" top and bottom of graph. null for nothing.
     	}, 
     y: {label: null}, // this affects tooltip label too  
-    symbol: {legend:true, 
-    				range: ["triangle", "diamond2", "diamond2", "star", "square"], 
-						domain: ["point_in_time", "start_time", "end_time", "latest_date", "filled"]},
+    symbol: symbol_time,
     color: color_time,
     marks: [
     	
