@@ -1,10 +1,10 @@
 
 # shared libraries, functions etc ####
 
-source("./docs/data/shared.R") 
+source("./src/data/shared.R") 
 
 
-source("./docs/data/r_events_code.R")
+source("./src/data/r_events_code.R")
 
 
 

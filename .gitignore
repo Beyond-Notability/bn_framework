@@ -1,4 +1,4 @@
 .DS_Store
-docs/.observablehq/cache/
+src/.observablehq/cache/
 node_modules/
 yarn-error.log

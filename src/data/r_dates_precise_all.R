@@ -68,7 +68,7 @@ bn_precise_dates_all_query |>
 
 ## edtf-notes ####
 
-## docs: The characters '?', '~' and '%' are used to mean "uncertain", "approximate", and "uncertain" as well as "approximate", respectively. These characters may occur only at the end of the date string and apply to the entire date.
+## The characters '?', '~' and '%' are used to mean "uncertain", "approximate", and "uncertain" as well as "approximate", respectively. These characters may occur only at the end of the date string and apply to the entire date.
 
 #    parse_date_time('1984?', "y")  # ? is ignored and date parsed as 1984-01-01  
 #    parse_date_time('2004-06~', "ym") # ~ is ignored and date parsed as 2004-06-01

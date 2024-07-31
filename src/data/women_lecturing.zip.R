@@ -1,6 +1,6 @@
 # shared libraries, functions etc ####
 
-source("./docs/data/shared.R") 
+source("./src/data/shared.R") 
 
 
 

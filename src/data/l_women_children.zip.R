@@ -1,7 +1,7 @@
 
-source("./docs/data/shared.R") 
+source("./src/data/shared.R") 
 
-source("./docs/data/r_women_children.R")
+source("./src/data/r_women_children.R")
 
 
 

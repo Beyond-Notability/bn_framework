@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Education | Beyond Notability</title>
+<title>BN categories | Beyond Notability</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
-<link rel="preload" as="style" href="./_observablehq/theme-air,near-midnight,alt,wide.css">
-<link rel="preload" as="style" href="./_observablehq/stdlib/inputs.css">
+<link rel="preload" as="style" href="./_observablehq/theme-air,near-midnight.css">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
-<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air,near-midnight,alt,wide.css">
-<link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.css">
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air,near-midnight.css">
 <link rel="modulepreload" href="./_observablehq/client.js">
 <link rel="modulepreload" href="./_observablehq/runtime.js">
 <link rel="modulepreload" href="./_observablehq/stdlib.js">
-<link rel="modulepreload" href="./_import/components/education.c32f17eb.js">
 <link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.15/_esm.js">
 <link rel="modulepreload" href="./_npm/d3@7.9.0/_esm.js">
-<link rel="modulepreload" href="./_observablehq/stdlib/inputs.js">
-<link rel="modulepreload" href="./_npm/htl@0.3.1/_esm.js">
 <link rel="modulepreload" href="./_npm/isoformat@0.2.1/_esm.js">
 <link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/_esm.js">
 <link rel="modulepreload" href="./_npm/d3-array@3.2.4/_esm.js">
@@ -58,64 +53,29 @@
 import {define} from "./_observablehq/client.js";
 import {registerFile} from "./_observablehq/stdlib.js";
 
-registerFile("./data/l_dates_education/educated_degrees2.json", {"name":"./data/l_dates_education/educated_degrees2.json","mimeType":"application/json","path":"./_file/data/l_dates_education/educated_degrees2.47e32c27.json","lastModified":1722157041948});
+registerFile("./data/instance_of_tree.json", {"name":"./data/instance_of_tree.json","mimeType":"application/json","path":"./_file/data/instance_of_tree.a2fd658a.json","lastModified":1722186031475});
 
-define({id: "31c7da76", inputs: ["view","makeToggle"], outputs: ["makeToggleView"], body: (view,makeToggle) => {
-// toggle baby! 8-)
-const makeToggleView = view(makeToggle);
-return {makeToggleView};
+define({id: "935c4cf9", inputs: ["FileAttachment"], outputs: ["io"], body: (FileAttachment) => {
+const io = FileAttachment("./data/instance_of_tree.json").json();
+return {io};
 }});
 
-define({id: "00cc9f2f", mode: "inline", inputs: ["makeChart","makeToggleView","display"], body: async (makeChart,makeToggleView,display) => {
+define({id: "9392474f", inputs: ["Plot","io","display"], body: async (Plot,io,display) => {
 display(await(
-makeChart(makeToggleView) 
+Plot.plot({
+  axis: null,
+  height: 1000,
+  margin: 10,
+  marginLeft: 70,
+  marginRight: 100,
+  marks: [
+    Plot.tree(io, {textStroke: "white"})
+  ]
+})
+
+// tree seems a more easily understandable layout for this data.
+// cluster > Like tree, except sets the treeLayout option to d3.cluster, aligning leaf nodes, and defaults the textLayout option to mirrored.
 ))
-}});
-
-define({id: "e78adc85", outputs: ["educatedAgesChart","educatedYearsChart"], body: async () => {
-const {educatedAgesChart, educatedYearsChart} = await import("./_import/components/education.c32f17eb.js");
-// Import components
-
-return {educatedAgesChart,educatedYearsChart};
-}});
-
-define({id: "63b20d73", inputs: ["FileAttachment"], outputs: ["education"], body: (FileAttachment) => {
-// load data
-const education = FileAttachment("./data/l_dates_education/educated_degrees2.json").json({typed: true});
-return {education};
-}});
-
-define({id: "5c60c82a", outputs: ["whichTitle"], body: () => {
-const whichTitle = (select) => {
-  return select === "dates" ?  
-  "chart by date" : "chart by age" 
-};
-return {whichTitle};
-}});
-
-define({id: "31e68c75", inputs: ["Inputs"], outputs: ["makeToggle"], body: (Inputs) => {
-// make the radio button for the toggle
-const makeToggle =
-		Inputs.radio(
-			["dates", "ages"],  
-			{
-				label: "View by: ", 
-				value:"dates", // preference
-				}
-			);
-return {makeToggle};
-}});
-
-define({id: "f150f171", inputs: ["resize","educatedYearsChart","education","educatedAgesChart"], outputs: ["makeChart"], body: (resize,educatedYearsChart,education,educatedAgesChart) => {
-// toggle function
-//i'd quite like less repetition in here but i can live with it.
-const makeChart = (selection) => {
-  return selection === "dates" ?  
-  resize((width) => educatedYearsChart(education, {width})) : 
-  resize((width) => educatedAgesChart(education, {width})) 
-}
-
-return {makeChart};
 }});
 
 </script>
@@ -128,10 +88,10 @@ return {makeChart};
   </ol>
   <ol>
     <li class="observablehq-link"><a href="./all-dates.html">(Almost) All the Dates</a></li>
-    <li class="observablehq-link observablehq-link-active"><a href="./education.html">Education</a></li>
+    <li class="observablehq-link"><a href="./education.html">Education</a></li>
     <li class="observablehq-link"><a href="./mothers.html">Motherhood</a></li>
     <li class="observablehq-link"><a href="./todo.html">Todo</a></li>
-    <li class="observablehq-link"><a href="./tree.html">BN categories</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./tree.html">BN categories</a></li>
     <li class="observablehq-link"><a href="./women-event-types.html">Participation in Events</a></li>
     <li class="observablehq-link"><a href="./women-lecturers.html">Lecturers</a></li>
   </ol>
@@ -139,23 +99,12 @@ return {makeChart};
 <script>{Object.assign(document.createElement("a"),{href:""}).password&&location.replace(location.href);const e=document.querySelector("#observablehq-sidebar"),t=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?t.checked=r==="true":t.indeterminate=!0;for(const o of document.querySelectorAll("#observablehq-sidebar summary")){const s=o.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${o.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
 <div id="observablehq-center">
 <main id="observablehq-main" class="observablehq">
-<h1 id="timelines-of-higher-education" tabindex="-1"><a class="observablehq-header-anchor" href="#timelines-of-higher-education">Timelines of higher education</a></h1>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-<div class="observablehq observablehq--block"><!--:31c7da76:--></div>
-<div class="grid grid-cols-1">
-  <div class="card">
-    <observablehq-loading></observablehq-loading><!--:00cc9f2f:-->
-  </div>
-</div>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-<div class="observablehq observablehq--block"><!--:e78adc85:--></div>
-<div class="observablehq observablehq--block"><!--:63b20d73:--></div>
-<div class="observablehq observablehq--block"><!--:5c60c82a:--></div>
-<div class="observablehq observablehq--block"><!--:31e68c75:--></div>
-<div class="observablehq observablehq--block"><!--:f150f171:--></div>
+<h1 id="'instance-of'-tree-diagram" tabindex="-1"><a class="observablehq-header-anchor" href="#'instance-of'-tree-diagram">'Instance of' tree diagram</a></h1>
+<div class="observablehq observablehq--block"><!--:935c4cf9:--></div>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:9392474f:--></div>
 </main>
 <footer id="observablehq-footer">
-<nav><a rel="prev" href="./all-dates.html"><span>(Almost) All the Dates</span></a><a rel="next" href="./mothers.html"><span>Motherhood</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-07-31T16:31:45">Jul 31, 2024</a>.</div>
+<nav><a rel="prev" href="./todo.html"><span>Todo</span></a><a rel="next" href="./women-event-types.html"><span>Participation in Events</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-07-31T17:22:41">Jul 31, 2024</a>.</div>
 </footer>
 </div>
