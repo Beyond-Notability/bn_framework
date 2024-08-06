@@ -31,7 +31,7 @@ export default {
   // pager: true, // whether to show previous & next links in the footer
   
   root: "src", // path to the source root for preview
-  output: "docs", // path to the output root for build
+  output: "dist", // path to the output root for build
   
   // search: true, // activate search
 
