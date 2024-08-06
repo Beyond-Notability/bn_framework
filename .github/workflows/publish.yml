@@ -26,7 +26,7 @@ jobs:
             any::patchwork
             any::ggthemes
             any::ggalt
-            any::SPARQLchunks
+            github::SPARQLchunks
             any::here
 # original script from here except path
       - name: Checkout
