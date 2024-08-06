@@ -25,3 +25,8 @@ For more, see <https://observablehq.com/framework/getting-started>.
 ## Installed extensions
 
 - [markdown-it-footnote](https://github.com/markdown-it/markdown-it-footnote)
+
+
+## Deployment
+
+GH Actions h/t [billmill.org](https://notes.billmill.org/programming/observable_framework/github_workflow_for_publishing_an_observable_framework.html)
