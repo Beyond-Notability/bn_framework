@@ -16,7 +16,7 @@ bn_women_events_of_dates_types |>
   filter(n_bn>=5) |>
   #select(bn_id, personLabel, event_type, n_bn, event_org) |>
   # make it json
-  jsonlite::toJSON()
+  toJSON()
 
  
 # zip(zipfile, files)

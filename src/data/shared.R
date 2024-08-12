@@ -1,31 +1,166 @@
 
 # frequently used libraries ####
 
-library(knitr)
-library(kableExtra)
+#library(knitr)
+#library(kableExtra)
 
-library(readxl) 
+#library(readxl) 
 #library(writexl)
 
 library(jsonlite)
 library(janitor)
-library(scales)
+#library(scales)
 library(glue)
 
 library(tidytext)
 
-library(tidyverse)
+#library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(readr)
+library(stringr)
+library(purrr)
+
+library(lubridate)
+library(httr)
+library(curl)
 
 # viz/ggplot extras
 
-library(patchwork)
+#library(patchwork)
 
-library(ggthemes)
-library(ggalt)
+#library(ggthemes)
+#library(ggalt)
 
 
 # wikidata/sparql etc
-library(SPARQLchunks) # can't get chunks working! but it's fine for inline queries.
+#library(SPARQLchunks) # can't get chunks working! but it's fine for inline queries.
+
+
+#' Fetch data from a SPARQL endpoint and store the output in a dataframe
+#' @param endpoint The SPARQL endpoint (a URL)
+#' @param query The SPARQL query (character)
+#' @param autoproxy Try to detect a proxy automatically (boolean). Useful on Windows machines behind corporate firewalls
+#' @param auth Authentication Information (httr-authenticate-object)
+#' @examples library(SPARQLchunks)
+#' endpoint <- "https://lindas.admin.ch/query"
+#' query <- "PREFIX schema: <http://schema.org/>
+#'   SELECT * WHERE {
+#'   ?sub a schema:DataCatalog .
+#'   ?subtype a schema:DataType .
+#' }"
+#' result_df <- sparql2df(endpoint, query)
+#' @export
+sparql2df <- function(endpoint, query, autoproxy = FALSE, auth = NULL) {
+  if (autoproxy) {
+    proxy_config <- autoproxyconfig(endpoint)
+  } else {
+    proxy_config <- httr::use_proxy(url = NULL)
+  }
+  acceptype <- "text/csv"
+  outcontent <- get_outcontent(endpoint, query, acceptype, proxy_config, auth)
+  out <- textConnection(outcontent)
+  df <- utils::read.csv(out)
+  return(df)
+}
+
+
+
+#' Try to determine the proxy settings automatically
+#' @param endpoint The SPARQL endpoint (URL)
+autoproxyconfig <- function(endpoint) {
+  message("Trying to determine proxy parameters")
+  proxy_url <- tryCatch(
+    {
+      curl::ie_get_proxy_for_url(endpoint)
+    },
+    error = function(e) {
+      message("Automatic proxy detection with curl::curl::ie_get_proxy_for_url() failed.")
+      return(NULL)
+    }
+  )
+  if (!is.null(proxy_url)) {
+    message(paste("Using proxy:", proxy_url))
+  } else {
+    message(paste("No proxy found or needed to access the endpoint", endpoint))
+  }
+  return(httr::use_proxy(url = proxy_url))
+}
+
+#' Get the content from the endpoint
+#' @param endpoint The SPARQL endpoint (URL)
+#' @param query The SPARQL query (character)
+#' @param acceptype 'text/csv' or 'text/xml' (character)
+#' @param proxy_config Detected proxy configuration (list)
+#' @param auth Authentication Information (httr-authenticate-object)
+get_outcontent <- function(endpoint, query, acceptype, proxy_config, auth = NULL) {
+  qm <- paste(endpoint, "?", "query", "=",
+    gsub("\\+", "%2B", utils::URLencode(query, reserved = TRUE)), "",
+    sep = ""
+  )
+
+  outcontent <- tryCatch(
+    {
+      out <- httr::GET(
+        qm,
+        proxy_config, auth,
+        httr::timeout(60),
+        httr::add_headers(c(Accept = acceptype))
+      )
+      httr::content(out, "text", encoding = "UTF-8")
+    },
+    error = function(e) {
+      # @see https://github.com/r-lib/httr/issues/417 The download.file function in base R uses IE settings, including proxy password, when you use download
+      # method wininet which is now the default on windows.
+      if (.Platform$OS.type == "windows") {
+        tempfile <- file.path(tempdir(), "temp.txt")
+        utils::download.file(qm,
+          method = "wininet",
+          headers = c(Accept = acceptype),
+          tempfile
+        )
+        temp <- paste(readLines(tempfile), collapse = "\n")
+        unlink(tempfile)
+        return(temp)
+      }
+    }
+  )
+  if (nchar(outcontent) < 1) {
+    warning(paste0(
+      "First query attempt result is empty. Trying without '",
+      acceptype,
+      "' header. The result is not guaranteed to be a list."
+    ))
+    outcontent <- tryCatch(
+      {
+        out <- httr::GET(
+          qm,
+          proxy_config, auth,
+          httr::timeout(60)
+        )
+        if (out$status == 401) {
+          warning("Authentication required. Provide valid authentication with the auth parameter")
+        } else {
+          httr::warn_for_status(out)
+        }
+        httr::content(out, "text", encoding = "UTF-8")
+      },
+      error = function(e) {
+        if (.Platform$OS.type == "windows") {
+          tempfile <- file.path(tempdir(), "temp.txt")
+          utils::download.file(qm, method = "wininet", tempfile)
+          temp <- paste(readLines(tempfile), collapse = "\n")
+          unlink(tempfile)
+          return(temp)
+        }
+      }
+    )
+    if (nchar(outcontent) < 1) {
+      warning("The query result is still empty")
+    }
+  }
+  return(outcontent)
+}
 
 
 
@@ -36,7 +171,7 @@ bn_std_query <- function(sparql){
     bn_prefixes,
     sparql
   )) |>
-    SPARQLchunks::sparql2df(endpoint=bn_endpoint) 
+    sparql2df(endpoint=bn_endpoint) 
 }
 
 

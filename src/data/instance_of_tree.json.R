@@ -71,4 +71,4 @@ bn_instance_of_paths_main_qual  |>
   
 bn_instance_of_paths_collapsed |>
   pull(paths) |>
-  jsonlite::toJSON()
+  toJSON()

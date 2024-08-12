@@ -10,7 +10,7 @@ source("./src/data/events_code.R")
 
 bn_women_events_of_dates_types |>
 	select(event_instance_id, event_type) |>
-   jsonlite::toJSON()
+   toJSON()
 #  write_csv(stdout()) # work out how to do this at some point...
 
 
