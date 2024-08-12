@@ -1,7 +1,7 @@
 ---
 theme: dashboard
 title: Todo
-toc: false
+toc: true
 ---
 
 Summary of pages
@@ -15,7 +15,8 @@ Summary of pages
 
 Other pages retained (for now) for reference. 
 
- 
+Updated 12/8/24 to use Github Actions.
+
 
 All the dates
 ------------
