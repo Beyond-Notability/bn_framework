@@ -2,7 +2,7 @@ import * as Plot from "npm:@observablehq/plot";
 
 
 
-export function hadChildrenAgesChart(data, lastAges, workYearsWithChildren, servedYearsWithChildren, {width}) {
+export function hadChildrenAgesChart(data, lastAges, workServedYearsWithChildren, {width}) {
 
   return Plot.plot({
   
@@ -20,6 +20,10 @@ export function hadChildrenAgesChart(data, lastAges, workYearsWithChildren, serv
     	},
     y: {label: null}, // this affects tooltip label too
     
+    symbol: {range: ["circle", "diamond2"], 
+				 domain: ["work", "served"]
+		},
+		    
     marks: [
       
       // horizontal guideline
@@ -54,48 +58,43 @@ export function hadChildrenAgesChart(data, lastAges, workYearsWithChildren, serv
       // needs to come *after* leftmost ruleY
       Plot.ruleX([15]), // makes X start at 15. 
          
-      // dots for work
-    	Plot.dot(workYearsWithChildren , 
+
+      // dots for combined activity. 
+      
+    	Plot.dot(workServedYearsWithChildren , 
     		{
-    			x:"work_age",
+    			x:"activity_age",
     			y:"personLabel",
     			strokeOpacity:0.7,
     			r:4,
-    			title: "positions", // TODO better tips
-    			//channels: {
-    			//	"positions": "positions",
-    			//},
+    			symbol:"activity",
+    			//title: "positions", // TODO better tips
+    			channels: {
+    				"position": "positions",
+    				"service": "service",
+    				"year": "start_year",
+    				"age": "activity_age",
+    			},
     			tip: {
-    			//format: {
-      			  //y: false, // now need to exclude this explicitly
-      			  //x: false
-    			//},
+    			format: {
+      			  y: false, // now need to exclude this explicitly
+      			  x: false,
+      			  symbol:false,
+      			  position:true,
+      			  service:true,
+      			  "year": (d) => `${d}`,
+      			  age:true
+    			},
     			anchor:"top", // tips below the line
     			}
     		}
     	)  ,
 
-			// dots for served on
-    	Plot.dot(servedYearsWithChildren , 
-    		{
-    			x:"served_age",
-    			y:"personLabel",
-    			strokeOpacity:0.7,
-    			r:3.5,
-    			symbol: "diamond",
-    			title: "service", // TODO better tips
-    
-    			tip: {
-    			//format: {
-      			  //y: false, // now need to exclude this explicitly
-      			  //x: false
-    			//},
-    			anchor:"top", // tips below the line
-    			}
-    		}
-    	)  ,
+
+    	
+	
     	   
-    	// barcode style for birth years
+    	// barcode style for birth years [go in last so they're on top]
       Plot.tickX(data, 
       	{
       		x: "age", 

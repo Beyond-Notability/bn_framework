@@ -273,6 +273,34 @@ bn_served_years_children <-
 # repeat same process to add any other categories.
 
 
+
+# combine work/service into a single df
+
+bn_work_served_years_children <-
+ bind_rows( 
+   bn_served_years |>
+  filter(children=="y" & served_age <= 70) |> # probably some older but lets stop here...
+  mutate(last_activity_age = max(served_age), .by = bn_id) |>
+  # just in case last child age is later than last work...
+  mutate(last_activity_age = if_else(last_activity_age>last_age, last_activity_age, last_age)) |>
+  rename(activity_age = served_age) |>
+  mutate(activity="served")
+  ,
+  bn_work_years |>
+	filter(children=="y" & work_age <= 70) |> # a few older but lets stop here...
+	mutate(last_activity_age = max(work_age), .by = bn_id) |>
+  # just in case last child age is later than last work...
+	mutate(last_activity_age = if_else(last_activity_age>last_age, last_activity_age, last_age)) |>
+  rename(activity_age=work_age) |>
+  mutate(activity = "work")) |>
+  relocate(positions, .after = service)  |>
+  #if she has positions and service in the same year, drop service.
+  group_by(bn_id, start_year) |>
+  arrange(positions, service, .by_group = TRUE) |>
+  top_n(-1, row_number()) |>
+  ungroup()
+
+
 ## make updated last_age for ruleY. don't need first because start is fixed at 15.
 ## but do need bn_dob_yr for sorting
 

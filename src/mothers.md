@@ -19,7 +19,7 @@ This graph shows all the women in our wikibase for whom we have ['had child in']
 
 <div class="grid grid-cols-1">
   <div class="card">
-    ${resize((width) => hadChildrenAgesChart(hadChildrenAges, lastAges, workYearsWithChildren, servedYearsWithChildren, {width}))}
+    ${resize((width) => hadChildrenAgesChart(hadChildrenAges, lastAges, workServedYearsWithChildren, {width}))}
   </div>
 </div>
 
@@ -64,9 +64,11 @@ import {hadChildrenAgesChart} from "./components/mothers.js";
 
 const hadChildrenAges = FileAttachment("data/l_women_children/had-children-ages.csv").csv({typed: true});
 
-const workYearsWithChildren = FileAttachment("data/l_women_children/work-years-with-children.csv").csv({typed:true});
+//const workYearsWithChildren = FileAttachment("data/l_women_children/work-years-with-children.csv").csv({typed:true});
 
-const servedYearsWithChildren = FileAttachment("data/l_women_children/served-years-with-children.csv").csv({typed:true});
+//const servedYearsWithChildren = FileAttachment("data/l_women_children/served-years-with-children.csv").csv({typed:true});
+
+const workServedYearsWithChildren = FileAttachment("data/l_women_children/work-served-years-with-children.csv").csv({typed:true});
 
 const lastAges = FileAttachment("data/l_women_children/consolidated-last-ages.csv").csv({typed:true});
 
