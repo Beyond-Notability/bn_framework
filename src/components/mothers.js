@@ -2,19 +2,20 @@ import * as Plot from "npm:@observablehq/plot";
 
 
 
-export function hadChildrenAgesChart(data, lastAges, workServedYearsWithChildren, {width}) {
+export function hadChildrenAgesChart(data, lastAges, workServedYearsWithChildren, {width}, plotTitle, plotHeight) {
 
   return Plot.plot({
   
-    title: "The ages at which BN women had children, sorted by mothers' dates of birth",
+    title: plotTitle,
     
     width,
-    height: 1600,
-    marginTop: 10,
+    height: plotHeight,
+    marginTop: 25,
     marginLeft: 180,
     
     x: {
     	grid: true, 
+    	//tickFormat: d3.format('d'),
     	label: "age at birth of child", // why does this not show at top as well?
     	axis: "both" // "both" top and bottom. [null for nothing.]
     	},
@@ -25,6 +26,16 @@ export function hadChildrenAgesChart(data, lastAges, workServedYearsWithChildren
 		},
 		    
     marks: [
+
+			// in order to have axis label at top and bottom... 
+//    	Plot.axisX({anchor: "top", 
+//      						label: "age at birth of child", 
+//      						tickFormat: d3.format('d')}
+//      						),
+//      Plot.axisX({anchor: "bottom", 
+//      						label: "age at birth of child", 
+//      						tickFormat: d3.format('d')}
+//      						),
       
       // horizontal guideline
       // age 15 to last event. 

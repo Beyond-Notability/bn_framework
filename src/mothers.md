@@ -19,7 +19,7 @@ This graph shows all the women in our wikibase for whom we have ['had child in']
 
 <div class="grid grid-cols-1">
   <div class="card">
-    ${resize((width) => hadChildrenAgesChart(hadChildrenAges, lastAges, workServedYearsWithChildren, {width}))}
+    ${resize((width) => hadChildrenAgesChart(hadChildrenAges, lastAges, workServedYearsWithChildren, {width}, plotTitle, plotHeight))}
   </div>
 </div>
 
@@ -53,6 +53,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 [^1]: [Observable Framework Markdown](https://observablehq.com/framework/markdown)
 [^2]: [Footnote extension for OF](https://observablehq.observablehq.cloud/framework-example-markdown-it-footnote/)
 
+```js
+// editables
+
+const plotTitle = "The ages at which BN women had children, sorted by mothers' dates of birth";
+
+const plotHeight = 1500;
+```
 
 ```js
 // Import components

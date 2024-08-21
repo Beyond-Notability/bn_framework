@@ -3,6 +3,7 @@ import * as d3 from "npm:d3";
 
 	
 // share as much as possible between the two versions of the chart
+// several very small differences in text between year and age; not quite worked out how to handle those yet
 
 const color_time = Plot.scale({
 		color: {
