@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Education | Beyond Notability</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
+<link rel="preload" as="style" href="./_observablehq/theme-air,near-midnight,alt,wide.css">
+<link rel="preload" as="style" href="./_observablehq/stdlib/inputs.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air,near-midnight,alt,wide.css">
+<link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.css">
+<link rel="modulepreload" href="./_observablehq/client.js">
+<link rel="modulepreload" href="./_observablehq/runtime.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.js">
+<link rel="modulepreload" href="./_import/components/education.c32f17eb.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.16/_esm.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/_esm.js">
+<link rel="modulepreload" href="./_observablehq/stdlib/inputs.js">
+<link rel="modulepreload" href="./_npm/htl@0.3.1/_esm.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/_esm.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/_esm.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/_esm.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.2/_esm.js">
+<script type="module">
+
+import {define} from "./_observablehq/client.js";
+import {registerFile} from "./_observablehq/stdlib.js";
+
+registerFile("./data/l_dates_education/educated_degrees2.json", {"name":"./data/l_dates_education/educated_degrees2.json","mimeType":"application/json","path":"./_file/data/l_dates_education/educated_degrees2.47e32c27.json","lastModified":1723058429088});
+
+define({id: "31c7da76", inputs: ["view","makeToggle"], outputs: ["makeToggleView"], body: (view,makeToggle) => {
+// toggle baby! 8-)
+const makeToggleView = view(makeToggle);
+return {makeToggleView};
+}});
+
+define({id: "00cc9f2f", mode: "inline", inputs: ["makeChart","makeToggleView","display"], body: async (makeChart,makeToggleView,display) => {
+display(await(
+makeChart(makeToggleView) 
+))
+}});
+
+define({id: "e78adc85", outputs: ["educatedAgesChart","educatedYearsChart"], body: async () => {
+const {educatedAgesChart, educatedYearsChart} = await import("./_import/components/education.c32f17eb.js");
+// Import components
+
+return {educatedAgesChart,educatedYearsChart};
+}});
+
+define({id: "63b20d73", inputs: ["FileAttachment"], outputs: ["education"], body: (FileAttachment) => {
+// load data
+const education = FileAttachment("./data/l_dates_education/educated_degrees2.json").json({typed: true});
+return {education};
+}});
+
+define({id: "5c60c82a", outputs: ["whichTitle"], body: () => {
+const whichTitle = (select) => {
+  return select === "dates" ?  
+  "chart by date" : "chart by age" 
+};
+return {whichTitle};
+}});
+
+define({id: "31e68c75", inputs: ["Inputs"], outputs: ["makeToggle"], body: (Inputs) => {
+// make the radio button for the toggle
+const makeToggle =
+		Inputs.radio(
+			["dates", "ages"],  
+			{
+				label: "View by: ", 
+				value:"dates", // preference
+				}
+			);
+return {makeToggle};
+}});
+
+define({id: "f150f171", inputs: ["resize","educatedYearsChart","education","educatedAgesChart"], outputs: ["makeChart"], body: (resize,educatedYearsChart,education,educatedAgesChart) => {
+// toggle function
+//i'd quite like less repetition in here but i can live with it.
+const makeChart = (selection) => {
+  return selection === "dates" ?  
+  resize((width) => educatedYearsChart(education, {width})) : 
+  resize((width) => educatedAgesChart(education, {width})) 
+}
+
+return {makeChart};
+}});
+
+</script>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Beyond Notability</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./all-dates.html">(Almost) All the Dates</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./education.html">Education</a></li>
+    <li class="observablehq-link"><a href="./mothers.html">Motherhood</a></li>
+    <li class="observablehq-link"><a href="./todo.html">Todo</a></li>
+    <li class="observablehq-link"><a href="./tree.html">BN categories</a></li>
+    <li class="observablehq-link"><a href="./women-event-types.html">Participation in Events</a></li>
+    <li class="observablehq-link"><a href="./women-lecturers.html">Lecturers</a></li>
+  </ol>
+</nav>
+<script>{Object.assign(document.createElement("a"),{href:""}).password&&location.replace(location.href);const e=document.querySelector("#observablehq-sidebar"),t=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?t.checked=r==="true":t.indeterminate=!0;for(const o of document.querySelectorAll("#observablehq-sidebar summary")){const s=o.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${o.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<main id="observablehq-main" class="observablehq">
+<h1 id="timelines-of-higher-education" tabindex="-1"><a class="observablehq-header-anchor" href="#timelines-of-higher-education">Timelines of higher education</a></h1>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+<div class="observablehq observablehq--block"><!--:31c7da76:--></div>
+<div class="grid grid-cols-1">
+  <div class="card">
+    <observablehq-loading></observablehq-loading><!--:00cc9f2f:-->
+  </div>
+</div>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+<div class="observablehq observablehq--block"><!--:e78adc85:--></div>
+<div class="observablehq observablehq--block"><!--:63b20d73:--></div>
+<div class="observablehq observablehq--block"><!--:5c60c82a:--></div>
+<div class="observablehq observablehq--block"><!--:31e68c75:--></div>
+<div class="observablehq observablehq--block"><!--:f150f171:--></div>
+</main>
+<footer id="observablehq-footer">
+<nav><a rel="prev" href="./all-dates.html"><span>(Almost) All the Dates</span></a><a rel="next" href="./mothers.html"><span>Motherhood</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-08-07T20:33:21">Aug 7, 2024</a>.</div>
+</footer>
+</div>

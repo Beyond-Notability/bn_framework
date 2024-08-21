@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Motherhood | Beyond Notability</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
+<link rel="preload" as="style" href="./_observablehq/theme-air,near-midnight,alt,wide.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air,near-midnight,alt,wide.css">
+<link rel="modulepreload" href="./_observablehq/client.js">
+<link rel="modulepreload" href="./_observablehq/runtime.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.js">
+<link rel="modulepreload" href="./_import/components/mothers.59158579.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.16/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/_esm.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/_esm.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/_esm.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/_esm.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.2/_esm.js">
+<script type="module">
+
+import {define} from "./_observablehq/client.js";
+import {registerFile} from "./_observablehq/stdlib.js";
+
+registerFile("./data/l_women_children/consolidated-last-ages.csv", {"name":"./data/l_women_children/consolidated-last-ages.csv","mimeType":"text/csv","path":"./_file/data/l_women_children/consolidated-last-ages.91cb2438.csv","lastModified":1723058431996});
+registerFile("./data/l_women_children/had-children-ages.csv", {"name":"./data/l_women_children/had-children-ages.csv","mimeType":"text/csv","path":"./_file/data/l_women_children/had-children-ages.c3b1713d.csv","lastModified":1723058431991});
+registerFile("./data/l_women_children/served-years-with-children.csv", {"name":"./data/l_women_children/served-years-with-children.csv","mimeType":"text/csv","path":"./_file/data/l_women_children/served-years-with-children.36b5408a.csv","lastModified":1723058431994});
+registerFile("./data/l_women_children/work-years-with-children.csv", {"name":"./data/l_women_children/work-years-with-children.csv","mimeType":"text/csv","path":"./_file/data/l_women_children/work-years-with-children.73cc66e4.csv","lastModified":1723058431993});
+
+define({id: "8f21268c", mode: "inline", inputs: ["resize","hadChildrenAgesChart","hadChildrenAges","lastAges","workYearsWithChildren","servedYearsWithChildren","display"], body: async (resize,hadChildrenAgesChart,hadChildrenAges,lastAges,workYearsWithChildren,servedYearsWithChildren,display) => {
+display(await(
+resize((width) => hadChildrenAgesChart(hadChildrenAges, lastAges, workYearsWithChildren, servedYearsWithChildren, {width}))
+))
+}});
+
+define({id: "a4ebcf56", outputs: ["hadChildrenAgesChart"], body: async () => {
+const {hadChildrenAgesChart} = await import("./_import/components/mothers.59158579.js");
+// Import components
+
+return {hadChildrenAgesChart};
+}});
+
+define({id: "f1be1211", inputs: ["FileAttachment"], outputs: ["hadChildrenAges","workYearsWithChildren","servedYearsWithChildren","lastAges"], body: (FileAttachment) => {
+//load data [dataloader uses zip method to create multiple objects]
+
+const hadChildrenAges = FileAttachment("./data/l_women_children/had-children-ages.csv").csv({typed: true});
+
+const workYearsWithChildren = FileAttachment("./data/l_women_children/work-years-with-children.csv").csv({typed:true});
+
+const servedYearsWithChildren = FileAttachment("./data/l_women_children/served-years-with-children.csv").csv({typed:true});
+
+const lastAges = FileAttachment("./data/l_women_children/consolidated-last-ages.csv").csv({typed:true});
+
+return {hadChildrenAges,workYearsWithChildren,servedYearsWithChildren,lastAges};
+}});
+
+</script>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Beyond Notability</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./all-dates.html">(Almost) All the Dates</a></li>
+    <li class="observablehq-link"><a href="./education.html">Education</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./mothers.html">Motherhood</a></li>
+    <li class="observablehq-link"><a href="./todo.html">Todo</a></li>
+    <li class="observablehq-link"><a href="./tree.html">BN categories</a></li>
+    <li class="observablehq-link"><a href="./women-event-types.html">Participation in Events</a></li>
+    <li class="observablehq-link"><a href="./women-lecturers.html">Lecturers</a></li>
+  </ol>
+</nav>
+<script>{Object.assign(document.createElement("a"),{href:""}).password&&location.replace(location.href);const e=document.querySelector("#observablehq-sidebar"),t=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?t.checked=r==="true":t.indeterminate=!0;for(const o of document.querySelectorAll("#observablehq-sidebar summary")){const s=o.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${o.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<main id="observablehq-main" class="observablehq">
+<h1 id="timelines-of-childbirth" tabindex="-1"><a class="observablehq-header-anchor" href="#timelines-of-childbirth">Timelines of childbirth</a></h1>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup> Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<sup class="footnote-ref"><a href="#fn2" id="fnref2">[2]</a></sup></p>
+<div class="grid grid-cols-1">
+  <div class="card">
+    <observablehq-loading></observablehq-loading><!--:8f21268c:-->
+  </div>
+</div>
+<p>Here is an inline note.<sup class="footnote-ref"><a href="#fn3" id="fnref3">[3]</a></sup></p>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+<div class="observablehq observablehq--block"><!--:a4ebcf56:--></div>
+<div class="observablehq observablehq--block"><!--:f1be1211:--></div>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p><a href="https://observablehq.com/framework/markdown" target="_blank" rel="noopener noreferrer">Observable Framework Markdown</a> <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn2" class="footnote-item"><p><a href="https://observablehq.observablehq.cloud/framework-example-markdown-it-footnote/" target="_blank" rel="noopener noreferrer">Footnote extension for OF</a> <a href="#fnref2" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn3" class="footnote-item"><p>Inlines notes are easier to write, since
+you don't have to pick an identifier and move down to type the
+note. <a href="#fnref3" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
+</main>
+<footer id="observablehq-footer">
+<nav><a rel="prev" href="./education.html"><span>Education</span></a><a rel="next" href="./todo.html"><span>Todo</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-08-07T20:33:21">Aug 7, 2024</a>.</div>
+</footer>
+</div>
