@@ -4,8 +4,9 @@ import * as d3 from "npm:d3";
 	
 // share as much as possible between the two versions of the chart
 // several very small differences in text between year and age; not quite worked out how to handle those yet
+// but it is easy to make Age/Year consts that you can put up top; at least it's easier than looking for the right spot inside each chart.
 
-const color_time = Plot.scale({
+const colorTime = Plot.scale({
 		color: {
 			range: ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "lightgray"], 
 			domain: ["point in time", "start time", "end time", "latest date", "filled"]
@@ -13,34 +14,41 @@ const color_time = Plot.scale({
 	});
 
 // TODO not working as intended; legend disappears.
-const symbol_time = Plot.scale({ 	
+const symbolTime = Plot.scale({ 	
     symbol: {legend:true, 
     				range: ["triangle", "diamond2", "diamond2", "star", "square"], 
 						domain: ["point in time", "start time", "end time", "latest date", "filled"]
 		}
 	});
 	
-const plotHeight = 6000;
+//const plotHeight = 6000;
 const plotMarginTop = 10;
 const plotMarginLeft = 180;
 
     	//TODO a bit more space between top X axis labels and first rule?
+    	// this is an extraordinary faff. 
+    	// problem that increasing topMargin pushes down tick labels but not the axis label!!! so they overlap.
+    	// increasing space between tick labels and axis labels needs messing around with Plot.axisX() and dy, and then the tick marks are wrong. how to fix those? idk yet.
+    	
     	//TODO year of event label at both top and bottom?
+    	// can't seem to get it working for this chart even though it's working for mothers.
+    	
     	//TODO custom shapes?
+    	// I think this needs d3.js stuff.
     
 
-const plotTitle = "Higher education [TODO (dates|ages)] "
+//const plotTitle = "Higher education [TODO (dates|ages)] "
 
 const eventLabel = {label: "year of event"}
     	   	
  
 // BY DATE   	
     	
-export function educatedYearsChart(data, {width}) {
+export function educatedYearsChart(data, {width}, titleYear, plotHeight) {
 
   return Plot.plot({
   
-    title: plotTitle, //"higher education chronology (ordered by date of birth)",
+    title: titleYear, //"higher education chronology (ordered by date of birth)",
     
     width,
     height: plotHeight,
@@ -57,12 +65,12 @@ export function educatedYearsChart(data, {width}) {
     	
     y: {label: null}, // this affects tooltip label too  
     
-    //symbol: symbol_time, // not showing legend...    
+    //symbol: symbolTime, // not showing legend...    
     symbol: {legend:true, 
     				range: ["triangle", "diamond2", "diamond2", "star", "square"], 
 						domain: ["point in time", "start time", "end time", "latest date", "filled"]
 		} ,
-    color: color_time,
+    color: colorTime,
     
     marks: [
      
@@ -253,10 +261,10 @@ export function educatedYearsChart(data, {width}) {
 // BY AGE
 
 
-export function educatedAgesChart(data, {width}) {
+export function educatedAgesChart(data, {width}, titleAge, plotHeight) {
 
   return Plot.plot({
-    title: plotTitle, // "higher education and age (ordered by date of birth)",
+    title: titleAge, // "higher education and age (ordered by date of birth)",
     width,
     height: plotHeight,
     marginTop: plotMarginTop,
@@ -270,12 +278,12 @@ export function educatedAgesChart(data, {width}) {
     	//axis: "both" // "both" top and bottom of graph. null for nothing.
     	}, 
     y: {label: null}, // this affects tooltip label too  
-    //symbol: symbol_time,
+    //symbol: symbolTime,
     symbol: {legend:true, 
     				range: ["triangle", "diamond2", "diamond2", "star", "square"], 
 						domain: ["point in time", "start time", "end time", "latest date", "filled"]
 		},
-    color: color_time,
+    color: colorTime,
     marks: [
     	
     	// NEAR REPETITION
