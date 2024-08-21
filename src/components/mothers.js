@@ -16,9 +16,10 @@ export function hadChildrenAgesChart(data, lastAges, workServedYearsWithChildren
     x: {
     	grid: true, 
     	//tickFormat: d3.format('d'),
-    	label: "age at birth of child", // why does this not show at top as well?
+    	label: "age at birth of child", // only shows at bottom
     	axis: "both" // "both" top and bottom. [null for nothing.]
     	},
+    	
     y: {label: null}, // this affects tooltip label too
     
     symbol: {range: ["circle", "diamond2"], 
@@ -27,7 +28,7 @@ export function hadChildrenAgesChart(data, lastAges, workServedYearsWithChildren
 		    
     marks: [
 
-			// in order to have axis label at top and bottom... 
+			// this works in the education timeline but not here. no error message, just blank.
 //    	Plot.axisX({anchor: "top", 
 //      						label: "age at birth of child", 
 //      						tickFormat: d3.format('d')}
