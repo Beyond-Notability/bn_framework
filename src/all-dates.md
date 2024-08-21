@@ -19,7 +19,7 @@ All this information was collected as [queryable data](beyond-notability.wikibas
 
 <div class="grid grid-cols-1">
   <div class="card">
-    ${resize((width) => datesChartY(dates, {width}))}
+    ${resize((width) => datesChartY(dates, {width}, plotTitle, plotHeight))}
   </div>
 </div>
 
@@ -39,10 +39,23 @@ Indeed, places of residence are particular interesting for considering the tempo
 
 
 
+
+
+```js 
+//editables
+
+const plotTitle = "(Almost) every date as a dot";
+
+const plotHeight = 2000;
+```
+
+
+
 ```js
 // Import components
 import {datesChartY} from "./components/allTheDates2.js";
 ```
+
 
 ```js
 // load data

@@ -1,13 +1,13 @@
 import * as Plot from "npm:@observablehq/plot";
 
-export function datesChartY(data, {width}) {
+export function datesChartY(data, {width}, plotTitle, plotHeight) {
 
   return Plot.plot({
   
-    title: "Every date as a dot",
+    title: plotTitle, 
     
     width,
-    height: 2000,
+    height: plotHeight, // 2000,
     marginTop: 10,
     marginLeft: 0,
     
