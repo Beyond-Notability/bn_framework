@@ -26,6 +26,7 @@ import "./_observablehq/client.js";
     <li class="observablehq-link"><a href="./all-dates.html">(Almost) All the Dates</a></li>
     <li class="observablehq-link"><a href="./education.html">Education</a></li>
     <li class="observablehq-link"><a href="./mothers.html">Motherhood</a></li>
+    <li class="observablehq-link"><a href="./residence.html">Residence</a></li>
     <li class="observablehq-link observablehq-link-active"><a href="./todo.html">Todo</a></li>
     <li class="observablehq-link"><a href="./tree.html">BN categories</a></li>
     <li class="observablehq-link"><a href="./women-event-types.html">Participation in Events</a></li>
@@ -33,6 +34,19 @@ import "./_observablehq/client.js";
   </ol>
 </nav>
 <script>{Object.assign(document.createElement("a"),{href:""}).password&&location.replace(location.href);const e=document.querySelector("#observablehq-sidebar"),t=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?t.checked=r==="true":t.indeterminate=!0;for(const o of document.querySelectorAll("#observablehq-sidebar summary")){const s=o.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${o.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<aside id="observablehq-toc" data-selector="h1:not(:first-of-type)[id], h2:first-child[id], :not(h1) + h2[id]">
+<nav>
+<div>Contents</div>
+<ol>
+<li class="observablehq-secondary-link"><a href="#summary-of-pages">Summary of pages</a></li>
+<li class="observablehq-secondary-link"><a href="#all-the-dates">All the dates</a></li>
+<li class="observablehq-secondary-link"><a href="#childbirth">Childbirth</a></li>
+<li class="observablehq-secondary-link"><a href="#education">Education</a></li>
+<li class="observablehq-secondary-link"><a href="#residence">Residence</a></li>
+<li class="observablehq-secondary-link"><a href="#networks">Networks</a></li>
+</ol>
+</nav>
+</aside>
 <div id="observablehq-center">
 <main id="observablehq-main" class="observablehq">
 <h2 id="summary-of-pages" tabindex="-1"><a class="observablehq-header-anchor" href="#summary-of-pages">Summary of pages</a></h2>
@@ -40,34 +54,47 @@ import "./_observablehq/client.js";
 <li>All the dates data, with filters for categories</li>
 <li>Childbirth and other activities before and after</li>
 <li>Higher education and degrees timeline</li>
-<li>Something about residence and gaps in it [not started]</li>
+<li>Something about residence and gaps in it [WIP]</li>
 <li>Networks around excavation; if there is enough data. [analysis WIP]</li>
 </ol>
 <p>Other pages retained (for now) for reference.</p>
+<p>Updated 12/8/24 to use Github Actions.</p>
 <h2 id="all-the-dates" tabindex="-1"><a class="observablehq-header-anchor" href="#all-the-dates">All the dates</a></h2>
 <ul>
 <li>category filters</li>
 </ul>
 <h2 id="childbirth" tabindex="-1"><a class="observablehq-header-anchor" href="#childbirth">Childbirth</a></h2>
 <ul>
-<li>tooltips need some work</li>
 <li>a bit more activity data? (RAI/SAL elections? spoke at?)</li>
+<li>Plot.axis not working (cf education) and Idk why</li>
+</ul>
+<p>notes</p>
+<ul>
+<li>work includes <code>employed as</code> (only about 3 instances?) - maybe separate these out</li>
+<li>named children included (if they have a date of birth) as well as <code>had child in</code></li>
 </ul>
 <h2 id="education" tabindex="-1"><a class="observablehq-header-anchor" href="#education">Education</a></h2>
 <ul>
-<li>custom d3 shapes?</li>
-<li>code for the two tables needs review and cleanup now the toggle is working</li>
+<li>more sharing code between the two tables</li>
+<li>custom d3 shapes? (esp for start/end pairs)</li>
 </ul>
 <h2 id="residence" tabindex="-1"><a class="observablehq-header-anchor" href="#residence">Residence</a></h2>
-<p>?????????</p>
+<ul>
+<li>some viz on people with only residence data for early or late in life;</li>
+<li>examples of people with gaps: look at place data between those gaps, does it help explain absent residence data?</li>
+</ul>
+<p>notes</p>
+<ul>
+<li>make sure all this chimes with history of inward migration, socio-economic class dynamics [town/country, family homes], etc</li>
+</ul>
 <h2 id="networks" tabindex="-1"><a class="observablehq-header-anchor" href="#networks">Networks</a></h2>
 <ul>
-<li>will need d3 for any network graphs</li>
+<li>will need d3 for any network graphs... could avoid having network graphs at all... :-0</li>
 <li>analysis of SAL elections started but work to do on change over time (excavation networks mostly done)</li>
 </ul>
 </main>
 <footer id="observablehq-footer">
-<nav><a rel="prev" href="./mothers.html"><span>Motherhood</span></a><a rel="next" href="./tree.html"><span>BN categories</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-08-07T20:33:21">Aug 7, 2024</a>.</div>
+<nav><a rel="prev" href="./residence.html"><span>Residence</span></a><a rel="next" href="./tree.html"><span>BN categories</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-08-28T13:29:18">Aug 28, 2024</a>.</div>
 </footer>
 </div>

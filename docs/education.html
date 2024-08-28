@@ -12,7 +12,7 @@
 <link rel="modulepreload" href="./_observablehq/client.js">
 <link rel="modulepreload" href="./_observablehq/runtime.js">
 <link rel="modulepreload" href="./_observablehq/stdlib.js">
-<link rel="modulepreload" href="./_import/components/education.c32f17eb.js">
+<link rel="modulepreload" href="./_import/components/education.99a4ea78.js">
 <link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.16/_esm.js">
 <link rel="modulepreload" href="./_npm/d3@7.9.0/_esm.js">
 <link rel="modulepreload" href="./_observablehq/stdlib/inputs.js">
@@ -58,7 +58,7 @@
 import {define} from "./_observablehq/client.js";
 import {registerFile} from "./_observablehq/stdlib.js";
 
-registerFile("./data/l_dates_education/educated_degrees2.json", {"name":"./data/l_dates_education/educated_degrees2.json","mimeType":"application/json","path":"./_file/data/l_dates_education/educated_degrees2.47e32c27.json","lastModified":1723058429088});
+registerFile("./data/l_dates_education/educated_degrees2.json", {"name":"./data/l_dates_education/educated_degrees2.json","mimeType":"application/json","path":"./_file/data/l_dates_education/educated_degrees2.8466fe3d.json","lastModified":1724847916904});
 
 define({id: "31c7da76", inputs: ["view","makeToggle"], outputs: ["makeToggleView"], body: (view,makeToggle) => {
 // toggle baby! 8-)
@@ -72,29 +72,35 @@ makeChart(makeToggleView)
 ))
 }});
 
-define({id: "e78adc85", outputs: ["educatedAgesChart","educatedYearsChart"], body: async () => {
-const {educatedAgesChart, educatedYearsChart} = await import("./_import/components/education.c32f17eb.js");
+define({id: "f5e06a6f", outputs: ["plotHeight","titleAge","titleYear"], body: () => {
+// editables
+
+const plotHeight = 5000;
+
+const titleAge = "Higher education timelines: lifecycle (ordered by date of birth)";
+const titleYear = "Higher education timelines: chronological (ordered by date of birth)";
+
+return {plotHeight,titleAge,titleYear};
+}});
+
+define({id: "cb9cf542", outputs: ["educatedAgesChart","educatedYearsChart"], body: async () => {
+const {educatedAgesChart, educatedYearsChart} = await import("./_import/components/education.99a4ea78.js");
 // Import components
+
 
 return {educatedAgesChart,educatedYearsChart};
 }});
 
-define({id: "63b20d73", inputs: ["FileAttachment"], outputs: ["education"], body: (FileAttachment) => {
+define({id: "0c0085cf", inputs: ["FileAttachment"], outputs: ["education"], body: (FileAttachment) => {
 // load data
+
 const education = FileAttachment("./data/l_dates_education/educated_degrees2.json").json({typed: true});
 return {education};
 }});
 
-define({id: "5c60c82a", outputs: ["whichTitle"], body: () => {
-const whichTitle = (select) => {
-  return select === "dates" ?  
-  "chart by date" : "chart by age" 
-};
-return {whichTitle};
-}});
-
-define({id: "31e68c75", inputs: ["Inputs"], outputs: ["makeToggle"], body: (Inputs) => {
+define({id: "822a73b2", inputs: ["Inputs"], outputs: ["makeToggle"], body: (Inputs) => {
 // make the radio button for the toggle
+
 const makeToggle =
 		Inputs.radio(
 			["dates", "ages"],  
@@ -106,13 +112,14 @@ const makeToggle =
 return {makeToggle};
 }});
 
-define({id: "f150f171", inputs: ["resize","educatedYearsChart","education","educatedAgesChart"], outputs: ["makeChart"], body: (resize,educatedYearsChart,education,educatedAgesChart) => {
+define({id: "173b18be", inputs: ["resize","educatedYearsChart","education","titleYear","plotHeight","educatedAgesChart","titleAge"], outputs: ["makeChart"], body: (resize,educatedYearsChart,education,titleYear,plotHeight,educatedAgesChart,titleAge) => {
 // toggle function
-//i'd quite like less repetition in here but i can live with it.
+//i'd like less repetition in here but i can live with it.
+
 const makeChart = (selection) => {
   return selection === "dates" ?  
-  resize((width) => educatedYearsChart(education, {width})) : 
-  resize((width) => educatedAgesChart(education, {width})) 
+  resize((width) => educatedYearsChart(education, {width}, titleYear, plotHeight)) : 
+  resize((width) => educatedAgesChart(education, {width}, titleAge, plotHeight)) 
 }
 
 return {makeChart};
@@ -130,6 +137,7 @@ return {makeChart};
     <li class="observablehq-link"><a href="./all-dates.html">(Almost) All the Dates</a></li>
     <li class="observablehq-link observablehq-link-active"><a href="./education.html">Education</a></li>
     <li class="observablehq-link"><a href="./mothers.html">Motherhood</a></li>
+    <li class="observablehq-link"><a href="./residence.html">Residence</a></li>
     <li class="observablehq-link"><a href="./todo.html">Todo</a></li>
     <li class="observablehq-link"><a href="./tree.html">BN categories</a></li>
     <li class="observablehq-link"><a href="./women-event-types.html">Participation in Events</a></li>
@@ -148,14 +156,14 @@ return {makeChart};
   </div>
 </div>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-<div class="observablehq observablehq--block"><!--:e78adc85:--></div>
-<div class="observablehq observablehq--block"><!--:63b20d73:--></div>
-<div class="observablehq observablehq--block"><!--:5c60c82a:--></div>
-<div class="observablehq observablehq--block"><!--:31e68c75:--></div>
-<div class="observablehq observablehq--block"><!--:f150f171:--></div>
+<div class="observablehq observablehq--block"><!--:f5e06a6f:--></div>
+<div class="observablehq observablehq--block"><!--:cb9cf542:--></div>
+<div class="observablehq observablehq--block"><!--:0c0085cf:--></div>
+<div class="observablehq observablehq--block"><!--:822a73b2:--></div>
+<div class="observablehq observablehq--block"><!--:173b18be:--></div>
 </main>
 <footer id="observablehq-footer">
 <nav><a rel="prev" href="./all-dates.html"><span>(Almost) All the Dates</span></a><a rel="next" href="./mothers.html"><span>Motherhood</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-08-07T20:33:21">Aug 7, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-08-28T13:29:18">Aug 28, 2024</a>.</div>
 </footer>
 </div>

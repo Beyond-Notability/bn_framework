@@ -294,9 +294,10 @@ bn_women_list_deduped <-
 bn_women_list |>
   mutate(across(c(dob, dod), ~parse_date_time(., "ymdHMS"), .names = "bn_{.col}")) |>
   mutate(across(c(bn_dob, bn_dod), year, .names = "{.col}_yr")) |>
-  # only one row per person
+  # only one row per person. earliest dob.
   group_by(bn_id) |>
-  top_n(1, row_number()) |>
+  arrange(bn_dob, bn_dod, .by_group = TRUE) |>
+  top_n(-1, row_number()) |>
   ungroup() 
 
 bn_women_dob_dod <-

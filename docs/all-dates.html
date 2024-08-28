@@ -10,7 +10,7 @@
 <link rel="modulepreload" href="./_observablehq/client.js">
 <link rel="modulepreload" href="./_observablehq/runtime.js">
 <link rel="modulepreload" href="./_observablehq/stdlib.js">
-<link rel="modulepreload" href="./_import/components/allTheDates2.ef7bd244.js">
+<link rel="modulepreload" href="./_import/components/allTheDates2.3c1e4e7b.js">
 <link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.16/_esm.js">
 <link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/_esm.js">
 <link rel="modulepreload" href="./_npm/d3@7.9.0/_esm.js">
@@ -54,16 +54,25 @@
 import {define} from "./_observablehq/client.js";
 import {registerFile} from "./_observablehq/stdlib.js";
 
-registerFile("./data/l_dates_precise_all.csv", {"name":"./data/l_dates_precise_all.csv","mimeType":"text/csv","path":"./_file/data/l_dates_precise_all.6b007227.csv","lastModified":1723058426517});
+registerFile("./data/l_dates_precise_all.csv", {"name":"./data/l_dates_precise_all.csv","mimeType":"text/csv","path":"./_file/data/l_dates_precise_all.7fa86808.csv","lastModified":1724847914380});
 
-define({id: "6cc447f4", mode: "inline", inputs: ["resize","datesChartY","dates","display"], body: async (resize,datesChartY,dates,display) => {
+define({id: "ac9a1e10", mode: "inline", inputs: ["resize","datesChartY","dates","plotTitle","plotHeight","display"], body: async (resize,datesChartY,dates,plotTitle,plotHeight,display) => {
 display(await(
-resize((width) => datesChartY(dates, {width}))
+resize((width) => datesChartY(dates, {width}, plotTitle, plotHeight))
 ))
 }});
 
+define({id: "d3eb01d6", outputs: ["plotTitle","plotHeight"], body: () => {
+//editables
+
+const plotTitle = "(Almost) every date as a dot";
+
+const plotHeight = 2000;
+return {plotTitle,plotHeight};
+}});
+
 define({id: "f89b9f5f", outputs: ["datesChartY"], body: async () => {
-const {datesChartY} = await import("./_import/components/allTheDates2.ef7bd244.js");
+const {datesChartY} = await import("./_import/components/allTheDates2.3c1e4e7b.js");
 // Import components
 
 return {datesChartY};
@@ -87,6 +96,7 @@ return {dates};
     <li class="observablehq-link observablehq-link-active"><a href="./all-dates.html">(Almost) All the Dates</a></li>
     <li class="observablehq-link"><a href="./education.html">Education</a></li>
     <li class="observablehq-link"><a href="./mothers.html">Motherhood</a></li>
+    <li class="observablehq-link"><a href="./residence.html">Residence</a></li>
     <li class="observablehq-link"><a href="./todo.html">Todo</a></li>
     <li class="observablehq-link"><a href="./tree.html">BN categories</a></li>
     <li class="observablehq-link"><a href="./women-event-types.html">Participation in Events</a></li>
@@ -104,7 +114,7 @@ return {dates};
 <p>All this information was collected as <a href="./beyond-notability.wikibase.cloud/">queryable data</a>, and so as good computational historians we pulled it together and stuck it on a timeline. The result is a <a href="https://observablehq.com/@d3/beeswarm/2" target="_blank" rel="noopener noreferrer">beeswarm plot</a> - below - that looks a lot like Mr Twit's Beard.</p>
 <div class="grid grid-cols-1">
   <div class="card">
-    <observablehq-loading></observablehq-loading><!--:6cc447f4:-->
+    <observablehq-loading></observablehq-loading><!--:ac9a1e10:-->
   </div>
 </div>
 <p>Much like Mr Twit, the uncritical user of our data - which on a bad day, might include us - could well feel wise and grand by having created a plot in the shape of the hirsute villain, might indulge in exploring the jungle of data for tasty morsels' of supposed insight: the decline in activity during the Great War, the growth in both education and work, the long delay in women being able to access spaces of work in these fields.</p>
@@ -114,6 +124,7 @@ return {dates};
 <p>More problems arise if we consider the <a href="https://beyond-notability.wikibase.cloud/wiki/Special:WhatLinksHere/Item:Q94" target="_blank" rel="noopener noreferrer">other types of time in the data</a>: start times, end times, latest dates, earliest dates; different forms of temporal flow and historical imagination.</p>
 <p>For example, we know that <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q954" target="_blank" rel="noopener noreferrer">Ethel Lega-Weekes</a> was elected as Fellow of the Royal Historical Society on 18 July 1914 and remaining a Fellow of the Society until her death in 1949. We also know that she became a member of the Devonshire Association in 1900, but we have no record of if and when that membership ended. We know that <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q747" target="_blank" rel="noopener noreferrer">Ada Goodrich-Freer</a> served on the Council of the Folklore Society until 1906, but we don't know when she joined the Council. We know that <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q238" target="_blank" rel="noopener noreferrer">Winifred Lamb</a> was living in Liphook, Hampshire, by 1932, because that was the address given in her nomination papers for election to the Society of Antiquaries of London. And we know that 1934 is the latest date that <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q1176" target="_blank" rel="noopener noreferrer">Veronica Seton-Williams</a> could have lived in Melbourne, because 1934 is the earliest date for which we have found record of her living in London.</p>
 <p>Indeed, places of residence are particular interesting for considering the temporal equivalency of data points. If <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q1176" target="_blank" rel="noopener noreferrer">Veronica Seton-Williams</a> is recorded as resident at 4 Handel Street, London, in 1934, then at 9 Elvaston Place, London, in 1946, how do we understand the crossover between these two data points? What can we reasonably assume of the twelve year gap between information? And most significantly perhaps - given the tendency for visualisation to be taken as objective knowledge (see <em>Data Feminism</em> (<a href="https://data-feminism.mitpress.mit.edu/pub/5evfe9yd/release/5" target="_blank" rel="noopener noreferrer">2020</a>) for both why and the best rebuttal of that tendency) - how might we represent this more accurately as data? Mr Twit's Beard, useful as it is for getting a sense of the shape of our data (e.g. women did do work in these fields after the 1950s, just our data collection stops then), is perhaps not the best way for representing that kind of temporal complexity: other posts in this interactive essay ('Motherhood' and 'Education') explore further our attempts to grapple with these flavours of time and temporality in our data.</p>
+<div class="observablehq observablehq--block"><!--:d3eb01d6:--></div>
 <div class="observablehq observablehq--block"><!--:f89b9f5f:--></div>
 <div class="observablehq observablehq--block"><!--:4ec69be2:--></div>
 <!-- 
@@ -131,6 +142,6 @@ precise
 </main>
 <footer id="observablehq-footer">
 <nav><a rel="prev" href="./"><span>Beyond Notability</span></a><a rel="next" href="./education.html"><span>Education</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-08-07T20:33:21">Aug 7, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-08-28T13:29:18">Aug 28, 2024</a>.</div>
 </footer>
 </div>

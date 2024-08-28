@@ -10,7 +10,7 @@ Summary of pages
 1. All the dates data, with filters for categories
 2. Childbirth and other activities before and after
 3. Higher education and degrees timeline 
-4. Something about residence and gaps in it [not started] 
+4. Something about residence and gaps in it [WIP] 
 6. Networks around excavation; if there is enough data. [analysis WIP] 
 
 Other pages retained (for now) for reference. 
@@ -46,7 +46,7 @@ Residence
 --------
 
 - some viz on people with only residence data for early or late in life; 
-- then some examples of people with gaps: look at place data between those gaps, does it help explain absent residence data? 
+- examples of people with gaps: look at place data between those gaps, does it help explain absent residence data? 
 
 notes
 - make sure all this chimes with history of inward migration, socio-economic class dynamics [town/country, family homes], etc

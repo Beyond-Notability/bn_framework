@@ -57,7 +57,7 @@
 import {define} from "./_observablehq/client.js";
 import {registerFile} from "./_observablehq/stdlib.js";
 
-registerFile("./data/women_lecturing/lecturers-dates.csv", {"name":"./data/women_lecturing/lecturers-dates.csv","mimeType":"text/csv","path":"./_file/data/women_lecturing/lecturers-dates.eb7b1d8a.csv","lastModified":1723058457057});
+registerFile("./data/women_lecturing/lecturers-dates.csv", {"name":"./data/women_lecturing/lecturers-dates.csv","mimeType":"text/csv","path":"./_file/data/women_lecturing/lecturers-dates.e3bead55.csv","lastModified":1724847952308});
 
 define({id: "d3f2d2cc", inputs: ["FileAttachment"], outputs: ["lecturersDates"], body: (FileAttachment) => {
 const lecturersDates = FileAttachment("./data/women_lecturing/lecturers-dates.csv").csv({typed: true});
@@ -171,6 +171,7 @@ resize((width) => lecturersOrgsChart(lecturersDates, {width}))
     <li class="observablehq-link"><a href="./all-dates.html">(Almost) All the Dates</a></li>
     <li class="observablehq-link"><a href="./education.html">Education</a></li>
     <li class="observablehq-link"><a href="./mothers.html">Motherhood</a></li>
+    <li class="observablehq-link"><a href="./residence.html">Residence</a></li>
     <li class="observablehq-link"><a href="./todo.html">Todo</a></li>
     <li class="observablehq-link"><a href="./tree.html">BN categories</a></li>
     <li class="observablehq-link"><a href="./women-event-types.html">Participation in Events</a></li>
@@ -199,6 +200,6 @@ resize((width) => lecturersOrgsChart(lecturersDates, {width}))
 </main>
 <footer id="observablehq-footer">
 <nav><a rel="prev" href="./women-event-types.html"><span>Participation in Events</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-08-07T20:33:21">Aug 7, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-08-28T13:29:18">Aug 28, 2024</a>.</div>
 </footer>
 </div>
