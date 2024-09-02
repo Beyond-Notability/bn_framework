@@ -42,6 +42,7 @@ return Plot.plot({
     labelAnchor: "center",
     tickFormat: Math.abs
   },
+  color: {legend:true},
   marks: [
     Plot.dot(
       data,
@@ -71,6 +72,7 @@ return Plot.plot({
     labelAnchor: "center",
     tickFormat: Math.abs
   },
+  color: {legend: true},
   marks: [
     Plot.dot(
       data,

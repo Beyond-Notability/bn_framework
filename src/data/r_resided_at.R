@@ -221,7 +221,7 @@ resided_exclusion |>
 # old: anyone with a latest date, whatever their age at the time
 resided_exclude_old_latest <-
 resided_exclusion |>
-  filter(date_prop_label %in% c("latest date") & age>old_age) |>
+  filter(date_prop_label %in% c("latest date") & age>=old_age) |>
   distinct(bn_id)
 
 # old: anyone with an end time that has no start time, whatever their age at the time
@@ -233,7 +233,7 @@ resided_exclusion_start_end_wide |>
 # young: anyone with any earliest date, whatever their age at the time
 resided_exclude_young_earliest <-
 resided_exclusion |>
-  filter(date_prop_label == "earliest date" & age<young_age) |>
+  filter(date_prop_label == "earliest date" & age<=young_age) |>
   distinct(bn_id)
 
 # young: anyone with any start time that has no end time, whatever the age at the time

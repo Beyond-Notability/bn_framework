@@ -11,3 +11,4 @@ write_csv(resided_dated, "resided-dated.csv", na="")
 write_csv(resided, "resided.csv", na="")
 write_csv(dates_resided_early_late, "dates-resided-early-late.csv", na="")
 system("zip - -r .")  
+
