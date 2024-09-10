@@ -4,7 +4,7 @@ title: Motherhood
 toc: false
 ---
 
-# A timelines of childbirth
+# A timeline of childbirth
 
 *This is a work-in-progress data essay*
 
