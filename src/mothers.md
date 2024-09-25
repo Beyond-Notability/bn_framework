@@ -80,6 +80,6 @@ const hadChildrenAges = FileAttachment("data/l_women_children/had-children-ages.
 
 const workServedSpokeYearsWithChildren = FileAttachment("data/l_women_children/work-served-years-with-children.csv").csv({typed:true})
 
-const lastAges = FileAttachment("data/l_women_children/consolidated-last-ages.csv").csv({typed:true});
+const lastAges = FileAttachment("data/l_women_children/last-ages-all.csv").csv({typed:true});
 
 ```
