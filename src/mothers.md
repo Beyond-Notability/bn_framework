@@ -45,6 +45,7 @@ This might seem a bit of a downer to end on. But - we think - there is considera
 
 - graph with speaking engagements to see the change in 'narrative'
 - why timelines of people: we want to see the people, not aggregate them out.
+- Wikipedia entries frequently don't mention marriages at all (never mind the name of the wife in question) and even fewer mention children (perhaps they do if the children are 'notable' - but certainly this means that daughters are less likely to be mentioned, even if they are doing things that are complementary to - even drawing on - the work of their fathers). BUT if their wives are Also Notable, the children tend (I think) to be mentioned there. Not sure how this might work on Wikidata however
 
 
 Here is an inline note.^[Inlines notes are easier to write, since
