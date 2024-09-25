@@ -28,18 +28,24 @@ All the dates
 Childbirth
 ----------
 
-- a bit more activity data? (RAI/SAL elections? spoke at?)
-- Plot.axis not working (cf education) and Idk why
+- try to get toggle for activity types working! (high priority)
+- Plot.axis to show label at both top and bottom is not working (cf education) and Idk why (lowish priority: not essential but desirable given that it's a tall chart, and for consistency between similar charts)
 
 notes
+
 - work includes `employed as` (only about 3 instances?) - maybe separate these out
 - named children included (if they have a date of birth) as well as `had child in`
+- upper age cutoff at 70; v few data points beyond this, doesn't significantly change interpretation but does make chart less readable (because it's trying to squish more into the same space)
+- handling more than one activity in the same year:
+	- there's been some reduction in preprocessing, so that only one activity per type per year is included in chart (doesn't remove that many instances)
+	- if there's more than one type of activity in the same year, all symbols are visible but *only one tooltip* (order of priority: work / served / spoke)
+
 
 Education
 --------
 
-- more sharing code between the two tables 
 - custom d3 shapes? (esp for start/end pairs)
+- more sharing code between the two tables 
 
 
 Residence

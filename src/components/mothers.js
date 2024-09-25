@@ -1,8 +1,8 @@
 import * as Plot from "npm:@observablehq/plot";
 
 
-
-export function hadChildrenAgesChart(data, lastAges, workServedYearsWithChildren, {width}, plotTitle, plotHeight) {
+//
+export function hadChildrenAgesChart(data, lastAges, workServedSpokeYearsWithChildren, {width}, plotTitle, plotHeight) {
 
   return Plot.plot({
   
@@ -16,14 +16,14 @@ export function hadChildrenAgesChart(data, lastAges, workServedYearsWithChildren
     x: {
     	grid: true, 
     	//tickFormat: d3.format('d'),
-    	label: "age at birth of child", // only shows at bottom
+    	label: "age at birth of child", // only shows at bottom, why?
     	axis: "both" // "both" top and bottom. [null for nothing.]
     	},
     	
     y: {label: null}, // this affects tooltip label too
     
-    symbol: {range: ["circle", "diamond2"], 
-				 domain: ["work", "served"]
+    symbol: {range: ["circle", "diamond2", "times"], 
+				 domain: ["work", "served", "spoke"]
 		},
 		    
     marks: [
@@ -58,7 +58,7 @@ export function hadChildrenAgesChart(data, lastAges, workServedYearsWithChildren
       	x1:"start_age", x2: "last_age", // x1 to start this at 15 as well. need to incorporate work ages into last_age...
       	y: "personLabel", 
       	stroke: "lightgray" , 
-      	strokeWidth: 3,
+      	strokeWidth: 4,
       channels: {
       	yob: 'bn_dob_yr', 
       	year:"year"
@@ -67,23 +67,23 @@ export function hadChildrenAgesChart(data, lastAges, workServedYearsWithChildren
       }),
       
       // vertical ruled line
-      // needs to come *after* leftmost ruleY
+      // needs to be *after* leftmost ruleY
       Plot.ruleX([15]), // makes X start at 15. 
          
 
       // dots for combined activity. 
       
-    	Plot.dot(workServedYearsWithChildren , 
+    	Plot.dot(workServedSpokeYearsWithChildren , 
     		{
     			x:"activity_age",
     			y:"personLabel",
     			strokeOpacity:0.7,
     			r:4,
     			symbol:"activity",
-    			//title: "positions", // TODO better tips
     			channels: {
     				"position": "positions",
     				"service": "service",
+    				"spoke": "spoke",
     				"year": "start_year",
     				"age": "activity_age",
     			},
@@ -94,6 +94,7 @@ export function hadChildrenAgesChart(data, lastAges, workServedYearsWithChildren
       			  symbol:false,
       			  position:true,
       			  service:true,
+      			  spoke:true,
       			  "year": (d) => `${d}`,
       			  age:true
     			},
@@ -104,15 +105,13 @@ export function hadChildrenAgesChart(data, lastAges, workServedYearsWithChildren
 
 
     	
-	
-    	   
     	// barcode style for birth years [go in last so they're on top]
       Plot.tickX(data, 
       	{
       		x: "age", 
       		y: "personLabel" , 
       		strokeWidth: 2,
-      		tip:true,
+      		//tip:true,
       		channels: {
       			"child born":"year", 
       			child:"childLabel", 

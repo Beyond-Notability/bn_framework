@@ -94,6 +94,8 @@ bn_had_children_query |>
 
 
 
+## set an upper age cutoff for work and served. v few beyond 70 and it squishes things.
+last_cutoff <- 70
 
 ##query without date property labels
 
@@ -178,7 +180,7 @@ bn_work_years_wide |>
   
 bn_work_years_children <-
 bn_work_years |>
-	filter(children=="y" & work_age <= 65) |> # a few older but lets stop here...
+	filter(children=="y" & work_age <= last_cutoff) |> 
 	mutate(last_work_age = max(work_age), .by = bn_id) |>
   # just in case last child age is later than last work...
 	mutate(last_work_age = if_else(last_work_age>last_age, last_work_age, last_age))
@@ -264,7 +266,7 @@ bn_served_years <-
 
 bn_served_years_children <-
   bn_served_years |>
-  filter(children=="y" & served_age <= 65) |> # probably some older but lets stop here...
+  filter(children=="y" & served_age <= last_cutoff) |> 
   mutate(last_served_age = max(served_age), .by = bn_id) |>
   # just in case last child age is later than last work...
   mutate(last_served_age = if_else(last_served_age>last_age, last_served_age, last_age))
@@ -273,13 +275,76 @@ bn_served_years_children <-
 # repeat same process to add any other categories.
 
 
+## spoke at
+## restricting this to mothers only
+## and to P1 dates, so won't need to faff with start-end
+
+spoke_at_spql <-
+'SELECT distinct ?person ?personLabel ?atLabel  ?at ?date ?s
+WHERE {  
+  values ?person {  <<bn_bnwd_values>> }
+  #?person bnwdt:P3 bnwd:Q3 . # select women
+   ?person bnp:P23 ?s .
+      ?s bnps:P23 ?at . # women who spoke at 
+  
+  # may as well just get pit dates for this. only a handful of others.
+    ?s bnpq:P1 ?date . 
+
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en-gb". } 
+}'
+
+spoke_at_spql <-
+'SELECT distinct ?person ?personLabel ?atLabel  ?at ?date ?s
+WHERE {  
+  values ?person {  <<bn_bnwd_values>> }
+  #?person bnwdt:P3 bnwd:Q3 . # select women
+   ?person bnp:P23 ?s .
+      ?s bnps:P23 ?at . # women who spoke at 
+  
+  # may as well just get pit dates for this. only a handful of others.
+    ?s bnpq:P1 ?date . 
+
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en-gb". } 
+}'
+
+bn_spoke_sparql <-
+bn_had_children_ages |>
+  bn_make_union() |>
+  mutate_glue_sparql(spoke_at_spql)
+
+bn_spoke_query <-
+  bn_std_query(bn_spoke_sparql) |>
+  make_bn_item_id(person) |>
+  make_bn_ids(c(at, s)) |>
+  make_date_year() |>
+  select(-person)
+
+
+
+bn_spoke_ages_years_children <-
+bn_spoke_query |>
+  distinct(bn_id, personLabel, atLabel, year) |>
+  group_by(bn_id, year) |>
+  arrange(atLabel, .by_group = TRUE) |>
+  top_n(1, row_number()) |>
+  ungroup() |>
+  left_join(bn_had_children_ages  |> count(bn_id, bn_dob_yr, earliest, latest, start_age, last_age, name="n_kids"), by="bn_id") |>
+  mutate(spoke_age = year-bn_dob_yr) |>
+  # if you change your mind and get all, you can easily adjust this.
+  mutate(children = "y")  |>
+  filter(children=="y" & spoke_age <= last_cutoff) |> 
+  mutate(last_spoke_age = max(spoke_age), .by = bn_id) |>
+  # just in case last child age is later than last work...
+  mutate(last_spoke_age = if_else(last_spoke_age>last_age, last_spoke_age, last_age))
+  
+  
 
 # combine work/service into a single df
 
 bn_work_served_years_children <-
  bind_rows( 
    bn_served_years |>
-  filter(children=="y" & served_age <= 70) |> # probably some older but lets stop here...
+  filter(children=="y" & served_age <= last_cutoff) |> 
   mutate(last_activity_age = max(served_age), .by = bn_id) |>
   # just in case last child age is later than last work...
   mutate(last_activity_age = if_else(last_activity_age>last_age, last_activity_age, last_age)) |>
@@ -287,7 +352,7 @@ bn_work_served_years_children <-
   mutate(activity="served")
   ,
   bn_work_years |>
-	filter(children=="y" & work_age <= 70) |> # a few older but lets stop here...
+	filter(children=="y" & work_age <= last_cutoff) |> 
 	mutate(last_activity_age = max(work_age), .by = bn_id) |>
   # just in case last child age is later than last work...
 	mutate(last_activity_age = if_else(last_activity_age>last_age, last_activity_age, last_age)) |>
@@ -301,6 +366,7 @@ bn_work_served_years_children <-
   ungroup()
 
 
+## without spoke at (added in last ages all below)
 ## make updated last_age for ruleY. don't need first because start is fixed at 15.
 ## but do need bn_dob_yr for sorting
 
@@ -316,6 +382,64 @@ bind_rows(
 ) |>
   arrange(bn_id) |>
   pivot_longer(last_age:last_work_age, names_to = "age_type", values_to = "last", values_drop_na = TRUE) |>
+  group_by(personLabel, bn_dob_yr) |>
+  summarise(last_age = max(last), .groups = "drop_last") |>
+  ungroup()
+
+
+
+
+
+bn_work_served_spoke_years_children <-
+ bind_rows( 
+  bn_served_years |>
+  filter(children=="y" & served_age <= last_cutoff) |> 
+  mutate(last_activity_age = max(served_age), .by = bn_id) |>
+  # just in case last child age is later than last work...
+  mutate(last_activity_age = if_else(last_activity_age>last_age, last_activity_age, last_age)) |>
+  rename(activity_age = served_age) |>
+  mutate(activity="served", sort=2)
+  ,
+  bn_work_years |>
+	filter(children=="y" & work_age <= last_cutoff) |> 
+	mutate(last_activity_age = max(work_age), .by = bn_id) |>
+  # just in case last child age is later than last work...
+	mutate(last_activity_age = if_else(last_activity_age>last_age, last_activity_age, last_age)) |>
+  rename(activity_age=work_age) |>
+  mutate(activity = "work", sort=1)
+  ,
+  bn_spoke_ages_years_children |>
+    rename(activity_age=spoke_age, last_activity_age=last_spoke_age, spoke=atLabel, start_year=year) |>
+    mutate(activity="spoke", sort=3)
+  ) |>
+  relocate(positions, .after = service)  |>
+  #in fact if you're going to toggle you only want to do the thing *per* activity type. i think. and i think this will work...
+  #if she has positions / service  in the same year, positions first then service
+  group_by(bn_id, start_year, activity) |>
+  #arrange(positions, service,  .by_group = TRUE) |>
+  top_n(-1, row_number()) |>
+  ungroup() |>
+  # sort here so spoke is first, fixes tips priorities in the plot.
+  arrange(-sort)
+
+
+## make updated last_age for ruleY. don't need first because start is fixed at 15.
+## but do need bn_dob_yr for sorting
+## you may also need separate last_age per activity for the goggling... but let's start with this
+bn_last_ages_all <-
+bind_rows(
+  bn_had_children_ages |>
+    distinct(bn_id, personLabel, bn_dob_yr, last_age) ,
+  bn_served_years_children |>
+    distinct(bn_id, personLabel, bn_dob_yr, last_served_age) ,
+  bn_work_years_children |>
+    distinct(bn_id, personLabel, bn_dob_yr, last_work_age),
+  bn_spoke_ages_years_children |>
+    distinct(bn_id, personLabel, bn_dob_yr, last_spoke_age)
+  # add any further categories here...
+) |>
+  arrange(bn_id) |>
+  pivot_longer(last_age:last_spoke_age, names_to = "age_type", values_to = "last", values_drop_na = TRUE) |>
   group_by(personLabel, bn_dob_yr) |>
   summarise(last_age = max(last), .groups = "drop_last") |>
   ungroup()

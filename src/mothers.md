@@ -19,7 +19,7 @@ The graph on this page shows all the women in [our wikibase](https://beyond-nota
 
 <div class="grid grid-cols-1">
   <div class="card">
-    ${resize((width) => hadChildrenAgesChart(hadChildrenAges, lastAges, workServedYearsWithChildren, {width}, plotTitle, plotHeight))}
+    ${resize((width) => hadChildrenAgesChart(hadChildrenAges, lastAges, workServedSpokeYearsWithChildren,  {width}, plotTitle, plotHeight))}
   </div>
 </div>
 
@@ -76,11 +76,9 @@ import {hadChildrenAgesChart} from "./components/mothers.js";
 
 const hadChildrenAges = FileAttachment("data/l_women_children/had-children-ages.csv").csv({typed: true});
 
-//const workYearsWithChildren = FileAttachment("data/l_women_children/work-years-with-children.csv").csv({typed:true});
+//const workServedYearsWithChildren = FileAttachment("data/l_women_children/work-served-years-with-children.csv").csv({typed:true});
 
-//const servedYearsWithChildren = FileAttachment("data/l_women_children/served-years-with-children.csv").csv({typed:true});
-
-const workServedYearsWithChildren = FileAttachment("data/l_women_children/work-served-years-with-children.csv").csv({typed:true});
+const workServedSpokeYearsWithChildren = FileAttachment("data/l_women_children/work-served-years-with-children.csv").csv({typed:true})
 
 const lastAges = FileAttachment("data/l_women_children/consolidated-last-ages.csv").csv({typed:true});
 

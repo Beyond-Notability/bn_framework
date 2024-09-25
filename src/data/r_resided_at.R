@@ -122,7 +122,7 @@ bn_women_birth <-
 
 resided_sparql <-
 'SELECT distinct ?person ?personLabel ?residedLabel 
-?address_text ?address_itemLabel ?geo ?date ?date_prop ?sourcingLabel ?note
+?address_text ?address_itemLabel ?geo ?long ?lat ?date ?date_prop ?sourcingLabel ?note
  ?s ?resided ?address_item
 
 
@@ -139,7 +139,10 @@ WHERE {
   
    optional { ?s bnpq:P31 ?address_text . }
    optional { ?s bnpq:P100 ?address_item . }
-   optional { ?s bnpq:P153 ?geo . }
+   optional { ?s bnpq:P153 ?geo . 
+     BIND(geof:longitude(?geo) AS ?long) .
+     BIND(geof:latitude(?geo)  AS ?lat) .
+   }
   
    optional { 
      ?s ( bnpq:P1 | bnpq:P27 | bnpq:P28 | bnpq:P51 | bnpq:P53 ) ?date .

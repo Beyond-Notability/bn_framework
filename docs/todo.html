@@ -65,18 +65,25 @@ import "./_observablehq/client.js";
 </ul>
 <h2 id="childbirth" tabindex="-1"><a class="observablehq-header-anchor" href="#childbirth">Childbirth</a></h2>
 <ul>
-<li>a bit more activity data? (RAI/SAL elections? spoke at?)</li>
-<li>Plot.axis not working (cf education) and Idk why</li>
+<li>try to get toggle for activity types working! (high priority)</li>
+<li>Plot.axis to show label at both top and bottom is not working (cf education) and Idk why (lowish priority: not essential but desirable given that it's a tall chart, and for consistency between similar charts)</li>
 </ul>
 <p>notes</p>
 <ul>
 <li>work includes <code>employed as</code> (only about 3 instances?) - maybe separate these out</li>
 <li>named children included (if they have a date of birth) as well as <code>had child in</code></li>
+<li>upper age cutoff at 70; v few data points beyond this, doesn't significantly change interpretation but does make chart less readable (because it's trying to squish more into the same space)</li>
+<li>handling more than one activity in the same year:
+<ul>
+<li>there's been some reduction in preprocessing, so that only one activity per type per year is included in chart (doesn't remove that many instances)</li>
+<li>if there's more than one type of activity in the same year, all symbols are visible but <em>only one tooltip</em> (order of priority: work / served / spoke)</li>
+</ul>
+</li>
 </ul>
 <h2 id="education" tabindex="-1"><a class="observablehq-header-anchor" href="#education">Education</a></h2>
 <ul>
-<li>more sharing code between the two tables</li>
 <li>custom d3 shapes? (esp for start/end pairs)</li>
+<li>more sharing code between the two tables</li>
 </ul>
 <h2 id="residence" tabindex="-1"><a class="observablehq-header-anchor" href="#residence">Residence</a></h2>
 <ul>
@@ -95,6 +102,6 @@ import "./_observablehq/client.js";
 </main>
 <footer id="observablehq-footer">
 <nav><a rel="prev" href="./residence.html"><span>Residence</span></a><a rel="next" href="./tree.html"><span>BN categories</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-08-28T13:29:18">Aug 28, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-09-25T07:54:38">Sep 25, 2024</a>.</div>
 </footer>
 </div>
