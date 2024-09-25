@@ -44,6 +44,7 @@ This might seem a bit of a downer to end on. But - we think - there is considera
 ## notes
 
 - graph with speaking engagements to see the change in 'narrative'
+- why timelines of people: we want to see the people, not aggregate them out.
 
 
 Here is an inline note.^[Inlines notes are easier to write, since
