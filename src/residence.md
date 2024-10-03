@@ -47,7 +47,7 @@ What do we see?
 
 ### women who only have early (up to age 30) and late (age 60+) residence data
 
-some viz on people with only residence data for early or late in life;
+Another way to think about the lifecourse is to filter to only women with only residence data for early or late in life, and then plot that alongside the other place data in their lifecourse.
 
 <div class="grid grid-cols-1">
   <div class="card">
@@ -59,6 +59,16 @@ Notes on the data:
 
 - for "early": excluded anyone who has start time that has no corresponding end time, and any with earliest date
 - for "late": excluded anyone who has end time with no corresponding start time, and any with latest date
+
+What do we see?
+
+- similar numbers of women have residence data for only late-teens / early-30s *or* late-50s to early-70s.
+- 'early' peaks 25-30
+- 'late' peaks at roughly 60
+- where the residence data clusters the other place data clusters
+- BUT, for 'late' peak of place data before residece peak (esp mid-50s) and for 'early' peak in early-20s before residence peak. Women, therefore, seem to be doing things that get into our data before they do things that get in our data that requires their address to be known. Going back to first graph and dominance of PiT data, where women live becomes archivable in the records we have used once women have done things first that make that residence worth recording.
+- Then, for 'early' - they drift away (kids?)
+- Then, for 'late' - they reach an age when they can no longer contribute or pass away.
 
 ## what does this all mean?
 
