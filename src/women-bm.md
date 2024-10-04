@@ -1,6 +1,6 @@
 ---
 theme: dashboard
-title: BM Reading Room Admissions and Higher Education
+title: BM Reading Room and Education
 toc: false
 ---
 
