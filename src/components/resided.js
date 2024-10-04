@@ -38,7 +38,7 @@ return Plot.plot({
   x: {label: "Age (years)"},
   y: {
     grid: true,
-    label: "← resided at · other →",
+    label: "← other · resided at →",
     labelAnchor: "center",
     tickFormat: Math.abs
   },
@@ -68,7 +68,7 @@ return Plot.plot({
   x: {label: "Age (years)"},
   y: {
     grid: true,
-    label: "← resided at · other →",
+    label: "← other · resided at →",
     labelAnchor: "center",
     tickFormat: Math.abs
   },
