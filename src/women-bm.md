@@ -28,9 +28,6 @@ const bm = FileAttachment("./data/l_bm/bm.csv").csv({typed: true});
 
 ```
 
-```js
-bm
-```
 
 
 ```js

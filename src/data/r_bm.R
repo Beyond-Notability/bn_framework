@@ -30,7 +30,7 @@ bn_women_bm_query |>
   left_join(
     bn_women_dob_dod |> select(bn_id, bn_dob, bn_dob_yr), by="bn_id"
   )  |>
-  mutate(age = year-bn_dob_yr) |>
+  mutate(age = if_else(!is.na(bn_dob_yr), as.character(year-bn_dob_yr), "")) |>
   rename(person_label=personLabel)
 
 
@@ -150,7 +150,7 @@ bn_women_bm_educated_dates_wide |>
     date_pairs=="2 both" & year_end_time==year ~ "end time",
     date_pairs=="2 both" ~ "filled"
   )) |>
-  mutate(age = year-bn_dob_yr) |>
+  mutate(age = if_else(!is.na(bn_dob_yr), as.character(year-bn_dob_yr), "")) |>
   select(bn_id, person_label, by_label, year, age, date_pairs, year_type,  bn_dob_yr, start_year, end_year, s) |>
   mutate(src="educated") |>
   arrange(bn_id, start_year, year)
