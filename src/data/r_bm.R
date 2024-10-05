@@ -29,7 +29,8 @@ bn_women_bm_query |>
 	ungroup() |>
   left_join(
     bn_women_dob_dod |> select(bn_id, bn_dob, bn_dob_yr), by="bn_id"
-  ) |>
+  )  |>
+  mutate(age = year-bn_dob_yr) |>
   rename(person_label=personLabel)
 
 

@@ -28,7 +28,9 @@ const bm = FileAttachment("./data/l_bm/bm.csv").csv({typed: true});
 
 ```
 
-
+```js
+bm
+```
 
 
 ```js
@@ -158,6 +160,7 @@ function bmYearsChart(data, {width}) {
       	dy: -6, // moves the dot
       	channels: {
       		"BM year":"year", 
+      		"age": "age",
       		} , 
       // tooltip
   			tip: {
@@ -189,7 +192,7 @@ function bmYearsChart(data, {width}) {
     			//"event type":"src",
     			"education year": "year",
       		//"year of birth":"bn_dob_yr", 
-      		//"age at event":"age",
+      		"age":"age",
       		where:"by_label",
       		qualification:"degree_label", 
       		} , 

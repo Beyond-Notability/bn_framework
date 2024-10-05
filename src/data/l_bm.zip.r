@@ -17,4 +17,3 @@ write_csv(bn_women_bm_educated_start_end_years, "start-end-pairs.csv")
 write_csv(bn_women_bm, "bm.csv")
 system("zip - -r .")
 
-

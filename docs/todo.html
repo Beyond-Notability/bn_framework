@@ -45,11 +45,13 @@ import "./_observablehq/client.js";
 <li class="observablehq-secondary-link"><a href="#education">Education</a></li>
 <li class="observablehq-secondary-link"><a href="#residence">Residence</a></li>
 <li class="observablehq-secondary-link"><a href="#networks">Networks</a></li>
+<li class="observablehq-secondary-link"><a href="#other-pages">Other pages</a></li>
 </ol>
 </nav>
 </aside>
 <div id="observablehq-center">
 <main id="observablehq-main" class="observablehq">
+<p>It might soon be time to separate data essays and other pages out into two separate sites.</p>
 <h2 id="summary-of-pages" tabindex="-1"><a class="observablehq-header-anchor" href="#summary-of-pages">Summary of pages</a></h2>
 <ol>
 <li>All the dates data, with filters for categories</li>
@@ -66,7 +68,6 @@ import "./_observablehq/client.js";
 </ul>
 <h2 id="childbirth" tabindex="-1"><a class="observablehq-header-anchor" href="#childbirth">Childbirth</a></h2>
 <ul>
-<li>try to get toggle for activity types working! (high priority)</li>
 <li>Plot.axis to show label at both top and bottom is not working (cf education) and Idk why (lowish priority: not essential but desirable given that it's a tall chart, and for consistency between similar charts)</li>
 </ul>
 <p>notes</p>
@@ -77,14 +78,14 @@ import "./_observablehq/client.js";
 <li>handling more than one activity in the same year:
 <ul>
 <li>there's been some reduction in preprocessing, so that only one activity per type per year is included in chart (doesn't remove that many instances)</li>
-<li>if there's more than one type of activity in the same year, all symbols are visible but <em>only one tooltip</em> (order of priority: work / served / spoke)</li>
+<li>if there's more than one type of activity in the same year, all symbols are visible but <em>only one tooltip</em> (order of priority should be: work / served / spoke)</li>
 </ul>
 </li>
 </ul>
 <h2 id="education" tabindex="-1"><a class="observablehq-header-anchor" href="#education">Education</a></h2>
 <ul>
 <li>custom d3 shapes? (esp for start/end pairs)</li>
-<li>more sharing code between the two tables</li>
+<li>better sharing code between the two tables</li>
 </ul>
 <h2 id="residence" tabindex="-1"><a class="observablehq-header-anchor" href="#residence">Residence</a></h2>
 <ul>
@@ -100,9 +101,12 @@ import "./_observablehq/client.js";
 <li>will need d3 for any network graphs... could avoid having network graphs at all... :-0</li>
 <li>analysis of SAL elections started but work to do on change over time (excavation networks mostly done)</li>
 </ul>
+<h2 id="other-pages" tabindex="-1"><a class="observablehq-header-anchor" href="#other-pages">Other pages</a></h2>
+<p>(lower priority)</p>
+<p>BM page should be componentized.</p>
 </main>
 <footer id="observablehq-footer">
 <nav><a rel="prev" href="./residence.html"><span>Residence</span></a><a rel="next" href="./tree.html"><span>BN categories</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-10-04T10:48:06">Oct 4, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-10-05T09:36:52">Oct 5, 2024</a>.</div>
 </footer>
 </div>

@@ -4,6 +4,8 @@ title: Todo
 toc: true
 ---
 
+It might soon be time to separate data essays and other pages out into two separate sites.
+
 Summary of pages
 ------
 
@@ -24,11 +26,9 @@ All the dates
 - category filters
 
 
-
 Childbirth
 ----------
 
-- try to get toggle for activity types working! (high priority)
 - Plot.axis to show label at both top and bottom is not working (cf education) and Idk why (lowish priority: not essential but desirable given that it's a tall chart, and for consistency between similar charts)
 
 notes
@@ -38,14 +38,14 @@ notes
 - upper age cutoff at 70; v few data points beyond this, doesn't significantly change interpretation but does make chart less readable (because it's trying to squish more into the same space)
 - handling more than one activity in the same year:
 	- there's been some reduction in preprocessing, so that only one activity per type per year is included in chart (doesn't remove that many instances)
-	- if there's more than one type of activity in the same year, all symbols are visible but *only one tooltip* (order of priority: work / served / spoke)
+	- if there's more than one type of activity in the same year, all symbols are visible but *only one tooltip* (order of priority should be: work / served / spoke)
 
 
 Education
 --------
 
 - custom d3 shapes? (esp for start/end pairs)
-- more sharing code between the two tables 
+- better sharing code between the two tables 
 
 
 Residence
@@ -63,3 +63,11 @@ Networks
 
 - will need d3 for any network graphs... could avoid having network graphs at all... :-0
 - analysis of SAL elections started but work to do on change over time (excavation networks mostly done)
+
+
+Other pages
+----------
+
+(lower priority)
+
+BM page should be componentized.

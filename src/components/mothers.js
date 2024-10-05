@@ -1,8 +1,8 @@
 import * as Plot from "npm:@observablehq/plot";
-
+import * as d3 from "npm:d3";
 
 //
-export function hadChildrenAgesChart(data, lastAges, workServedSpokeYearsWithChildren, {width}, plotTitle, plotHeight) {
+export function hadChildrenAgesChart(hadChildrenAges, lastAges, workServedSpoke, {width}, plotTitle, plotHeight) {
 
   return Plot.plot({
   
@@ -54,7 +54,7 @@ export function hadChildrenAgesChart(data, lastAges, workServedSpokeYearsWithChi
      	
       
       // horizontal thicker line first child to last child. 
-        Plot.ruleY(data, {
+        Plot.ruleY(hadChildrenAges, {
       	x1:"start_age", x2: "last_age", // x1 to start this at 15 as well. need to incorporate work ages into last_age...
       	y: "personLabel", 
       	stroke: "lightgray" , 
@@ -73,7 +73,7 @@ export function hadChildrenAgesChart(data, lastAges, workServedSpokeYearsWithChi
 
       // dots for combined activity. 
       
-    	Plot.dot(workServedSpokeYearsWithChildren , 
+    	Plot.dot(workServedSpoke , 
     		{
     			x:"activity_age",
     			y:"personLabel",
@@ -106,7 +106,7 @@ export function hadChildrenAgesChart(data, lastAges, workServedSpokeYearsWithChi
 
     	
     	// barcode style for birth years [go in last so they're on top]
-      Plot.tickX(data, 
+      Plot.tickX(hadChildrenAges, 
       	{
       		x: "age", 
       		y: "personLabel" , 
