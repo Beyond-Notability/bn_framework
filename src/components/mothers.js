@@ -22,8 +22,10 @@ export function hadChildrenAgesChart(hadChildrenAges, lastAges, workServedSpoke,
     	
     y: {label: null}, // this affects tooltip label too
     
-    symbol: {range: ["circle", "diamond2", "times"], 
-				 domain: ["work", "served", "spoke"]
+    symbol: {
+    		range: ["circle", "diamond2", "times"], 
+				domain: ["work", "served", "spoke"],
+				legend:true
 		},
 		    
     marks: [
