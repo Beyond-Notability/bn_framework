@@ -31,7 +31,8 @@ bn_women_bm_query |>
     bn_women_dob_dod |> select(bn_id, bn_dob, bn_dob_yr), by="bn_id"
   )  |>
   mutate(age = if_else(!is.na(bn_dob_yr), as.character(year-bn_dob_yr), "")) |>
-  rename(person_label=personLabel)
+  rename(person_label=personLabel) |>
+  mutate(group = if_else(earliest_bm>=1890, "1890s", "1880s"))
 
 
 bn_women_bm_educated_dates_sparql <-
@@ -153,4 +154,10 @@ bn_women_bm_educated_dates_wide |>
   mutate(age = if_else(!is.na(bn_dob_yr), as.character(year-bn_dob_yr), "")) |>
   select(bn_id, person_label, by_label, year, age, date_pairs, year_type,  bn_dob_yr, start_year, end_year, s) |>
   mutate(src="educated") |>
-  arrange(bn_id, start_year, year)
+  arrange(bn_id, start_year, year) |>
+  # add bm group
+  left_join(
+    bn_women_bm |>
+    distinct(bn_id, group), by="bn_id"
+  )
+  

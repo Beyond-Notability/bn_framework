@@ -11,7 +11,7 @@ toc: false
 
 <div class="grid grid-cols-1">
   <div class="card">
-    ${resize((width) => bmYearsChart(education, {width}))}
+    ${resize((width) => bmYearsChart(bm, education, {width}))}
   </div>
 </div>
 
@@ -33,10 +33,7 @@ const bm = FileAttachment("./data/l_bm/bm.csv").csv({typed: true});
 ```js
 // TODO componentise this properly
 
-// can't get image to load; not sure what i'm doing wrong.
-// Waldir, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons
-//const book_img = FileAttachment("./data/img/Black_book_icon.svg").image({width: 25})
-// https://commons.wikimedia.org/wiki/File:Black_book_icon.svg
+// why does fy:group not work 
 
 const colorTime = Plot.scale({
 		color: {
@@ -46,13 +43,13 @@ const colorTime = Plot.scale({
 	});
 
 	
-const plotHeight = 1500;
+const plotHeight = 2000;
 const plotMarginTop = 10;
 const plotMarginLeft = 180;
 
 
 // BY DATE   	
-function bmYearsChart(data, {width}) {
+function bmYearsChart(bm, education, {width}) {
 
   return Plot.plot({
   
@@ -75,6 +72,7 @@ function bmYearsChart(data, {width}) {
     symbol: {legend:true, 
     				range: ["triangle", "diamond2", "diamond2", "star", "square"], 
 						domain: ["point in time", "start time", "end time", "latest date", "filled"]
+						// symbolStar not working in range here; why not???
 		} ,
     color: colorTime,
     
@@ -90,11 +88,8 @@ function bmYearsChart(data, {width}) {
       						),
       
       
-    	// GUIDE LINES
+    	// GUIDE LINES. a bit tricky if it can start with either bm or education. hmm.
       
-    	// turn into separate rule for education? needs separate year_last as well
-    	
-    	// TODO split rule so that first segment between 1830 and birth is de-emphasised but still acts as a guide. just thinner atm but will look at other possible styling.
     	
       Plot.ruleY(bm, { 
       	x1:1870, // TODO variable earliest_year for when the data expands.(for the whole dataset) needs to be 0 (or 5). and has to be earliest of *either* education *or* BM. so earliest_bm doesn't work for this. 
@@ -111,9 +106,8 @@ function bmYearsChart(data, {width}) {
     //  VERTICAL RULES
     
     	// this should be *after* left-most Y rule 
-      Plot.ruleX([1870]), // makes X start at 1830. 
+      Plot.ruleX([1870]), // makes X start at 1870. 
       //TODO variable earliest_year as above
-      
       
       // DOTS
       
@@ -121,7 +115,7 @@ function bmYearsChart(data, {width}) {
  			// Q is there any way to do this so the fill looks like joined up lines rather than dots?
  			
       Plot.dot(
-      	data, {
+      	education, {
       	x: "year", 
       	y: "person_label" , 
       	filter: (d) => d.year_type=="filled",
@@ -136,7 +130,7 @@ function bmYearsChart(data, {width}) {
     	
 			// educated at single points (point in time, start/end, latest)
       Plot.dot(
-      	data, {
+      	education, {
       	x: "year", 
       	y: "person_label" , 
       	fill: "year_type",
@@ -147,13 +141,14 @@ function bmYearsChart(data, {width}) {
     	}), // /dot
  
     	
-    	// BM dot  . want to use Plot.image with book icon but it won't work!
-    	Plot.dot(
+    	// BM book icon. :-)
+    	Plot.image(
       	bm, {
       	x: "year", 
       	y: "person_label" , 
-      	//src: book_img, // can't get this to work.
-      	symbol:"wye",
+      	src: bookImg, 
+      	//symbol:"wye",
+      	//symbol: symbolStar,
       	dy: -6, // moves the dot
       	channels: {
       		"BM year":"year", 
@@ -177,7 +172,7 @@ function bmYearsChart(data, {width}) {
       // TOOLTIPS
             
       // tip education negative offset
-    	Plot.tip(data, Plot.pointer({
+    	Plot.tip(education, Plot.pointer({
     			x: "year", 
     			y: "person_label", // can you really not give this a label?
       	  filter: (d) =>  d.year_type !="filled",  // no tips on filled years!
@@ -213,7 +208,47 @@ function bmYearsChart(data, {width}) {
 
 ```
 
+```js
 
+// specify them as part of the symbol scale’s range option:
+
+const symbolStar = {
+        draw(context, size) {
+          const l = Math.sqrt(size);
+          const x = l * Math.cos(Math.PI / 6);
+          const y = l * Math.sin(Math.PI / 6);
+          context.moveTo(0, -l);
+          context.lineTo(0, l);
+          context.moveTo(-x, -y);
+          context.lineTo(x, y);
+          context.moveTo(x, -y);
+          context.lineTo(-x, y);
+          context.closePath();
+        }
+      };
+
+/*
+Plot.plot({
+  symbol: {
+      range: [symbolStar, symbolCross, symbolWye, …]
+  },
+  marks: [ … ]
+})
+*/
+```
+
+
+
+
+
+```js
+
+const bookImg = FileAttachment("./data/img/Black_book_icon.svg.png").url();
+
+// Waldir, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons
+// https://commons.wikimedia.org/wiki/File:Black_book_icon.svg
+
+```
 
 
 

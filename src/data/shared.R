@@ -25,6 +25,7 @@ library(tidytext)
 library(dplyr)
 library(tidyr)
 library(readr)
+library(tibble)
 library(stringr)
 library(purrr)
 
