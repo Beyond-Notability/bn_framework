@@ -34,6 +34,9 @@ jobs:
             any::lubridate
             any::httr
             any::curl
+            any::tidygraph
+            any::ggraph
+            any::widyr
             
 # end of r additions            
 
