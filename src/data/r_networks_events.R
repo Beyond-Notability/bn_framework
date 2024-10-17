@@ -1,7 +1,7 @@
 # general functions for network analysis ####
 
 library(tidygraph)
-library(ggraph)
+#library(ggraph)
 library(widyr)
 #library(networkD3)
 

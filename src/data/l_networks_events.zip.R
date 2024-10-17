@@ -13,4 +13,3 @@ write_csv(bn_events_nodes_js, "bn-events-nodes.csv")
 write_csv(bn_events_edges_js, "bn-events-edges.csv")
 write_json(bn_events_json, "bn-events.json")
 system("zip - -r .")
-
