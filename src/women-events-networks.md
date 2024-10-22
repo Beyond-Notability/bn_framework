@@ -12,7 +12,7 @@ Links have been created between women on the basis of attendance *at the same ev
 
 - Size of nodes reflects a person's number of event attendances. 
 - Width of connecting lines reflects the number of connections between a pair. (NB in this particular graph very few people have more than one or two connections)
-- Node colours represent groups detected by R. I'm still experimenting a bit but most of the algorithms available seem to give very similar results. 
+- Node colours represent groups detected by R. I'm still experimenting a bit but most of the algorithms available seem to give very similar results. (It's worth looking out for people who have links to more than one group even if they don't have many links, eg Alice Edleston.)
 - Completely isolated nodes were removed from the network.
 
 Because labels are long and overlap, only women with at least 5 event attendances have a visible name label, but you can see all the other names on hovering. 

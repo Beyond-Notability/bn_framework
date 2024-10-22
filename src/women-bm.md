@@ -89,7 +89,7 @@ function bmYearsChart(bm, education, {width}) {
       
     	
       Plot.ruleY(bm, { 
-      	x1:1870, // TODO variable earliest_year for when the data expands.(for the whole dataset) needs to be 0 (or 5). and has to be earliest of *either* education *or* BM. so earliest_bm doesn't work for this. 
+      	x1:1865, // TODO variable earliest_year for when the data expands.(for the whole dataset) needs to be 0 (or 5). and has to be earliest of *either* education *or* BM. so earliest_bm doesn't work for this. 
       	x2:1920, 
       	y: "person_label", 
       	stroke: "lightgray" , 
