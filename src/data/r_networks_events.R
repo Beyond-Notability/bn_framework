@@ -504,7 +504,7 @@ bn_women_events_network  |>
   mutate(grp4 = as.factor(group_louvain())) |> # 25 groups. g1=27
   as_tibble() |>
   select(id=personLabel, person, n_event, starts_with("grp")) |>
-  mutate(name_label = if_else(n_event>9, id, ""))
+  mutate(name_label = if_else(n_event>=5, id, ""))
 
 
 bn_events_edges_js2 <-

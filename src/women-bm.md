@@ -21,11 +21,8 @@ toc: false
 
 ```js
 // load data
-
 const education = FileAttachment("./data/l_bm/educated.csv").csv({typed: true});
 const bm = FileAttachment("./data/l_bm/bm.csv").csv({typed: true});
-
-
 ```
 
 
@@ -33,7 +30,7 @@ const bm = FileAttachment("./data/l_bm/bm.csv").csv({typed: true});
 ```js
 // TODO componentise this properly
 
-// why does fy:group not work 
+// why does fy:group not work ... should it be fx: ?
 
 const colorTime = Plot.scale({
 		color: {
@@ -148,7 +145,6 @@ function bmYearsChart(bm, education, {width}) {
       	y: "person_label" , 
       	src: bookImg, 
       	//symbol:"wye",
-      	//symbol: symbolStar,
       	dy: -6, // moves the dot
       	channels: {
       		"BM year":"year", 
@@ -208,34 +204,7 @@ function bmYearsChart(bm, education, {width}) {
 
 ```
 
-```js
 
-// specify them as part of the symbol scale’s range option:
-
-const symbolStar = {
-        draw(context, size) {
-          const l = Math.sqrt(size);
-          const x = l * Math.cos(Math.PI / 6);
-          const y = l * Math.sin(Math.PI / 6);
-          context.moveTo(0, -l);
-          context.lineTo(0, l);
-          context.moveTo(-x, -y);
-          context.lineTo(x, y);
-          context.moveTo(x, -y);
-          context.lineTo(-x, y);
-          context.closePath();
-        }
-      };
-
-/*
-Plot.plot({
-  symbol: {
-      range: [symbolStar, symbolCross, symbolWye, …]
-  },
-  marks: [ … ]
-})
-*/
-```
 
 
 
