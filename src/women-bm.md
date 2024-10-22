@@ -103,7 +103,7 @@ function bmYearsChart(bm, education, {width}) {
     //  VERTICAL RULES
     
     	// this should be *after* left-most Y rule 
-      Plot.ruleX([1870]), // makes X start at 1870. 
+      Plot.ruleX([1865]), // makes X start at 1865. 
       //TODO variable earliest_year as above
       
       // DOTS
