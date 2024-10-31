@@ -497,14 +497,29 @@ bn_women_events_edges |>
 bn_events_nodes_js2 <-
 bn_women_events_network  |>
   filter(!node_is_isolated()) |>
+  mutate(degree = centrality_degree(weights=weight),
+        betweenness = centrality_betweenness(weights=weight), # number of shortest paths going through a node
+        #closeness = centrality_closeness(weights=weight), # how many steps required to access every other node from a given node
+        #harmonic = centrality_harmonic(weights=weight), # variant of closeness for disconnected networks
+       eigenvector = centrality_eigen(weights=weight) # how well connected to well-connected nodes
+    )  |>
   #mutate(groups = as.factor(group_edge_betweenness(directed=FALSE, n_groups = 20))) |>
   mutate(grp1 = as.factor(group_edge_betweenness(directed=FALSE))) |> # 44 groups. g1 only 25. but still big disparities.
   mutate(grp2 = as.factor(group_infomap())) |>  # 29 groups. g1 30.
   mutate(grp3 = as.factor(group_leading_eigen())) |> # 26 groups. g1=27
   mutate(grp4 = as.factor(group_louvain())) |> # 25 groups. g1=27
   as_tibble() |>
-  select(id=personLabel, person, n_event, starts_with("grp")) |>
-  mutate(name_label = if_else(n_event>=5, id, ""))
+  select(id=personLabel, person, n_event, degree, betweenness, eigenvector,  starts_with("grp")) |>
+  mutate(group = case_when(
+  	n_event >9 ~ "group1",
+  	n_event > 4 ~ "group2",
+  	.default = "group3"
+  )) |>
+  mutate(
+  	name_label = if_else(n_event>3, id, ""), 
+  	full_name=id, 
+  	gender="woman") |>
+  arrange(id)
 
 
 bn_events_edges_js2 <-
@@ -516,6 +531,7 @@ bn_women_events_edges |>
   
 # put in named list ready to write_json  
 bn_events_json <-
-list(links= bn_events_edges_js2,
-     nodes= bn_events_nodes_js2
-     )     
+list(
+     nodes= bn_events_nodes_js2,
+     links= bn_events_edges_js2
+     )   

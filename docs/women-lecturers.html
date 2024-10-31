@@ -57,7 +57,7 @@
 import {define} from "./_observablehq/client.js";
 import {registerFile} from "./_observablehq/stdlib.js";
 
-registerFile("./data/women_lecturing/lecturers-dates.csv", {"name":"./data/women_lecturing/lecturers-dates.csv","mimeType":"text/csv","path":"./_file/data/women_lecturing/lecturers-dates.2ee2f9dd.csv","lastModified":1729144812174});
+registerFile("./data/women_lecturing/lecturers-dates.csv", {"name":"./data/women_lecturing/lecturers-dates.csv","mimeType":"text/csv","path":"./_file/data/women_lecturing/lecturers-dates.709be43f.csv","lastModified":1730357069514});
 
 define({id: "d3f2d2cc", inputs: ["FileAttachment"], outputs: ["lecturersDates"], body: (FileAttachment) => {
 const lecturersDates = FileAttachment("./data/women_lecturing/lecturers-dates.csv").csv({typed: true});
@@ -169,14 +169,15 @@ resize((width) => lecturersOrgsChart(lecturersDates, {width}))
   </ol>
   <ol>
     <li class="observablehq-link"><a href="./all-dates.html">(Almost) All the Dates</a></li>
+    <li class="observablehq-link"><a href="./bm.html">BM Reading Room and Education</a></li>
     <li class="observablehq-link"><a href="./education.html">Education</a></li>
+    <li class="observablehq-link"><a href="./events-networks-highlight.html">Events networks + highlight connections</a></li>
+    <li class="observablehq-link"><a href="./events-networks.html">Events networks v1</a></li>
     <li class="observablehq-link"><a href="./mothers.html">Motherhood</a></li>
     <li class="observablehq-link"><a href="./residence.html">Residence</a></li>
-    <li class="observablehq-link"><a href="./todo.html">Todo</a></li>
-    <li class="observablehq-link"><a href="./tree.html">BN categories</a></li>
-    <li class="observablehq-link"><a href="./women-bm.html">BM Reading Room and Education</a></li>
+    <li class="observablehq-link"><a href="./todo.html">Notes and Todo</a></li>
+    <li class="observablehq-link"><a href="./tree.html">BN categories tree</a></li>
     <li class="observablehq-link"><a href="./women-event-types.html">Participation in Events</a></li>
-    <li class="observablehq-link"><a href="./women-events-networks.html">Events networks</a></li>
     <li class="observablehq-link observablehq-link-active"><a href="./women-lecturers.html">Lecturers</a></li>
   </ol>
 </nav>
@@ -201,7 +202,7 @@ resize((width) => lecturersOrgsChart(lecturersDates, {width}))
 </div>
 </main>
 <footer id="observablehq-footer">
-<nav><a rel="prev" href="./women-events-networks.html"><span>Events networks</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-10-22T11:56:30">Oct 22, 2024</a>.</div>
+<nav><a rel="prev" href="./women-event-types.html"><span>Participation in Events</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-10-31T07:44:16">Oct 31, 2024</a>.</div>
 </footer>
 </div>

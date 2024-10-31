@@ -7,11 +7,6 @@ toc: false
 # Timelines of higher education
 
 
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-
-
-
 ```js
 // toggle baby! 8-)
 const makeToggleView = view(makeToggle);
@@ -22,11 +17,6 @@ const makeToggleView = view(makeToggle);
     ${makeChart(makeToggleView) }
   </div>
 </div>
-
-
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-
 
 
 

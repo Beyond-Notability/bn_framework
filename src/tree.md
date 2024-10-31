@@ -1,10 +1,12 @@
 ---
 theme: default
-title: BN categories
+title: BN categories tree
 toc: false
 ---
 
 # 'Instance of' tree diagram
+
+Does anything look out of place?
 
 ```js
 const io = FileAttachment("./data/instance_of_tree.json").json();

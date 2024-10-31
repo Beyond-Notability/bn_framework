@@ -1,6 +1,6 @@
 ---
 theme: dashboard
-title: Events networks
+title: Events networks v1
 ---
 
 
@@ -8,7 +8,6 @@ title: Events networks
 
 An experimental interactive network graph created from the events data at [BN Notes events analysis](https://beyond-notability.github.io/bn_notes/posts/events-2024-02-26/).
 
-Links have been created between women on the basis of attendance *at the same event* instance (fuller nerdy explanation at the BN Notes post but this meant a one-off event like a named conference or one dated occurrence of a recurring event like an annual meeting). 
 
 - Size of nodes reflects a person's number of event attendances. 
 - Width of connecting lines reflects the number of connections between a pair. (NB in this particular graph very few people have more than one or two connections)
@@ -17,12 +16,7 @@ Links have been created between women on the basis of attendance *at the same ev
 
 Because labels are long and overlap, only women with at least 5 event attendances have a visible name label, but you can see all the other names on hovering. 
 
-Zoom and drag for the whole network are now working! It may still be a bit small on a laptop screen if the sidebar menu is open, but will expand if you close the menu (click on the arrow). It's unlikely to look very nice on a phone!
-
-Todo:
-
-- better tooltips and labels
-- highlight connections when you click on a node
+Zoom and drag for the whole network are now working! It may still be a bit small on a laptop screen if the sidebar menu is open, but will expand if you close the menu (click on the arrow).
 
 
 ```js
@@ -149,6 +143,11 @@ const color = d3.scaleOrdinal(d3.schemeCategory10);
   
   display(svg.node() );
 ```
+
+
+Links have been created between women on the basis of attendance *at the same event* instance (fuller nerdy explanation at the BN Notes post but this meant a one-off event like a named conference or one dated occurrence of a recurring event like an annual meeting). This is an "association network", which is slightly different from an "interaction network" (of which the classic example is senders and recipients of letters). It can make risky assumptions - just because two people went to the same conference doesn't necessasrily mean they even knew each other, though it does imply shared interests and likely associations with other people.
+
+
 
 
 ```js

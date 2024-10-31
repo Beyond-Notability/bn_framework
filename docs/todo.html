@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Todo | Beyond Notability</title>
+<title>Notes and Todo | Beyond Notability</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
 <link rel="preload" as="style" href="./_observablehq/theme-air,near-midnight,alt,wide.css">
@@ -24,14 +24,15 @@ import "./_observablehq/client.js";
   </ol>
   <ol>
     <li class="observablehq-link"><a href="./all-dates.html">(Almost) All the Dates</a></li>
+    <li class="observablehq-link"><a href="./bm.html">BM Reading Room and Education</a></li>
     <li class="observablehq-link"><a href="./education.html">Education</a></li>
+    <li class="observablehq-link"><a href="./events-networks-highlight.html">Events networks + highlight connections</a></li>
+    <li class="observablehq-link"><a href="./events-networks.html">Events networks v1</a></li>
     <li class="observablehq-link"><a href="./mothers.html">Motherhood</a></li>
     <li class="observablehq-link"><a href="./residence.html">Residence</a></li>
-    <li class="observablehq-link observablehq-link-active"><a href="./todo.html">Todo</a></li>
-    <li class="observablehq-link"><a href="./tree.html">BN categories</a></li>
-    <li class="observablehq-link"><a href="./women-bm.html">BM Reading Room and Education</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./todo.html">Notes and Todo</a></li>
+    <li class="observablehq-link"><a href="./tree.html">BN categories tree</a></li>
     <li class="observablehq-link"><a href="./women-event-types.html">Participation in Events</a></li>
-    <li class="observablehq-link"><a href="./women-events-networks.html">Events networks</a></li>
     <li class="observablehq-link"><a href="./women-lecturers.html">Lecturers</a></li>
   </ol>
 </nav>
@@ -40,21 +41,18 @@ import "./_observablehq/client.js";
 <nav>
 <div>Contents</div>
 <ol>
-<li class="observablehq-secondary-link"><a href="#summary-of-pages">Summary of pages</a></li>
+<li class="observablehq-secondary-link"><a href="#summary-of-data-essay-pages">Summary of data essay pages</a></li>
 <li class="observablehq-secondary-link"><a href="#all-the-dates">All the dates</a></li>
 <li class="observablehq-secondary-link"><a href="#childbirth">Childbirth</a></li>
 <li class="observablehq-secondary-link"><a href="#education">Education</a></li>
 <li class="observablehq-secondary-link"><a href="#residence">Residence</a></li>
 <li class="observablehq-secondary-link"><a href="#networks">Networks</a></li>
-<li class="observablehq-secondary-link"><a href="#other-pages">Other pages</a></li>
 </ol>
 </nav>
 </aside>
 <div id="observablehq-center">
 <main id="observablehq-main" class="observablehq">
-<p>It might soon be time to separate data essays and other pages out into two separate sites.
-What to call the data essays site???</p>
-<h2 id="summary-of-pages" tabindex="-1"><a class="observablehq-header-anchor" href="#summary-of-pages">Summary of pages</a></h2>
+<h2 id="summary-of-data-essay-pages" tabindex="-1"><a class="observablehq-header-anchor" href="#summary-of-data-essay-pages">Summary of data essay pages</a></h2>
 <ol>
 <li>All the dates data, with filters for categories</li>
 <li>Childbirth and other activities before and after</li>
@@ -72,43 +70,25 @@ What to call the data essays site???</p>
 <ul>
 <li>Plot.axis to show label at both top and bottom is not working (cf education) and Idk why (lowish priority: not essential but desirable given that it's a tall chart, and for consistency between similar charts)</li>
 </ul>
-<p>notes</p>
-<ul>
-<li>work includes <code>employed as</code> (only about 3 instances?) - maybe separate these out</li>
-<li>named children included (if they have a date of birth) as well as <code>had child in</code></li>
-<li>upper age cutoff at 70; v few data points beyond this, doesn't significantly change interpretation but does make chart less readable (because it's trying to squish more into the same space)</li>
-<li>handling more than one activity in the same year:
-<ul>
-<li>there's been some reduction in preprocessing, so that only one activity per type per year is included in chart (doesn't remove that many instances)</li>
-<li>if there's more than one type of activity in the same year, all symbols are visible but <em>only one tooltip</em> (order of priority should be: work / served / spoke)</li>
-</ul>
-</li>
-</ul>
 <h2 id="education" tabindex="-1"><a class="observablehq-header-anchor" href="#education">Education</a></h2>
 <ul>
+<li>add BM chart (needs to be componentized)</li>
 <li>custom d3 shapes? (esp for start/end pairs)</li>
 <li>better sharing code between the two tables</li>
 </ul>
 <h2 id="residence" tabindex="-1"><a class="observablehq-header-anchor" href="#residence">Residence</a></h2>
 <ul>
-<li>some viz on people with only residence data for early or late in life;</li>
 <li>examples of people with gaps: look at place data between those gaps, does it help explain absent residence data?</li>
-</ul>
-<p>notes</p>
-<ul>
-<li>make sure all this chimes with history of inward migration, socio-economic class dynamics [town/country, family homes], etc</li>
 </ul>
 <h2 id="networks" tabindex="-1"><a class="observablehq-header-anchor" href="#networks">Networks</a></h2>
 <ul>
-<li>will need d3 for any network graphs... could avoid having network graphs at all... :-0</li>
-<li>analysis of SAL elections started but work to do on change over time (excavation networks mostly done)</li>
+<li>make highlight connections on click work properly!!!!</li>
+<li>filters</li>
+<li>work out how to componentize the fkg thing?</li>
 </ul>
-<h2 id="other-pages" tabindex="-1"><a class="observablehq-header-anchor" href="#other-pages">Other pages</a></h2>
-<p>(lower priority)</p>
-<p>BM page should be componentized.</p>
 </main>
 <footer id="observablehq-footer">
-<nav><a rel="prev" href="./residence.html"><span>Residence</span></a><a rel="next" href="./tree.html"><span>BN categories</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-10-22T11:56:30">Oct 22, 2024</a>.</div>
+<nav><a rel="prev" href="./residence.html"><span>Residence</span></a><a rel="next" href="./tree.html"><span>BN categories tree</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-10-31T07:44:16">Oct 31, 2024</a>.</div>
 </footer>
 </div>

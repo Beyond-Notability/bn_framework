@@ -54,7 +54,7 @@
 import {define} from "./_observablehq/client.js";
 import {registerFile} from "./_observablehq/stdlib.js";
 
-registerFile("./data/l_dates_precise_all.csv", {"name":"./data/l_dates_precise_all.csv","mimeType":"text/csv","path":"./_file/data/l_dates_precise_all.c9ae52e7.csv","lastModified":1729144787802});
+registerFile("./data/l_dates_precise_all.csv", {"name":"./data/l_dates_precise_all.csv","mimeType":"text/csv","path":"./_file/data/l_dates_precise_all.66df6c86.csv","lastModified":1730356952510});
 
 define({id: "ac9a1e10", mode: "inline", inputs: ["resize","datesChartY","dates","plotTitle","plotHeight","display"], body: async (resize,datesChartY,dates,plotTitle,plotHeight,display) => {
 display(await(
@@ -94,14 +94,15 @@ return {dates};
   </ol>
   <ol>
     <li class="observablehq-link observablehq-link-active"><a href="./all-dates.html">(Almost) All the Dates</a></li>
+    <li class="observablehq-link"><a href="./bm.html">BM Reading Room and Education</a></li>
     <li class="observablehq-link"><a href="./education.html">Education</a></li>
+    <li class="observablehq-link"><a href="./events-networks-highlight.html">Events networks + highlight connections</a></li>
+    <li class="observablehq-link"><a href="./events-networks.html">Events networks v1</a></li>
     <li class="observablehq-link"><a href="./mothers.html">Motherhood</a></li>
     <li class="observablehq-link"><a href="./residence.html">Residence</a></li>
-    <li class="observablehq-link"><a href="./todo.html">Todo</a></li>
-    <li class="observablehq-link"><a href="./tree.html">BN categories</a></li>
-    <li class="observablehq-link"><a href="./women-bm.html">BM Reading Room and Education</a></li>
+    <li class="observablehq-link"><a href="./todo.html">Notes and Todo</a></li>
+    <li class="observablehq-link"><a href="./tree.html">BN categories tree</a></li>
     <li class="observablehq-link"><a href="./women-event-types.html">Participation in Events</a></li>
-    <li class="observablehq-link"><a href="./women-events-networks.html">Events networks</a></li>
     <li class="observablehq-link"><a href="./women-lecturers.html">Lecturers</a></li>
   </ol>
 </nav>
@@ -109,41 +110,19 @@ return {dates};
 <div id="observablehq-center">
 <main id="observablehq-main" class="observablehq">
 <h1 id="all-the-dates" tabindex="-1"><a class="observablehq-header-anchor" href="#all-the-dates">All The Dates</a></h1>
+<p>[curent version of the data essay is now <a href="https://beyond-notability.github.io/beyond-notability-observable-essays/" target="_blank" rel="noopener noreferrer">here</a>. charts here retained for reference/experimentation.]</p>
 <p>Using <a href="https://observablehq.com/plot/" target="_blank" rel="noopener noreferrer">Observable Plot</a> / <a href="https://observablehq.com/plot/transforms/dodge" target="_blank" rel="noopener noreferrer">dodge transform</a></p>
-<p><em>This is a work-in-progress data essay</em></p>
-<p>Historians study change over time. We care about temporality. We consider what came before and what came after. We note the relationship between when things occured in our topic of discrete study, Braudel's proverbial surface ripples, and the longue duree of societal, cultural, demographic, geological, and climatological time.</p>
-<p>As good historians, <a href="https://beyondnotability.org/" target="_blank" rel="noopener noreferrer">Beyond Notability</a> project team collected a large number of dates associated with women's work in archaeology, history and heritage between - roughly - 1870 to 1950. And as we sought to organise the information we found within a biographical framework, we also collected data - where available - on when women were born, when they died, significant life events such as childbirth (see 'Motherhood'), and activities that enabled work, such as education (see 'Education').</p>
-<p>All this information was collected as <a href="./beyond-notability.wikibase.cloud/">queryable data</a>, and so as good computational historians we pulled it together and stuck it on a timeline. The result is a <a href="https://observablehq.com/@d3/beeswarm/2" target="_blank" rel="noopener noreferrer">beeswarm plot</a> - below - that looks a lot like Mr Twit's Beard.</p>
 <div class="grid grid-cols-1">
   <div class="card">
     <observablehq-loading></observablehq-loading><!--:ac9a1e10:-->
   </div>
 </div>
-<p>Much like Mr Twit, the uncritical user of our data - which on a bad day, might include us - could well feel wise and grand by having created a plot in the shape of the hirsute villain, might indulge in exploring the jungle of data for tasty morsels' of supposed insight: the decline in activity during the Great War, the growth in both education and work, the long delay in women being able to access spaces of work in these fields.</p>
-<p>Now, there are some insights here, as well as nuances and complications to be teased out. But more importantly there is a problem of temporal equivalency - each spike on the beard may represent a date but there is a variety of <em>types</em> of dates among them.</p>
-<p>Birth and death are simple. They take place when they take place (or at least that true for births and deaths as recorded by the bureaucratic regimes of modern nation states in the global north). They - like asking a question at an events, being elected to a membership body, or writing a letter - are things that take place at <a href="https://beyond-notability.wikibase.cloud/wiki/Property:P1" target="_blank" rel="noopener noreferrer">points in time</a>.</p>
-<p>But can we equate these acts easily with, say, the point in time at which a book was published? Many acts that happen at a moment are the result of a more gradual process: a letter to a professional body <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q577" target="_blank" rel="noopener noreferrer">may be dated 16 February 1921</a>, but may have been written over a series of days. And if this seems trivial, what about writing a book? Maude Violet Clarke's 'The Medieval City State' may have <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q381" target="_blank" rel="noopener noreferrer">been published in 1926</a>, but the labour the produced the book does not have the same temporal equivalency to <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q374" target="_blank" rel="noopener noreferrer">her giving a paper at the Royal Historical Society on 10 December 1925</a>. And yet they both are, on our plot, equivalent in size and shape, another point in time among many.</p>
-<p>More problems arise if we consider the <a href="https://beyond-notability.wikibase.cloud/wiki/Special:WhatLinksHere/Item:Q94" target="_blank" rel="noopener noreferrer">other types of time in the data</a>: start times, end times, latest dates, earliest dates; different forms of temporal flow and historical imagination.</p>
-<p>For example, we know that <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q954" target="_blank" rel="noopener noreferrer">Ethel Lega-Weekes</a> was elected as Fellow of the Royal Historical Society on 18 July 1914 and remaining a Fellow of the Society until her death in 1949. We also know that she became a member of the Devonshire Association in 1900, but we have no record of if and when that membership ended. We know that <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q747" target="_blank" rel="noopener noreferrer">Ada Goodrich-Freer</a> served on the Council of the Folklore Society until 1906, but we don't know when she joined the Council. We know that <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q238" target="_blank" rel="noopener noreferrer">Winifred Lamb</a> was living in Liphook, Hampshire, by 1932, because that was the address given in her nomination papers for election to the Society of Antiquaries of London. And we know that 1934 is the latest date that <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q1176" target="_blank" rel="noopener noreferrer">Veronica Seton-Williams</a> could have lived in Melbourne, because 1934 is the earliest date for which we have found record of her living in London.</p>
-<p>Indeed, places of residence are particular interesting for considering the temporal equivalency of data points. If <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q1176" target="_blank" rel="noopener noreferrer">Veronica Seton-Williams</a> is recorded as resident at 4 Handel Street, London, in 1934, then at 9 Elvaston Place, London, in 1946, how do we understand the crossover between these two data points? What can we reasonably assume of the twelve year gap between information? And most significantly perhaps - given the tendency for visualisation to be taken as objective knowledge (see <em>Data Feminism</em> (<a href="https://data-feminism.mitpress.mit.edu/pub/5evfe9yd/release/5" target="_blank" rel="noopener noreferrer">2020</a>) for both why and the best rebuttal of that tendency) - how might we represent this more accurately as data? Mr Twit's Beard, useful as it is for getting a sense of the shape of our data (e.g. women did do work in these fields after the 1950s, just our data collection stops then), is perhaps not the best way for representing that kind of temporal complexity: other posts in this interactive essay ('Motherhood' and 'Education') explore further our attempts to grapple with these flavours of time and temporality in our data.</p>
 <div class="observablehq observablehq--block"><!--:d3eb01d6:--></div>
 <div class="observablehq observablehq--block"><!--:f89b9f5f:--></div>
 <div class="observablehq observablehq--block"><!--:4ec69be2:--></div>
-<!-- 
-data variables
-precise
-"person"          "personLabel"     
-"date"            "year"    "month"           "day"             "m"              
-"nice_date"       
-"date_precision"  "date_certainty" 
-"date_label"      "date_level"      "date_string"    "qual_date_prop" 
-"date_propLabel" "date_prop"   "prop_label"     "category"         
-"prop_valueLabel"  "prop_value" 
-"s"  
--->
 </main>
 <footer id="observablehq-footer">
-<nav><a rel="prev" href="./"><span>Beyond Notability</span></a><a rel="next" href="./education.html"><span>Education</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-10-22T11:56:30">Oct 22, 2024</a>.</div>
+<nav><a rel="prev" href="./"><span>Beyond Notability</span></a><a rel="next" href="./bm.html"><span>BM Reading Room and Education</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-10-31T07:44:16">Oct 31, 2024</a>.</div>
 </footer>
 </div>

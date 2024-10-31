@@ -58,9 +58,9 @@
 import {define} from "./_observablehq/client.js";
 import {registerFile} from "./_observablehq/stdlib.js";
 
-registerFile("./data/l_women_children/had-children-ages.csv", {"name":"./data/l_women_children/had-children-ages.csv","mimeType":"text/csv","path":"./_file/data/l_women_children/had-children-ages.0dff1002.csv","lastModified":1729144791888});
-registerFile("./data/l_women_children/last-ages-all.csv", {"name":"./data/l_women_children/last-ages-all.csv","mimeType":"text/csv","path":"./_file/data/l_women_children/last-ages-all.a82c5171.csv","lastModified":1729144791892});
-registerFile("./data/l_women_children/work-served-years-with-children.csv", {"name":"./data/l_women_children/work-served-years-with-children.csv","mimeType":"text/csv","path":"./_file/data/l_women_children/work-served-years-with-children.20a964f0.csv","lastModified":1729144791891});
+registerFile("./data/l_women_children/had-children-ages.csv", {"name":"./data/l_women_children/had-children-ages.csv","mimeType":"text/csv","path":"./_file/data/l_women_children/had-children-ages.77bb8edd.csv","lastModified":1730357054881});
+registerFile("./data/l_women_children/last-ages-all.csv", {"name":"./data/l_women_children/last-ages-all.csv","mimeType":"text/csv","path":"./_file/data/l_women_children/last-ages-all.2b9c2840.csv","lastModified":1730357054886});
+registerFile("./data/l_women_children/work-served-years-with-children.csv", {"name":"./data/l_women_children/work-served-years-with-children.csv","mimeType":"text/csv","path":"./_file/data/l_women_children/work-served-years-with-children.20a964f0.csv","lastModified":1730357054884});
 
 define({id: "44d9e7e5", inputs: ["view","makeCheckbox"], outputs: ["checkMothers"], body: (view,makeCheckbox) => {
 //toggle
@@ -134,14 +134,15 @@ return {flatMothers};
   </ol>
   <ol>
     <li class="observablehq-link"><a href="./all-dates.html">(Almost) All the Dates</a></li>
+    <li class="observablehq-link"><a href="./bm.html">BM Reading Room and Education</a></li>
     <li class="observablehq-link"><a href="./education.html">Education</a></li>
+    <li class="observablehq-link"><a href="./events-networks-highlight.html">Events networks + highlight connections</a></li>
+    <li class="observablehq-link"><a href="./events-networks.html">Events networks v1</a></li>
     <li class="observablehq-link observablehq-link-active"><a href="./mothers.html">Motherhood</a></li>
     <li class="observablehq-link"><a href="./residence.html">Residence</a></li>
-    <li class="observablehq-link"><a href="./todo.html">Todo</a></li>
-    <li class="observablehq-link"><a href="./tree.html">BN categories</a></li>
-    <li class="observablehq-link"><a href="./women-bm.html">BM Reading Room and Education</a></li>
+    <li class="observablehq-link"><a href="./todo.html">Notes and Todo</a></li>
+    <li class="observablehq-link"><a href="./tree.html">BN categories tree</a></li>
     <li class="observablehq-link"><a href="./women-event-types.html">Participation in Events</a></li>
-    <li class="observablehq-link"><a href="./women-events-networks.html">Events networks</a></li>
     <li class="observablehq-link"><a href="./women-lecturers.html">Lecturers</a></li>
   </ol>
 </nav>
@@ -149,65 +150,21 @@ return {flatMothers};
 <div id="observablehq-center">
 <main id="observablehq-main" class="observablehq">
 <h1 id="a-timeline-of-childbirth" tabindex="-1"><a class="observablehq-header-anchor" href="#a-timeline-of-childbirth">A timeline of childbirth</a></h1>
-<p><em>This is a work-in-progress data essay</em></p>
-<p>Alongside collecting information about women's work in archaeology, history, and heritage - including work related activities such as <a href="https://beyond-notability.github.io/bn_framework/education.html" target="_blank" rel="noopener noreferrer">Education</a> - the <a href="https://beyondnotability.org/" target="_blank" rel="noopener noreferrer">Beyond Notability</a> project team sought to collect data on biographical 'life events' such as marriage, divorce, and parenthood. When it came time to consider how we might represent these 'life events' as data, our focus turned to ways that enabled us to understand what events like becoming a parent did to women's ability to pursue their work in the fields of archaeology, history, and heritage. And to methods of visualisation that disaggregated women from the whole, that made people and their individual lives easier to see.</p>
-<p>The graph on this page shows all the women in <a href="https://beyond-notability.wikibase.cloud/" target="_blank" rel="noopener noreferrer">our wikibase</a> for whom we have <a href="https://beyond-notability.wikibase.cloud/wiki/Special:WhatLinksHere/Property:P131" target="_blank" rel="noopener noreferrer">'had child in'</a> data with a known date on which that event occurred. Each woman is represented by a single row. The rows are sorted by date of birth, with the earliest - <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q3658" target="_blank" rel="noopener noreferrer">Margaret Emily Blaauw</a>, born 1798 - at the top and the latest - <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q106" target="_blank" rel="noopener noreferrer">Jacquetta Hawkes</a>, born 1910 - at the bottom. The right hand end of the row represents the last piece of data on the graph (rather than a data of death). Each row then shows four types of information:</p>
-<ul>
-<li>The year or years in which each woman had children, with each of these instances represented as a vertical line.</li>
-<li>For women who had more than on child, the periods between having their first and last child are represented by a thicker horizontal line.</li>
-<li>As a diamond, the years (usually not start and end dates) in which we have documentary evidence that each woman <a href="https://beyond-notability.wikibase.cloud/wiki/Property:P102" target="_blank" rel="noopener noreferrer">'served on'</a> a committee or group, for example that <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q960" target="_blank" rel="noopener noreferrer">Sophie Lomas served on the Historical Committee of the Festival of Empire in 1911</a>, though that service may have started before that date or ended after that date.</li>
-<li>As a circle, the years (again, usually not start and end dates) in which we are aware that each woman <a href="https://beyond-notability.wikibase.cloud/wiki/Property:P17" target="_blank" rel="noopener noreferrer">'held a position'</a> in or for an organisation, such as a recorded reference to <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q998" target="_blank" rel="noopener noreferrer">Lina Chaworth Musters having held the position of County Collector for The Folklore Society in 1894</a>, though - again - that position may have started before that date or ended after that date. Note that this category of data does not include employment at an institution that typically employed people on a formal, longstanding basis (this captured by our <a href="https://beyond-notability.wikibase.cloud/wiki/Property:P105" target="_blank" rel="noopener noreferrer">'employed as'</a> statements).</li>
-<li>Ignore the cross or 'X' marks for now, in fact toggle them off by unchecking the 'spoke' box at the top of the visualisation.</li>
-</ul>
+<p>[curent version of the data essay is now <a href="https://beyond-notability.github.io/beyond-notability-observable-essays/" target="_blank" rel="noopener noreferrer">here</a>. this chart retained for reference/experimentation.]</p>
 <div class="observablehq observablehq--block"><!--:44d9e7e5:--></div>
 <div class="grid grid-cols-1">
   <div class="card">
     <observablehq-loading></observablehq-loading><!--:e88397d8:-->
   </div>
 </div>
-<p>What does organising and plotting the data in this way suggest?</p>
-<ul>
-<li>First, it foregrounds parenthood as a significant feature in the lives of many women included in our wikibase, and states unambiguously that many women who had children also had active and productive lives in the fields of archaeology, history, and heritage.</li>
-<li>Second, it suggests that few women sat on committees or held positions before the age of 30, and those that did cluster towards the end of the period of our study.</li>
-<li>Third, that after the age of 40 women with children started sitting on committees and holding positions with greater frequency.</li>
-<li>Fourth, that across our period, some women, though few in number, sat on committees or held positions in and around periods when they were having children.</li>
-<li>Fifth, given that a woman wouldn't be included in our wikibase unless they contributed to archaeology, history, and/or heritage, that many women who had children did things other than serving on committees or holding positions, and that these cluster towards the start of the period (that is, if you look at the first eighteen women on the plot, only one - <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q2092" target="_blank" rel="noopener noreferrer">Mary Anne Everett Green</a> - has any data recorded in the <a href="https://beyond-notability.wikibase.cloud/wiki/Property:P102" target="_blank" rel="noopener noreferrer">'served on'</a> or <a href="https://beyond-notability.wikibase.cloud/wiki/Property:P17" target="_blank" rel="noopener noreferrer">'held a position'</a> fields). <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q488" target="_blank" rel="noopener noreferrer">Emily Winifred Allen</a> was an active contributor to the life of the Cambrian Archaeological Association, speaking at meetings and exhibiting artefacts. <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q316" target="_blank" rel="noopener noreferrer">Fenella Armytage</a> corresponded with the Royal Archaeological Institute. <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q945" target="_blank" rel="noopener noreferrer">Charlotte Latham</a> collected folklore, published in the Folklore Society's journal, and supplied information to scholars working in the field.</li>
-<li>And sixth, it opens up questions that go beyond the data, back into the archive, back into particular cases and circumstances. Given that many of the first eighteen women on the plot were of means asks us to consider how was socio-economic status a factor in women working? (and did these women's self-fashion construct activities as something distinct from 'work'?) Did different work to fit around children? How did cultures created by the marriage bar - even if it didn't apply to many contexts these women worked in - shape what work women did and didn't do?</li>
-</ul>
-<p>That is, visualising this particular combination of data and interpreting what we see opens out the scope of enquiry rather than providing a settled representation of how in this period motherhood related to work in the fields of archaeology, history, and heritage. And just as importantly, the interpretation draws us towards a series of caveats - health warnings - required so as to not misread the visualistion and the underlying data it contains.</p>
-<ul>
-<li>First, and most obviously, the data selected is the data that is interpreted. Now go back and check the box next to the 'spoke' box. The crosses - or Xs if you prefer - will reappear. These are instances of when women '<a href="https://beyond-notability.wikibase.cloud/wiki/Property:P23" target="_blank" rel="noopener noreferrer">spoke at</a>' a meeting, conference, or congress, and adding that data back in makes the patterns change, with few women recorded as speaking until later in life, usually after having served on a committee or held a role. In turn, our interpretations change - we see a longevity of careers that was not otherwise there.</li>
-<li>Second, that we have recorded 'had child in' data for fewer than 10% of the women in the wikibase: <a href="https://beyond-notability.wikibase.cloud/w/index.php?title=Special:WhatLinksHere/Property:P131&amp;limit=500" target="_blank" rel="noopener noreferrer">72</a> women out of more than 900. That cannot be all the possible data, and is likely a sample skewed towards those women who were more notable and whose activities are recorded across multiple sources (for example, there are <a href="https://tinyurl.com/2aryjrp7" target="_blank" rel="noopener noreferrer">56 women about whom we have recorded fewer than 5 pieces of information</a>, none of whom have <a href="https://beyond-notability.wikibase.cloud/wiki/Property:P131" target="_blank" rel="noopener noreferrer">'had child in'</a> associated with them). Even for women in our wikibase with notable husbands, we often find that little accessible information exists about their marital life, and - in particular - Wikipedia entries for these notable husbands frequently do not mention the women to whom they were married: for example, the Wikipedia entry for <a href="https://en.wikipedia.org/wiki/Gerard_Clauson" target="_blank" rel="noopener noreferrer">Gerard Clauson</a> does not mention his marriage to <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q3414" target="_blank" rel="noopener noreferrer">Honor Clauson</a>. And similar patterns are true of women in our database with notable fathers: for example, <a href="https://en.wikipedia.org/wiki/Frederick_William_Grafton" target="_blank" rel="noopener noreferrer">Frederick Grafton</a>'s daughter <a href="https://beyond-notability.wikibase.cloud/wiki/Item:Q454" target="_blank" rel="noopener noreferrer">Emily Grafton</a> is not mentioned in his Wikipedia entry. And for people born after 1911, dates of birth are tricky to find as the 1911 Census is the last census we have easy access to. For data on childbirth after that period we have depended on sources like the Oxford Dictionary of National Biography, which again skews to 'notable' people. The data we have on childbirth is, then, partial at best.</li>
-<li>Third, this cannot be all the data out there about service on committees, positions held with bodies, etc - given the archives we have consulted, regional committees and less well regarded roles less likely to be captured in our data.</li>
-<li>Fourth, a data point for a date on which a woman 'had' a child cannot capture the fact that parenthood was not faced equally. Some people had help. Some children got unwell. Some parents got unwell. Some births were harder than others. Some children were adopted. Some people took on significant caring responsibilities that amounted to the labour of parenthood without ever 'having' children. And the dynamics of parenthood changed across our period and between regions. This was the period in British History in which <a href="https://www.bloomsbury.com/uk/double-lives-9781408870761/" target="_blank" rel="noopener noreferrer">the concept of the working mother both emerged and was transformed</a>. All data points cannot be treated equally.</li>
-<li>Fifth, more conceptually, if Beyond Notability had sought to recover the lives of men's work in archaeology, history, and heritage, would we have even thought to plot the relationship between their work and the years in which they 'had' children? Would we have thought of parenthood as a life event for them? Would we have thought to create visualisations that anchored their lives around their fertility and/or caring responsibilities? Probably not.</li>
-</ul>
-<p>This might seem a bit of a downer to end on. But - we think - there is considerable merit to our approach to data capture. In particular by combining 'work' and 'life events' we open up linked data biography to asking better questions about the lifecourse as it relates to people of all genders. For example, in a forthcoming paper we argue that whilst the prevailing model for representing the life course as linked data - that is, the <a href="https://www.wikidata.org/" target="_blank" rel="noopener noreferrer">Wikidata</a> data model - is adequate for representing the temporal relationship between most events across the lifecourse, it does a poor job with parenthood. That is, unless a person had a child who was themselves sufficiently notable to warrant a Wikidata entry, and in turn a date of birth, all other acts of childbirth on Wikidata are represented by <a href="https://www.wikidata.org/wiki/Property:P1971" target="_blank" rel="noopener noreferrer">‘number of children’</a>, a property that captures the number of children a person had – or has had so far – in their lifetime. This perspective disables the ability to see across and through life events. This in part can be explained by what is achievable through community and voluntary production of data using a platform such as Wikidata: a statement listing the number of children someone had will take considerably less time – and research – to implement than multiple statements recording the dates on which multiple children were born. But Wikidata is a central node within contemporary knowledge infrastructure. And by taking an atemporal viewpoint in some cases, whilst capturing granular temporal information in others, the model opens limited space for the rich, subtle, and granular conceptual changes required when researching and representing complex historical phenomena. This complexity is what our wikibase has sought to retain. As a result motherhood - where we are aware of it - relates to and is entangled other events in the lifecourse, with work in archaeology, history, and heritage; whatever that 'work' meant.</p>
-<h2 id="ignore-this" tabindex="-1"><a class="observablehq-header-anchor" href="#ignore-this">ignore this</a></h2>
-<p>Here is an inline note.<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup></p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<sup class="footnote-ref"><a href="#fn2" id="fnref2">[2]</a></sup> Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<sup class="footnote-ref"><a href="#fn3" id="fnref3">[3]</a></sup></p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
 <div class="observablehq observablehq--block"><!--:9851cee0:--></div>
 <div class="observablehq observablehq--block"><!--:a4ebcf56:--></div>
 <div class="observablehq observablehq--block"><!--:73e3480d:--></div>
 <div class="observablehq observablehq--block"><!--:866db70c:--></div>
 <div class="observablehq observablehq--block"><!--:49d59168:--></div>
-<hr class="footnotes-sep">
-<section class="footnotes">
-<ol class="footnotes-list">
-<li id="fn1" class="footnote-item"><p>Inlines notes are easier to write, since
-you don't have to pick an identifier and move down to type the
-note. <a href="#fnref1" class="footnote-backref">↩︎</a></p>
-</li>
-<li id="fn2" class="footnote-item"><p><a href="https://observablehq.com/framework/markdown" target="_blank" rel="noopener noreferrer">Observable Framework Markdown</a> <a href="#fnref2" class="footnote-backref">↩︎</a></p>
-</li>
-<li id="fn3" class="footnote-item"><p><a href="https://observablehq.observablehq.cloud/framework-example-markdown-it-footnote/" target="_blank" rel="noopener noreferrer">Footnote extension for OF</a> <a href="#fnref3" class="footnote-backref">↩︎</a></p>
-</li>
-</ol>
-</section>
 </main>
 <footer id="observablehq-footer">
-<nav><a rel="prev" href="./education.html"><span>Education</span></a><a rel="next" href="./residence.html"><span>Residence</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-10-22T11:56:30">Oct 22, 2024</a>.</div>
+<nav><a rel="prev" href="./events-networks.html"><span>Events networks v1</span></a><a rel="next" href="./residence.html"><span>Residence</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-10-31T07:44:16">Oct 31, 2024</a>.</div>
 </footer>
 </div>
