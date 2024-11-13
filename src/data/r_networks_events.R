@@ -1,9 +1,7 @@
 # general functions for network analysis ####
 
 library(tidygraph)
-#library(ggraph)
-library(widyr)
-#library(networkD3)
+#library(widyr)
 
 # create an undirected tbl_graph using person id as node id ####
 # n = nodes list, e = edges list. need to be in the right sort of format! 
@@ -15,6 +13,162 @@ bn_tbl_graph <- function(n, e){
     node_key = "person"
   )
 }
+
+
+
+
+
+
+## new function to dedup repeated pairs after doing joins
+make_edge_ids <- function(data){
+  data |>
+  # make std edge1-edge2 ordering numerically. (don't really need names? that's nodes metadata too really)
+  mutate(across(c(from, to), ~str_remove(., "Q"), .names="{.col}_n")) |>
+  mutate(across(c(from_n, to_n), parse_number)) |>
+  # standard from_to id according to which is lower number, for deduping repeated pairs
+  mutate(edge_id = case_when(
+    from_n<to_n ~ glue("{from}_{to}"),
+    to_n<from_n ~ glue("{to}_{from}")
+  )) |>
+  mutate(edge1 = case_when(
+    from_n<to_n ~ from,
+    to_n<from_n ~ to
+  )) |>
+  mutate(edge2 = case_when(
+    from_n<to_n ~ to,
+    to_n<from_n ~ from
+  )) |>
+  select(-from_n, -to_n)
+}
+
+
+
+
+# network has to be a tbl_graph
+# must have weight col, even if all the weights are 1.
+# centrality scores: degree, betweenness, [closeness], harmony, eigenvector. 
+bn_centrality <- function(network){
+  network |>
+    # tidygraph fixes renumbering for you... but you should keep bn ids anyway.
+  filter(!node_is_isolated()) |>
+  # doesn't use the weights column by default. 
+    mutate(degree = centrality_degree(weights=weight),
+           betweenness = centrality_betweenness(weights=weight), # number of shortest paths going through a node
+           #closeness = centrality_closeness(weights=weight), # how many steps required to access every other node from a given node
+           harmonic = centrality_harmonic(weights=weight), # variant of closeness for disconnected networks
+           eigenvector = centrality_eigen(weights=weight) # how well connected to well-connected nodes
+    )  |>
+    # make rankings. wondering whether to use dense_rank which doesn't leave gaps.
+    mutate(across(c(degree, betweenness, harmonic, eigenvector),  ~min_rank(desc(.)), .names = "{.col}_rank")) 
+    # if you do closeness lower=more central so needs to be ranked the other way round from the rest !
+    # mutate(across(c(closeness),  min_rank, .names = "{.col}_rank"))
+}
+
+
+
+# community detection
+# doing unweighted; seemed to work better for events?
+# run this *after* centrality function otherwise you might need isolated filter
+
+bn_clusters <- function(network){
+  network |>
+    mutate(grp_edge_btwn = as.factor(group_edge_betweenness(directed=FALSE))) |>
+    mutate(grp_infomap = as.factor(group_infomap())) |>  
+    mutate(grp_leading_eigen = as.factor(group_leading_eigen())) |> 
+    mutate(grp_louvain = as.factor(group_louvain())) 
+}
+
+
+
+
+
+
+## gender 
+# list of all the named people (not just women) with gender  
+
+# list of all the named people (not just women) with gender  
+bn_gender_sparql <-
+  'SELECT DISTINCT ?person ?personLabel ?genderLabel
+WHERE {  
+  ?person bnwdt:P12 bnwd:Q2137 .
+  FILTER NOT EXISTS {?person bnwdt:P4 bnwd:Q12 .} #filter out project team 
+   optional { ?person bnwdt:P3 ?gender . } # a few without/uv, some named individuals
+  SERVICE wikibase:label {bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en-gb,en".}
+}
+order by ?personLabel'
+
+bn_gender_query <-
+  bn_std_query(bn_gender_sparql) |>
+  make_bn_ids(person) 
+
+bn_gender <-
+  bn_gender_query |>
+# drop the not recorded, indecipherable, unnamed person kind of things.
+  filter(!person %in% c("Q17", "Q2753", "Q576", "Q47") & personLabel !="??????????") |>
+# make blank/uv gender "unknown" (only about a dozen, may well drop them.)
+  mutate(genderLabel = case_when(
+    is.na(genderLabel) | genderLabel=="" ~ "unknown",
+    str_detect(genderLabel, "t\\d") ~ "unknown",
+    .default = genderLabel
+  )) |>
+   # do slightly different gender column <uv> gender for excavations. tidy up later 
+   mutate(gender = if_else(genderLabel %in% c("man", "woman"), genderLabel, NA))  |>
+  rename(name = personLabel)
+
+
+
+
+
+## this is not the all-the-dates query
+bn_dates_sparql <-
+'SELECT distinct ?person (year(?dod) as ?year_death) (year(?dob) as ?year_birth) ?s
+  WHERE {
+   ?person bnwdt:P12 bnwd:Q2137 . #humans
+   FILTER NOT EXISTS { ?person bnwdt:P4 bnwd:Q12 . } # not project team
+   
+  optional { ?person bnwdt:P15 ?dod .   }
+  optional { ?person bnwdt:P26 ?dob .   }
+    
+} # /where
+ORDER BY ?person ?date'
+
+bn_dates_query <-
+  bn_std_query(bn_dates_sparql) |>
+  make_bn_ids(c(person, s))  
+
+
+
+bn_birth_dates <-
+bn_dates_query |>
+  filter(!is.na(year_birth)) |> 
+  distinct(person, year_birth) |>
+  group_by(person) |>
+  arrange(year_birth, .by_group = T) |>
+  top_n(-1, row_number()) |>
+  ungroup() 
+
+# dod seems fine on year, but should you assume it'll stay that way?
+bn_death_dates <-
+bn_dates_query |>
+  filter(!is.na(year_death)) |>
+  distinct(person, year_death)|>
+  group_by(person) |>
+  arrange(year_death, .by_group = T) |>
+  top_n(-1, row_number()) |>
+  ungroup() 
+
+
+
+bn_person_list <-
+bn_gender |>
+  left_join(bn_birth_dates, by="person") |>
+  left_join(bn_death_dates, by="person")
+
+
+
+
+
+
 
 
 # organised by (P109): union query for linked event pages or in quals, excluding human organisers. atm all are items.
@@ -55,11 +209,7 @@ WHERE {
 bn_organised_by_query <-
   bn_std_query(bn_organised_by_sparql) |>
   #make_bn_item_id(person) |>
-  make_bn_ids(c(organised_by, s)) ## |>
-#  select(-person) |>
- # rename(ppa=prop)
-
-
+  make_bn_ids(c(organised_by, s)) 
 
 
 bn_women_events_sparql <-
@@ -120,10 +270,6 @@ bn_women_events_query |>
   relocate(ppa, .after = ppa_label) |>
   relocate(s, .after = last_col())
 
-# propLabel was ppa_label
-# ppaLabel was ppa_valueLabel
-# ppa was ppa_value
-# prop was ppa
 
 # bn_women_ppa_events_qualifiers <-
 bn_women_events_qualifiers <-
@@ -134,14 +280,6 @@ bn_women_events_query |>
   rename(qual_label = qual_propLabel, qual_p=qual_prop) |>
   relocate(ppa, .after = ppa_label) |>
   relocate(event_id, .after = event)
-
-# qualifiers 
-# qual_propLabel (eg point in time) was qual_label
-# qual_prop unchanged
-# qual_valueLabel (timestamps, text (incl society names)) unchanged?
-# qual_value (timestamps, Qs, text) unchanged?
-
-
 
 
 # get instance of for qualifiers
@@ -177,12 +315,8 @@ bn_women_ppa_qual_inst_query <-
   select(-person) |>
   semi_join(bn_women_events, by="s")
 
-# probably best not to use this if some events don't have i/o; go the other way and do left join
-# bn_women_events_qual_io <-
-# bn_women_ppa_qual_inst_query |>
-#   semi_join(bn_women_events, by="s")
 
-
+# why precision?
 # this is quite similar to qualifiers query in dates.r (though that's more general) - see if you can consolidate them later.
 # fetching date_prop makes the query a *lot* slower, so get R to turn the prop IDs into labels instead.
 
@@ -234,10 +368,6 @@ bn_women_events_time_precision_query <-
   )) |>
   rename(date_prop=pq) |>
   select(-person)
-
-# read_csv is automatically converting date to POSIXct... since when? it will break make_date_year
-#bn_std_query(bn_women_events_time_precision_sparql) # not converted
-#read_csv(bn_events_timeprecision_csv_file) # converted
 
 
 bn_women_events_dates <-
@@ -305,10 +435,6 @@ bn_women_events_of_dates <-
 # # watch out for manytomany warning. caused by multiple orgs in of. top_n as a quick hack to get rid. there are only a handful.
 # bn_women_events_of_dates <-
 
-
-
-
-## even newer versions: of_org replaces use of of_value
 
 bn_women_events_of_dates_types_all <-
 bn_women_events_of_dates |>
@@ -434,6 +560,7 @@ bn_women_events_of_dates_types_all |>
   # also dropping separate organised by and of cols.
   distinct(bn_id, personLabel, ppa_type, ppa, event_title, event_type, year, event_instance_date, event_org, org_id, event_instance_id, event_org_id, dob, yob)
 
+
 # unique event instances based on the workings
 # but this is probably not quite right because it includes too much stuff incl title in group by
 bn_women_event_instances <-
@@ -442,96 +569,93 @@ bn_women_events_of_dates_types_all |>
   # get all unique dates listed for the event instance, in chronological order
   arrange(date, .by_group = T) |>
   summarise(dates_in_db = paste(unique(date), collapse = " | "), .groups = "drop_last") |>
-  ungroup() 
+  ungroup()
 
 
 
-
-
-bn_women_events_nodes <-
+bn_events_dated_for_pairs <-
 bn_women_events_of_dates_types_all |>
   filter(!is.na(org_id) & !str_detect(org_id, "_:t") & !is.na(year)) |>
-  rename(person=bn_id) |>
-  count(person, personLabel, name="n_event")  
+  mutate(org_year = paste(org_id, year))  |>
+  distinct(from=bn_id, from_name=personLabel, org_year, event_instance_id, ppa_type, year )
+
+bn_events_dated_pairs <-
+bn_events_dated_for_pairs  |>
+  inner_join(bn_events_dated_for_pairs |>
+               select(to=from, to_name=from_name, event_instance_id), by="event_instance_id", relationship = "many-to-many") |>
+  filter(from!=to) |>
+  relocate(to, to_name, .after = from_name) |>
+  arrange(from_name, to_name) |>
+  make_edge_ids()  
+
+
+# what diff does ppa make? quite a bit. leave it out for now
+#  distinct(edge_id, edge1, edge2, event_instance_id, ppa_type, year) # 646
 
 bn_women_events_edges <-
-bn_women_events_of_dates_types_all |>
-  filter(!is.na(org_id) & !str_detect(org_id, "_:t") & !is.na(year)) |>
-  mutate(org_year = paste(org_id, year)) |>
-  #pairwise_count(bn_id, org_year, upper=F, sort=T) |>
-  pairwise_count(bn_id, event_instance_id, upper=F, sort=T) |>
-  rename(from=item1, to=item2, weight=n)
+bn_events_dated_pairs |>
+  distinct(edge_id, edge1, edge2, event_instance_id, year) |> # 588
+  group_by(edge1, edge2) |>
+  summarise(weight=n(), edge_start_year=min(year), edge_end_year=max(year), .groups = "drop_last") |>
+  ungroup() |>
+  mutate(from=edge1, to=edge2) |>
+  relocate(from, to)
+
+
+# use edges list to make nodes list, it's safer that way.
+bn_women_events_nodes <-
+bn_women_events_edges |>
+  pivot_longer(from:to, values_to = "person") |>
+  distinct(person) |>
+  inner_join(bn_person_list, by="person")
 
 bn_women_events_network <-
 bn_tbl_graph(
   bn_women_events_nodes,
   bn_women_events_edges
-)  
-
-# add numerical IDs counting from 0 for d3. only for connected nodes.
-bn_events_nodes_js <-
-#bn_women_events_nodes |>
-bn_women_events_network  |>
-  filter(!node_is_isolated()) |>
-  #mutate(groups = as.factor(group_edge_betweenness(directed=FALSE, n_groups = 20))) |>
-  mutate(grp1 = as.factor(group_edge_betweenness(directed=FALSE))) |> # 44 groups. g1 only 25. but still big disparities.
-  mutate(grp2 = as.factor(group_infomap())) |>  # 29 groups. g1 30.
-  mutate(grp3 = as.factor(group_leading_eigen())) |> # 26 groups. g1=27
-  mutate(grp4 = as.factor(group_louvain())) |> # 25 groups. g1=27
-  as_tibble() |>
-  rowid_to_column("id") |>
-  mutate(id=id-1) |>
-  select(id, label=personLabel, person, n_event, starts_with("grp"))
+)   |>
+  #filter(!node_is_isolated()) |> don't need this if you use bn_centrality.
+  bn_centrality() |>
+  bn_clusters()
 
 
-bn_events_edges_js <-
-bn_women_events_edges |>
-  rename(from_id=from, to_id=to) |>
-  inner_join(bn_events_nodes_js |> select(from=id, from_id=person), by="from_id") |>
-  inner_join(bn_events_nodes_js |> select(to=id, to_id=person), by="to_id")
+
+
+
 
 
 
 # version uisng names instead of numerical ids, like the miserables example
 
-bn_events_nodes_js2 <-
-bn_women_events_network  |>
-  filter(!node_is_isolated()) |>
-  mutate(degree = centrality_degree(weights=weight),
-        betweenness = centrality_betweenness(weights=weight), # number of shortest paths going through a node
-        #closeness = centrality_closeness(weights=weight), # how many steps required to access every other node from a given node
-        #harmonic = centrality_harmonic(weights=weight), # variant of closeness for disconnected networks
-       eigenvector = centrality_eigen(weights=weight) # how well connected to well-connected nodes
-    )  |>
-  #mutate(groups = as.factor(group_edge_betweenness(directed=FALSE, n_groups = 20))) |>
-  mutate(grp1 = as.factor(group_edge_betweenness(directed=FALSE))) |> # 44 groups. g1 only 25. but still big disparities.
-  mutate(grp2 = as.factor(group_infomap())) |>  # 29 groups. g1 30.
-  mutate(grp3 = as.factor(group_leading_eigen())) |> # 26 groups. g1=27
-  mutate(grp4 = as.factor(group_louvain())) |> # 25 groups. g1=27
+bn_events_nodes_d3 <-
+bn_women_events_network |>
   as_tibble() |>
-  select(id=personLabel, person, n_event, degree, betweenness, eigenvector,  starts_with("grp")) |>
+  select(id=name, person, gender, year_birth, year_death,degree, betweenness, eigenvector, harmonic, ends_with("_rank"), starts_with("grp")) |>
+  # make a slighlty artificial group for testing filtering, if you ever get that far
   mutate(group = case_when(
-  	n_event >9 ~ "group1",
-  	n_event > 4 ~ "group2",
-  	.default = "group3"
+    degree >8 ~ "group1",
+  	degree >3 ~ "group2",
+  	degree >1 ~ "group3",
+  	.default = "group4"
   )) |>
   mutate(
-  	name_label = if_else(n_event>3, id, ""), 
-  	full_name=id, 
-  	gender="woman") |>
+    name_label = if_else(degree>3, id, ""), 
+  	full_name=id) |>
   arrange(id)
 
 
-bn_events_edges_js2 <-
+bn_events_edges_d3 <-
 bn_women_events_edges |>
-  rename(value=weight) |>
-  inner_join(bn_events_nodes_js2 |> select(source=id, from=person), by="from") |>
-  inner_join(bn_events_nodes_js2 |> select(target=id, to=person), by="to") |>
-  relocate(value, from, to, .after = last_col())
+  left_join(bn_events_nodes_d3 |> distinct(source=id, from=person), by="from") |>
+  left_join(bn_events_nodes_d3 |> distinct(target=id, to=person), by="to") |>
+  select(source, target, from, to, weight, edge_start_year, edge_end_year)
+  
+ 
   
 # put in named list ready to write_json  
 bn_events_json <-
 list(
-     nodes= bn_events_nodes_js2,
-     links= bn_events_edges_js2
+     nodes= bn_events_nodes_d3,
+     links= bn_events_edges_d3
      )   
+

@@ -23,6 +23,10 @@ export default {
 //  ],
 
 
+  // Content to add to the head of the page, e.g. for a favicon:
+  head: '<link rel="icon" href="./static/profile.jpg" type="image/jpg">',
+
+
   // Some additional configuration options and their defaults:
   // theme: "default", // try "light", "dark", "slate", etc.
   // header: "", // what to show in the header (HTML)
