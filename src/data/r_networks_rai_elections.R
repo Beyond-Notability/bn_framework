@@ -222,8 +222,8 @@ bn_elections_query |>
 
 bn_rai_proposers <-
 bn_rai_elections |>
-# this should get/drop seconders/signers without needing to specify prop.
-  filter(is.na(qual_prop)) |> 
+# idiot
+#  filter(is.na(qual_prop)) |> 
   filter(!str_detect(proposer, "_:t")) |>
   distinct(bn_id, personLabel, supporterLabel=proposerLabel, supporter= proposer, date, year, prop, s) |>
   #keep only known gender. (-10)
@@ -231,6 +231,7 @@ bn_rai_elections |>
 
 bn_rai_seconds <-
 bn_rai_elections |>
+# this should get seconders/signers without needing to specify prop.
   filter(!is.na(qual_prop)) |>
   distinct(bn_id, personLabel, supporterLabel= interactionLabel, supporter= interaction, date, year, prop=qual_prop, s) |>
   # not named people

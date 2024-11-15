@@ -23,7 +23,7 @@ toc: false
 
 hover and click can be a bit temperamental, especially with small nodes/dense bits of the network, but they do work correctly in this version!
 
-an interesting thing to look for (here and in filtered version below) is individuals who are connected to several different colour nodes: it may suggest they're good "bridges" between groups in the network.
+an interesting thing to look for (here and in filtered version below) is individuals who are connected to several different colour nodes: it may suggest they're good "bridges" between groups in the network. (which might reflect longevity; the RAI data covers a longer period of time than eg SAL elections)
 
 
 ```js
@@ -35,7 +35,6 @@ chart1()
 ## Individuals
 
 Select names from the dropdown to see their personal networks.
-
 
 ```js 
 //filter method  //https://observablehq.com/@asgersp/d3-force-directed-graph-with-input

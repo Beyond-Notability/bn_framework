@@ -11,3 +11,4 @@ source("./src/data/r_networks_rai_elections.R")
 setwd(tempdir())
 write_json(bn_rai_elections_json, "bn-rai-elections.json")
 system("zip - -r .")
+
