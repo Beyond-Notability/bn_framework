@@ -8,35 +8,69 @@ toc: false
 # SAL Elections Networks
 
 
-```js
-// workaround for a weird bug in the markdown rendering.
-```
+Connections between FSA candidates, proposers and (personal) signers. Read alongside [analyses at the other blog](https://beyond-notability.github.io/bn_notes/blog.html#category=SAL).
+
+- size of node reflects level of connectedness (degree)
+- width of edges reflects number of times a pair appeared together (link weight)
+- colour of nodes for auto-detected clusters
+
+Removed individuals who only appear in one election. It's still a very dense network, so a slider has been added to filter by link weight, with default view set at minimum 2 to make the chart more readable.
+
+
 
 Overview
 -------
 
-- zoom, drag, etc
-- size of node reflects level of connectedness
-- width of edges reflects number of links between the pair
-- colour for auto-detected clusters
+interactions:
+
 - hover over a node to temporarily highlight its network
 - click on node to fix highlighting
 - click outside nodes to reset
 
-hover and click can be a bit temperamental, especially with small nodes/dense bits of the network, but they do work correctly in this version!
+hover/click can be a bit temperamental, but they do work in this version!
 
-This is a very dense network. I've already filtered out individuals with <=15 connections, but it's still difficult to see much without filters (and it may be slightly sluggish when zooming and moving around). I'll try to get more filtering options working.
+
+
+```js 
+//slider - link weights. 
+
+// get min and max for slider range
+const minWeight = d3.min(data.links.map(d => d.weight));
+const maxWeight = d3.max(data.links.map(d => d.weight))
+
+const weightConnections = view(
+	Inputs.range(
+		[minWeight, maxWeight], {
+  		label: "Minimum link weight",
+  		step: 1,
+  		value: 2 // default to min 2
+		}
+	)
+)
+```
 
 
 ```js
-chart1()
+// data for slider.  output = weightData
+
+const weightLinks = data.links.filter(l => l.weight >= weightConnections);
+const weightNodes = data.nodes.filter((n) =>
+    weightLinks.some((l) => l.source === n.id || l.target === n.id)
+  );
+const weightData = {nodes: weightNodes, links: weightLinks}
+```
+
+
+
+```js
+chartHighlight()
 ```
 
 
 
 ## Individuals
 
-Select names from the dropdown to see their personal networks.
+Select names in the dropdown to see their personal networks.
 
 
 ```js 
@@ -57,7 +91,30 @@ const filterId = view(
 
 
 ```js
-chart2()
+chartSelect()
+```
+
+
+```js
+// data for individuals dropdown (with "All"; it's irrelevant here, but might not always be). output = selectData.
+
+// apparently these are necessary in this if/else setup, though idk why
+  let selectLinks = []
+  let selectNodes = []
+  
+  if(filterId === "All"){
+  
+     selectLinks = data.links.map(d => ({...d}) ) ; 
+     selectNodes = data.nodes.map(d => ({...d}) );
+     
+  } else {
+  
+    selectLinks = data.links.filter(d => d.source == filterId || d.target == filterId).map(d => ({...d}));
+    const otherPersons = selectLinks.map(d => d.source !== filterId ? d.source : d.target)
+    selectNodes = data.nodes.filter(d => d.id == filterId || otherPersons.indexOf(d.id) >= 0).map(d => ({...d}));
+  }
+  
+  const selectData = {nodes: selectNodes, links: selectLinks};
 ```
 
 
@@ -65,12 +122,12 @@ chart2()
 
 ```js
 
+function chartHighlight() {
 
-function chart1() {
+const height = 800;
 
-
-  const links = data.links.map(d => Object.create(d));
-  const nodes = data.nodes.map(d => Object.create(d));
+  const links = weightData.links.map(d => Object.create(d));
+  const nodes = weightData.nodes.map(d => Object.create(d));
   
     // Create the SVG container.
   
@@ -207,7 +264,7 @@ function chart1() {
   const mouseOverFunction = (event, d) => {
     tooltip.style("visibility", "visible")
     .html(() => {
-        const content = `<span>${d.id}</span>`;
+        const content = `${d.id}<br/>${d.nn} elections`;
         return content;
       });
 
@@ -353,29 +410,15 @@ function chart1() {
 
 ```js
 
-function chart2() {
+function chartSelect() {
+
+const height = 500;
 
   // The force simulation mutates links and nodes, so create a copy
   // so that re-evaluating this cell produces the same result.
   
-  let links = []
-  let nodes = []
-  
-//  if(filterId === "All"){
-//     links = data.links.map(d => Object.create(d));
-//     nodes = data.nodes.map(d => Object.create(d));
-     
-//  } else {
-  
-    links = data.links.filter(d => d.source == filterId || d.target == filterId).map(d => Object.create(d));
-    const otherPersons = links.map(d => d.source !== filterId ? d.source : d.target)
-    nodes = data.nodes.filter(d => d.id == filterId || otherPersons.indexOf(d.id) >= 0).map(d => Object.create(d));
-//  }
-  
-//  const links = data.links.map(d => ({...d}));
-//  const nodes = data.nodes.map(d => ({...d}));
-//  const links = data.links.map(d => Object.create(d)); //timeseries had this but i don't *thnk* it's significant diff.
-//  const nodes = data.nodes.map(d => Object.create(d));
+  const links = selectData.links.map(d => Object.create(d)); 
+  const nodes = selectData.nodes.map(d => Object.create(d));
 
 
   // Create a simulation with several forces. 
@@ -491,7 +534,6 @@ function chart2() {
 ```js
 // shared between the charts
 
-const height = 800
 
 function getRadius(useCasesCount){
 		var	m=useCasesCount/1.5
@@ -512,30 +554,7 @@ const color = d3.scaleOrdinal(d3.schemeCategory10);
 
 
 ```js
-function drag(simulation) {
-  function dragstarted(event) {
-    if (!event.active) simulation.alphaTarget(0.3).restart();
-    event.subject.fx = event.subject.x;
-    event.subject.fy = event.subject.y;
-  }
-
-  function dragged(event) {
-    event.subject.fx = event.x;
-    event.subject.fy = event.y;
-  }
-
-  function dragended(event) {
-    if (!event.active) simulation.alphaTarget(0);
-    event.subject.fx = null;
-    event.subject.fy = null;
-  }
-
-
-  return d3.drag()
-      .on("start", dragstarted)
-      .on("drag", dragged)
-      .on("end", dragended);
-}
+//function drag(simulation) {}
 ```
 
 
@@ -609,6 +628,15 @@ html
 // data
 const data = FileAttachment("./data/l_networks_sal_elections_v2/bn-sal-elections_v2.json").json();
 
+```
+
+
+
+
+
+```js
+// Import components
+import {drag} from "./components/networks.js";
 ```
 
 

@@ -257,13 +257,21 @@ bn_sal_supporters_elections |>
 
 
 
-bn_sal_election_edges_v2 <-
+bn_sal_pairs <-
 bind_rows(
   bn_sal_fsa_pairs,
   bn_sal_supporters_pairs
 ) |>
   arrange(f_election_id, from, to) |>
-  make_edge_ids() |>
+  make_edge_ids() 
+
+
+
+
+
+
+bn_sal_election_edges_v2 <-
+  bn_sal_pairs |>
   distinct(edge_id, edge1, edge2, f_election_id, f_id, f_name, year) |> 
   group_by(edge1, edge2) |>
   summarise(weight=n(), edge_start_year=min(year), edge_end_year=max(year), .groups = "drop_last") |>
@@ -277,13 +285,25 @@ bn_sal_election_nodes_v2 <-
 bn_sal_election_edges_v2 |>
   pivot_longer(from:to, values_to = "person") |>
   distinct(person) |>
-  inner_join(bn_person_list, by="person")
+  inner_join(bn_person_list, by="person") |>
+  inner_join(
+    bn_sal_pairs |>
+      distinct(from, to, f_election_id) |>
+      pivot_longer(c(from, to), values_to = "person") |>
+      distinct(person, f_election_id) |> 
+  	count(person, name="nn"), by="person"
+  )
+
+
+
 
 
 bn_sal_election_network_v2 <-
 bn_tbl_graph(bn_sal_election_nodes_v2, bn_sal_election_edges_v2) |>
   bn_centrality() |>
-  filter(degree>15) |> # 10 = roughly degree rank 250
+  # adjusted to filter by number of elections rather than degree. this drops at least half the people.
+  filter(nn>1) |>
+#  filter(degree>15) |> # 10 = roughly degree rank 250
   filter(!node_is_isolated()) |>
   # takes a while... culprit is edge_betweenness; the rest seem fine.
   #bn_clusters()
@@ -300,7 +320,7 @@ bn_tbl_graph(bn_sal_election_nodes_v2, bn_sal_election_edges_v2) |>
 bn_sal_nodes_d3 <-
 bn_sal_election_network_v2 |>
   as_tibble() |>
-  select(id=name, person, gender, year_birth, year_death,degree, betweenness, eigenvector, harmonic, ends_with("_rank"), starts_with("grp")) |>
+  select(id=name, person, gender, year_birth, year_death, nn, degree, betweenness, eigenvector, harmonic, ends_with("_rank"), starts_with("grp")) |>
   # make a slighlty artificial group for testing filtering, if you ever get that far
   mutate(group = case_when(
     degree >8 ~ "group1",

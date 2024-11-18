@@ -7,29 +7,31 @@ toc: false
 
 # RAI Elections Networks
 
-```js
-// workaround for a weird bug in the markdown rendering.
-```
+Connections between RAI fellows, their proposers and seconders. Read alongside [post at BN Notes](https://beyond-notability.github.io/bn_notes/posts/rai-2023-10-14/).
 
-## Overview
-
-- zoom, drag, etc
 - size of node reflects level of connectedness
 - width of edges reflects number of links between the pair
 - colour for auto-detected clusters
+
+an interesting thing to look for is individuals who are connected to several different colour nodes: it may suggest they're good "bridges" between groups in the network (also might reflect longevity since the RAI data covers a long period of time).
+
+
+
+## Overview
+
+interactions:
+
 - hover over a node to temporarily highlight its network
 - click on node to fix highlighting
 - click outside nodes to reset
 
-hover and click can be a bit temperamental, especially with small nodes/dense bits of the network, but they do work correctly in this version!
+(hover and click can be a bit temperamental)
 
-an interesting thing to look for (here and in filtered version below) is individuals who are connected to several different colour nodes: it may suggest they're good "bridges" between groups in the network. (which might reflect longevity; the RAI data covers a longer period of time than eg SAL elections)
 
 
 ```js
-chart1()
+chartHighlight()
 ```
-
 
 
 ## Individuals
@@ -53,8 +55,31 @@ const filterId = view(
 ```
 
 
+
 ```js
-chart2()
+chartSelect()
+```
+
+
+```js
+// data for individuals dropdown (with "All"; it's irrelevant here, but might not always be). output = selectData.
+
+// apparently these are necessary in this if/else setup, though idk why
+  let selectLinks = []
+  let selectNodes = []
+  
+  if(filterId === "All"){
+     selectLinks = data.links.map(d => ({...d}) ) ; 
+     selectNodes = data.nodes.map(d => ({...d}) );
+     
+  } else {
+  
+    selectLinks = data.links.filter(d => d.source == filterId || d.target == filterId).map(d => ({...d}));
+    const otherPersons = selectLinks.map(d => d.source !== filterId ? d.source : d.target)
+    selectNodes = data.nodes.filter(d => d.id == filterId || otherPersons.indexOf(d.id) >= 0).map(d => ({...d}));
+  }
+  
+  const selectData = {nodes: selectNodes, links: selectLinks};
 ```
 
 
@@ -63,8 +88,9 @@ chart2()
 ```js
 
 
-function chart1() {
+function chartHighlight() {
 
+const height = 800;
 
   const links = data.links.map(d => Object.create(d));
   const nodes = data.nodes.map(d => Object.create(d));
@@ -200,7 +226,7 @@ function chart1() {
   const mouseOverFunction = (event, d) => {
     tooltip.style("visibility", "visible")
     .html(() => {
-        const content = `<span>${d.id}</span>`;
+        const content = `${d.id}<br/>${d.nn} elections`;
         return content;
       });
 
@@ -346,29 +372,15 @@ function chart1() {
 
 ```js
 
-function chart2() {
+function chartSelect() {
+
+const height = 500;
 
   // The force simulation mutates links and nodes, so create a copy
   // so that re-evaluating this cell produces the same result.
-  
-  let links = []
-  let nodes = []
-  
-//  if(filterId === "All"){
-//     links = data.links.map(d => Object.create(d));
-//     nodes = data.nodes.map(d => Object.create(d));
-     
-//  } else {
-  
-    links = data.links.filter(d => d.source == filterId || d.target == filterId).map(d => Object.create(d));
-    const otherPersons = links.map(d => d.source !== filterId ? d.source : d.target)
-    nodes = data.nodes.filter(d => d.id == filterId || otherPersons.indexOf(d.id) >= 0).map(d => Object.create(d));
-//  }
-  
-//  const links = data.links.map(d => ({...d}));
-//  const nodes = data.nodes.map(d => ({...d}));
-//  const links = data.links.map(d => Object.create(d)); //timeseries had this but i don't *thnk* it's significant diff.
-//  const nodes = data.nodes.map(d => Object.create(d));
+
+  const links = selectData.links.map(d => Object.create(d)); 
+  const nodes = selectData.nodes.map(d => Object.create(d));
 
 
   // Create a simulation with several forces. 
@@ -484,7 +496,6 @@ function chart2() {
 ```js
 // shared between the charts
 
-const height = 800
 
 function getRadius(useCasesCount){
 		var	m=useCasesCount/1.5
@@ -505,30 +516,7 @@ const color = d3.scaleOrdinal(d3.schemeCategory10);
 
 
 ```js
-function drag(simulation) {
-  function dragstarted(event) {
-    if (!event.active) simulation.alphaTarget(0.3).restart();
-    event.subject.fx = event.subject.x;
-    event.subject.fy = event.subject.y;
-  }
-
-  function dragged(event) {
-    event.subject.fx = event.x;
-    event.subject.fy = event.y;
-  }
-
-  function dragended(event) {
-    if (!event.active) simulation.alphaTarget(0);
-    event.subject.fx = null;
-    event.subject.fy = null;
-  }
-
-
-  return d3.drag()
-      .on("start", dragstarted)
-      .on("drag", dragged)
-      .on("end", dragended);
-}
+//function drag(simulation) {}
 ```
 
 
@@ -602,6 +590,15 @@ html
 // data
 const data = FileAttachment("./data/l_networks_rai_elections/bn-rai-elections.json").json();
 
+```
+
+
+
+
+
+```js
+// Import components
+import {drag} from "./components/networks.js";
 ```
 
 

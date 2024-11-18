@@ -571,7 +571,20 @@ bn_excavations_nodes <-
 bn_excavations_edges  |>
   pivot_longer(from:to, values_to = "person") |>
   distinct(person) |>
-  inner_join(bn_person_list, by="person")
+  inner_join(bn_person_list, by="person") |>
+  # add number of excavations per person
+#  inner_join(
+#  bn_excavations_pairs |>
+#  	distinct(person=from, excavation) |>
+#  	count(person, name="nn"), by="person"
+#  )
+    inner_join(
+    bn_excavations_pairs |>
+      distinct(from, to, excavation) |>
+      pivot_longer(c(from, to), values_to = "person") |>
+      distinct(person, excavation) |> 
+  	count(person, name="nn"), by="person"
+  )
 
 
 bn_excavations_network <-
@@ -589,7 +602,7 @@ bn_excavations_network <-
 bn_excavations_nodes_d3 <-
 bn_excavations_network |>
   as_tibble() |>
-  select(id=name, person, gender, year_birth, year_death,degree, betweenness, eigenvector, harmonic, ends_with("_rank"), starts_with("grp")) |>
+  select(id=name, person, gender, year_birth, year_death, nn, degree, betweenness, eigenvector, harmonic, ends_with("_rank"), starts_with("grp")) |>
   # make a slighlty artificial group for testing filtering, if you ever get that far
   mutate(group = case_when(
     degree >8 ~ "group1",

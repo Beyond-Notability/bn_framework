@@ -1,44 +1,48 @@
 ---
 theme: dashboard
-title: Events networks
+title: Education networks
 toc: false
 ---
 
 
-# Women's events networks
+# Education Networks
 
-An interactive network graph created from the events data at [BN Notes events analysis](https://beyond-notability.github.io/bn_notes/posts/events-2024-02-26/).
+```js
+// workaround for a weird bug in the markdown rendering.
+```
+Here I've taken the education ["cohorts" I analysed early on in the project](https://beyond-notability.github.io/bn_notes/posts/education-2023-09-22/) to connect women by institution and overlapping years (UCL students also had to share subjects). So pairs who were at a college together for three years have wider edges than, say, women who only overlapped for a year. 
 
-Links have been created between women on the basis of attendance *at the same event* instance (fuller explanation at the linked post but this meant a one-off event like a named conference or one dated occurrence of a recurring event like an annual meeting). This is an "association network", which is slightly different from an "interaction network" (of which the classic example is senders and recipients of letters). That can make risky assumptions - just because two people went to the same conference doesn't necessasrily mean they even knew each other, though it does imply shared interests and likely associations.
+If we have only a start date or end date for a woman, I've made the (perhaps risky) assumption that she attended for three years. (The extent of inference varied quite a bit for different colleges which can be seen in the dumbbell charts in the linked post.)
 
+As a lot of women only attended one college, this particular network has some very clear clusters. I've added a second filtered chart with dropdown for colleges.
 
-- Size of nodes reflects a person's connectedness (degree) 
-- Width of connecting lines reflects the number of connections between a pair (link weight)
-- Node colours represent automatically-detected clusters.
-	- (It's worth looking out for people who have links to more than one cluster even if they don't have many links, eg Alice Edleston.)
+- size of node reflects level of connectedness (degree) 
+	- (in this case, large nodes may indicate longer than usual periods in education, like Annie Abram at LSE)
+- width of edges reflects number of links between the pair (link weight)
+- colour for auto-detected clusters
 
 
 ## Overview
 
 interactions:
 
-- hover over a node to highlight its connections
-- click to make it stick so you can take a closer look
-- click again in the chart outside nodes to reset.
+- hover over a node to temporarily highlight its network
+- click on node to make highlighting stick
+- click outside nodes to reset
 
-(hover and click can be slightly temperamental)
+(hover and click can be a bit temperamental)
 
 
 
 ```js
-chartHighlight()
+chart1()
 ```
 
 
 
 ## Individuals
 
-Select names in the dropdown to see personal networks.
+Select names from the dropdown to see their personal networks.
 
 
 ```js 
@@ -58,27 +62,94 @@ const filterId = view(
 ```
 
 
-
 ```js
-chartSelect(selectData)
+chart2(selectData)
 ```
 
 
 
 
+## Colleges
+
+
+
+```js 
+//
+const filterCollege = view(
+		Inputs.select(
+				//["All"].concat(data.links.map(d => d.college_label)),
+				data.links.map((d) => d.college_label ),
+				{
+				label: "college", 
+				sort: true, 
+				unique: true, 
+				}
+				)
+		)
+```
+
+
+```js
+chart2(collegeData)
+```
+
 
 
 
 ```js
-function chartHighlight() {
+// data for college dropdown. output = collegeData
+
+const collegeLinks = data.links.filter(d => d.college_label == filterCollege);
+
+const collegeNodes = data.nodes.filter((n) =>
+    collegeLinks.some((l) => l.source === n.id || l.target === n.id)
+  );
+  
+const collegeData = {nodes: collegeNodes, links: collegeLinks}
+
+```
+
+
+```js
+// data for individuals dropdown (with "All"; it's irrelevant here, but might not always be). output = selectData.
+
+// apparently these are necessary in this if/else setup, though idk why
+  let selectLinks = []
+  let selectNodes = []
+  
+  if(filterId === "All"){
+     selectLinks = data.links.map(d => ({...d}) ) ; 
+     selectNodes = data.nodes.map(d => ({...d}) );
+     
+  } else {
+  
+    selectLinks = data.links.filter(d => d.source == filterId || d.target == filterId).map(d => ({...d}));
+    const otherPersons = selectLinks.map(d => d.source !== filterId ? d.source : d.target)
+    selectNodes = data.nodes.filter(d => d.id == filterId || otherPersons.indexOf(d.id) >= 0).map(d => ({...d}));
+  }
+  
+  const selectData = {nodes: selectNodes, links: selectLinks};
+```
+
+
+
+```js
+// this is the chart with highlighting.
+function chart1() {
 
 const height = 800
 
   const links = data.links.map(d => Object.create(d));
   const nodes = data.nodes.map(d => Object.create(d));
   
+    // Create the SVG container.
+
+  
   const svg = d3.create("svg")
-     .attr("viewBox", [-width / 2, -height / 2, width, height]); 
+      .attr("width", width)
+      .attr("height", height)
+      .attr("viewBox", [-width / 2, -height / 2, width, height])
+      .attr("style", "max-width: 100%; height: auto;");
   
   
   // create link reference
@@ -101,6 +172,7 @@ const height = 800
   //const nodeRadius = d => 15 * d.support;
 
 
+
 // not quite sure what the significance of baseGroup is...
   const baseGroup = svg.append("g");
   
@@ -116,17 +188,18 @@ const height = 800
   
   let ifClicked = false;
 
+
   const simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id( function(d) { return d.id; } ).strength(0.3)) 
-		.force("charge", d3.forceManyBody().strength(-400))
+		.force("charge", d3.forceManyBody().strength(-300) ) //
 		.force("center", d3.forceCenter(0,0))
-		// avoid (or reduce) overlap. 
-		.force("collide", d3.forceCollide().radius(d => getRadius(d) + 25).iterations(2)) // what does iterations do?
+		
+		// avoid (or reduce) overlap. may need tweaking
+		.force("collide", d3.forceCollide().radius(d => getRadius(d) + 20).iterations(2))  
+     
       .force("x", d3.forceX())
       .force("y", d3.forceY());
 		
-		
-  
 
   const link = baseGroup.append("g")
       .selectAll("line")
@@ -134,26 +207,27 @@ const height = 800
       .join("line")
       //.classed('link', true) // aha now width works.
       .attr("stroke", "#bdbdbd") 
-      .attr("stroke-opacity", 0.5) // is this working?
-      .attr("stroke-width", d => d.weight) ;
+      .attr("stroke-opacity", 0.4) // is this working? works with attr instead of style
+      .attr("stroke-width", d => d.value) ;
+          
       
-
+  
 
   const node = baseGroup.append("g")
       .selectAll("circle")
       .data(nodes)
       .join("circle")
       .classed('node', true)
-      .attr("r", d => getRadius(d.degree))
+      .attr("r", d => getRadius(d.degree/2)) // can tweak this
       .attr("fill", d => color(d.grp_leading_eigen))  
-      .style("fill-opacity", 0.5)  
-      .call(drag(simulation)); // this was what was missing for drag...
+      .style("fill-opacity", 0.6)  
+      .call(drag(simulation)); // this is what was missing for drag...
        
-  
-  
+
+
     
-  // text labels - i think working correctly.
-  // have to be added in several places after this to match node and link.
+  // text labels 
+  // stuff has to be added in several places after this to match node and link.
  
  	const text = baseGroup.append("g")
     //.attr("class", "labels")
@@ -199,7 +273,7 @@ const height = 800
   const mouseOverFunction = (event, d) => {
     tooltip.style("visibility", "visible")
     .html(() => {
-        const content = `${d.id}<br/>${d.nn} events`;
+        const content = `<span>${d.id}</span>`;
         return content;
       });
 
@@ -344,11 +418,9 @@ const height = 800
 
 
 
-
-
 ```js
 
-function chartSelect(chartData) {
+function chart2(chartData) {
 
 const height = 500
 
@@ -470,33 +542,31 @@ const height = 500
 
 
 
+```js
+// shared between the charts
+
+
+function getRadius(useCasesCount){
+		var	m=useCasesCount/1.5
+		var d=3/useCasesCount
+  if(useCasesCount>=9){   
+  	var radius = m+d  
+    return radius
+  }
+  return 8
+}
+
+const color = d3.scaleOrdinal(d3.schemeCategory10);
+```
+
+
 
 
 
 
 ```js
-// data for individuals dropdown (with "All"; it's irrelevant here, but might not always be). output = selectData.
-
-// apparently these are necessary in this if/else setup, though idk why
-  let selectLinks = []
-  let selectNodes = []
-  
-  if(filterId === "All"){
-     selectLinks = data.links.map(d => ({...d}) ) ; 
-     selectNodes = data.nodes.map(d => ({...d}) );
-     
-  } else {
-  
-    selectLinks = data.links.filter(d => d.source == filterId || d.target == filterId).map(d => ({...d}));
-    const otherPersons = selectLinks.map(d => d.source !== filterId ? d.source : d.target)
-    selectNodes = data.nodes.filter(d => d.id == filterId || otherPersons.indexOf(d.id) >= 0).map(d => ({...d}));
-  }
-  
-  const selectData = {nodes: selectNodes, links: selectLinks};
+//function drag(simulation) {}
 ```
-
-
-
 
 
 ```js
@@ -511,27 +581,7 @@ const tooltip = d3.select("body").append("div")
 
 
 
-```js
 
-function getRadius(useCasesCount){
-		var	m=useCasesCount/1.5
-		var d=3/useCasesCount
-  if(useCasesCount>=9){   
-  	var radius = m+d  
-    return radius
-  }
-  return 6
-}
-
-
-const color = d3.scaleOrdinal(d3.schemeCategory10);
-```
-
-
-
-```js
-//function drag(simulation) {}
-```
 
 
 
@@ -541,7 +591,7 @@ html
 `<style>         
     .node {
         stroke: #f0f0f0;
-        stroke-width: 0px;
+        stroke-width: 1px;
     }
 
     .link {
@@ -581,10 +631,16 @@ html
 
 
 
+
+
+
+
 ```js
-// events data. 
-const data = FileAttachment("data/l_networks_events/bn-events.json").json();
+// data
+const data = FileAttachment("./data/l_networks_education/bn-education.json").json();
+
 ```
+
 
 
 
@@ -593,4 +649,3 @@ const data = FileAttachment("data/l_networks_events/bn-events.json").json();
 // Import components
 import {drag} from "./components/networks.js";
 ```
-

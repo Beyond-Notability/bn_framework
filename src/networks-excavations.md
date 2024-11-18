@@ -1,29 +1,30 @@
 ---
 theme: dashboard
-title: excavations
+title: Excavations networks
 toc: false
 ---
 
 
 # Excavations Networks
 
-```js
-// workaround for a weird bug in the markdown rendering.
-```
+Read alongside [analysis at BN Notes](https://beyond-notability.github.io/bn_notes/posts/excavations-2024-07-10/).
+
+- size of node reflects level of connectedness (degree)
+- width of edges reflects number of links between a pair (link weight)
+- colour for auto-detected clusters
+
+NB that there are quite a few individuals who only appear in one or two excavations but if the excavation group is very large that can make them look more significant than they perhaps really are. I've added excavation count to tooltips and I may well change the variable for sizing nodes.
+
 
 ## Overview
 
-- zoom, drag, etc
-- size of node reflects level of connectedness
-- width of edges reflects number of links between the pair
-- colour for auto-detected clusters
+interactions:
+
 - hover over a node to temporarily highlight its network
 - click on node to fix highlighting
 - click outside nodes to reset
 
 (hover and click can be a bit temperamental)
-
-it should be noted that there are quite a few individuals who only appear in one excavation but it's a large one and that can make them look more significant than they perhaps really are. I'll aim to add that sort of info to tooltips and I may change the variable I use for size of nodes.
 
 
 
@@ -61,12 +62,36 @@ chart2()
 
 
 
+```js
+// data for individuals dropdown (with "All"; it's irrelevant here, but might not always be). output = selectData.
+
+// apparently these are necessary in this if/else setup, though idk why
+  let selectLinks = []
+  let selectNodes = []
+  
+  if(filterId === "All"){
+     selectLinks = data.links.map(d => ({...d}) ) ; 
+     selectNodes = data.nodes.map(d => ({...d}) );
+     
+  } else {
+  
+    selectLinks = data.links.filter(d => d.source == filterId || d.target == filterId).map(d => ({...d}));
+    const otherPersons = selectLinks.map(d => d.source !== filterId ? d.source : d.target)
+    selectNodes = data.nodes.filter(d => d.id == filterId || otherPersons.indexOf(d.id) >= 0).map(d => ({...d}));
+  }
+  
+  const selectData = {nodes: selectNodes, links: selectLinks};
+```
+
+
 
 ```js
 
 
 function chart1() {
 
+
+const height = 800
 
   const links = data.links.map(d => Object.create(d));
   const nodes = data.nodes.map(d => Object.create(d));
@@ -124,7 +149,8 @@ function chart1() {
 		.force("center", d3.forceCenter(0,0))
 		
 		// avoid (or reduce) overlap. may need tweaking
-		.force("collide", d3.forceCollide().radius(d => getRadius(d) + 20).iterations(2))  
+		.force("collide", d3.forceCollide().radius(d => getRadius(d) + 20).iterations(2)) // using degree
+		//.force("collide", d3.forceCollide().radius(d => d*3).iterations(2))  // TODO to use nn
      
       .force("x", d3.forceX())
       .force("y", d3.forceY());
@@ -148,6 +174,7 @@ function chart1() {
       .join("circle")
       .classed('node', true)
       .attr("r", d => getRadius(d.degree/2)) // can tweak this
+      //.attr("r", d => d.nn*3) // nn is too small, TODO change getRadius.
       .attr("fill", d => color(d.grp_leading_eigen))  
       .style("fill-opacity", 0.6)  
       .call(drag(simulation)); // this is what was missing for drag...
@@ -202,7 +229,7 @@ function chart1() {
   const mouseOverFunction = (event, d) => {
     tooltip.style("visibility", "visible")
     .html(() => {
-        const content = `<span>${d.id}</span>`;
+        const content = `${d.id}<br/>${d.nn} excavations`;
         return content;
       });
 
@@ -346,31 +373,19 @@ function chart1() {
 
 
 
+
 ```js
 
 function chart2() {
 
+const height = 500;
+
   // The force simulation mutates links and nodes, so create a copy
   // so that re-evaluating this cell produces the same result.
   
-  let links = []
-  let nodes = []
-  
-//  if(filterId === "All"){
-//     links = data.links.map(d => Object.create(d));
-//     nodes = data.nodes.map(d => Object.create(d));
-     
-//  } else {
-  
-    links = data.links.filter(d => d.source == filterId || d.target == filterId).map(d => Object.create(d));
-    const otherPersons = links.map(d => d.source !== filterId ? d.source : d.target)
-    nodes = data.nodes.filter(d => d.id == filterId || otherPersons.indexOf(d.id) >= 0).map(d => Object.create(d));
-//  }
-  
-//  const links = data.links.map(d => ({...d}));
-//  const nodes = data.nodes.map(d => ({...d}));
-//  const links = data.links.map(d => Object.create(d)); //timeseries had this but i don't *thnk* it's significant diff.
-//  const nodes = data.nodes.map(d => Object.create(d));
+
+  const links = selectData.links.map(d => Object.create(d)); //timeseries had this but i don't *thnk* it's significant diff.
+  const nodes = selectData.nodes.map(d => Object.create(d));
 
 
   // Create a simulation with several forces. 
@@ -410,6 +425,7 @@ function chart2() {
       .data(nodes)
       .join("circle")
       .attr("r", d => getRadius(d.degree)) // tweak
+      //.attr("r", d => d.nn) // TODO
       .attr("fill", d => color(d.grp_leading_eigen))  
       .style("fill-opacity", 0.6)
       .attr("stroke", "black")
@@ -486,7 +502,6 @@ function chart2() {
 ```js
 // shared between the charts
 
-const height = 800
 
 function getRadius(useCasesCount){
 		var	m=useCasesCount/1.5
@@ -507,30 +522,7 @@ const color = d3.scaleOrdinal(d3.schemeCategory10);
 
 
 ```js
-function drag(simulation) {
-  function dragstarted(event) {
-    if (!event.active) simulation.alphaTarget(0.3).restart();
-    event.subject.fx = event.subject.x;
-    event.subject.fy = event.subject.y;
-  }
-
-  function dragged(event) {
-    event.subject.fx = event.x;
-    event.subject.fy = event.y;
-  }
-
-  function dragended(event) {
-    if (!event.active) simulation.alphaTarget(0);
-    event.subject.fx = null;
-    event.subject.fy = null;
-  }
-
-
-  return d3.drag()
-      .on("start", dragstarted)
-      .on("drag", dragged)
-      .on("end", dragended);
-}
+//function drag(simulation) {}
 ```
 
 
@@ -604,6 +596,15 @@ html
 // data
 const data = FileAttachment("./data/l_networks_excavations/bn-excavations.json").json();
 
+```
+
+
+
+
+
+```js
+// Import components
+import {drag} from "./components/networks.js";
 ```
 
 

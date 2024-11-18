@@ -607,7 +607,14 @@ bn_women_events_nodes <-
 bn_women_events_edges |>
   pivot_longer(from:to, values_to = "person") |>
   distinct(person) |>
-  inner_join(bn_person_list, by="person")
+  inner_join(bn_person_list, by="person") |>
+    inner_join(
+    bn_events_dated_pairs |>
+      distinct(from, to, event_instance_id) |>
+      pivot_longer(c(from, to), values_to = "person") |>
+      distinct(person, event_instance_id) |> 
+  	count(person, name="nn"), by="person"
+  )
 
 bn_women_events_network <-
 bn_tbl_graph(
@@ -630,7 +637,7 @@ bn_tbl_graph(
 bn_events_nodes_d3 <-
 bn_women_events_network |>
   as_tibble() |>
-  select(id=name, person, gender, year_birth, year_death,degree, betweenness, eigenvector, harmonic, ends_with("_rank"), starts_with("grp")) |>
+  select(id=name, person, gender, year_birth, year_death, nn, degree, betweenness, eigenvector, harmonic, ends_with("_rank"), starts_with("grp")) |>
   # make a slighlty artificial group for testing filtering, if you ever get that far
   mutate(group = case_when(
     degree >8 ~ "group1",
