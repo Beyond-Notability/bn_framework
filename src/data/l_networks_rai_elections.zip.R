@@ -3,6 +3,8 @@
 
 source("./src/data/shared.R") 
 
+source("./src/data/r_networks_general.R")
+
 source("./src/data/r_networks_rai_elections.R")
   
 ## make a zip with several objects

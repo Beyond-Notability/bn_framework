@@ -3,6 +3,8 @@
 
 source("./src/data/shared.R") 
 
+source("./src/data/r_networks_general.R")
+
 source("./src/data/r_networks_excavations.R")
   
 ## make a zip with several objects
@@ -11,3 +13,4 @@ source("./src/data/r_networks_excavations.R")
 setwd(tempdir())
 write_json(bn_excavations_json, "bn-excavations.json")
 system("zip - -r .")
+
