@@ -1,33 +1,28 @@
 ---
 theme: dashboard
-title: SAL elections
+title: The big network of everything
 toc: false
+draft: true
 ---
 
 
-# SAL Elections Networks
+# Women's networks
 
 
-Connections between FSA candidates, proposers and (personal) signers. Read alongside [analyses at the other blog](https://beyond-notability.github.io/bn_notes/blog.html#category=SAL).
-
-- size of node reflects level of connectedness (degree)
-- width of edges reflects number of times a pair appeared together (link weight)
-- colour of nodes for auto-detected clusters
-
-Removed individuals who only appear in one election. It's still a very dense network, so a slider has been added to filter by link weight, with default view set at minimum 2 to make the chart more readable.
+- Size of nodes reflects a person's connectedness (degree) 
+- Width of connecting lines reflects the number of connections between a pair (link weight)
+- Node colours represent automatically-detected clusters.
 
 
-
-Overview
--------
+## Overview
 
 interactions:
 
-- hover over a node to temporarily highlight its network
-- click on node to fix highlighting
-- click outside nodes to reset
+- hover over a node to highlight its connections
+- click to make it stick so you can take a closer look
+- click again in the chart outside nodes to reset.
 
-hover/click can be a bit temperamental, but they do work in this version!
+(hover and click can be slightly temperamental)
 
 
 
@@ -49,19 +44,77 @@ const weightConnections = view(
 )
 ```
 
+agents checkbox has equiv of groupNames (linkLabels) in the checkbox, using value: instead of key: is config:relationships which is just labels as well.
+
+so how does it then connect to the data?
+
+```js
+//checkbox - groups
+//using d3.group and then flat
+// this is different... not sure i can work this...
+/**/
+const checkGroup = view(
+	Inputs.checkbox(
+			//d3.group(newdata.nodes, (d) => d.meta ), { // change data source here
+			nodesData, {
+			label: "group:",
+			//key: ["Events", "Excavations", "RAI elections"],
+			//value: groupNames, // 
+			value: ["Events", "Excavations", "RAI elections"],
+			sort: true
+			}
+)
+)
+
+```
+
+
+```js echo
+nodesData
+```
+
+```js
+// make array of distinct values from group col. yes! 
+
+const nodesData = [
+  ...new Set(
+    data.nodes  // change data source here as necessary
+      .flatMap((n) => n.meta )
+      .sort()
+  )
+]
+
+```
+
+
+
+
 
 
 
 
 ```js
-chartHighlight(weightData)
+// data for slider.  output = weightData
+
+const weightLinks = data.links.filter(l => l.weight >= weightConnections);
+const weightNodes = data.nodes.filter((n) =>
+    weightLinks.some((l) => l.source === n.id || l.target === n.id)
+  );
+const weightData = {nodes: weightNodes, links: weightLinks}
+```
+
+
+
+
+```js
+chartHighlight()
 ```
 
 
 
 ## Individuals
 
-Select names in the dropdown to see their personal networks.
+Select names in the dropdown to see personal networks.
 
 
 ```js 
@@ -81,76 +134,41 @@ const filterId = view(
 ```
 
 
+
 ```js
-chartSelect()
+chartSelect(selectData)
 ```
 
 
 
 
-```js
-// data for chartHighlight. slider.  output = weightData
-
-const weightLinks = data.links.filter(l => l.weight >= weightConnections);
-const weightNodes = data.nodes.filter((n) =>
-    weightLinks.some((l) => l.source === n.id || l.target === n.id)
-  );
-const weightData = {nodes: weightNodes, links: weightLinks}
-```
-
-
-```js
-// data for chartSelect. individuals dropdown (with "All"; it's irrelevant here, but might not always be). output = selectData.
-
-// apparently these are necessary in this if/else setup, though idk why
-  let selectLinks = []
-  let selectNodes = []
-  
-  if(filterId === "All"){
-  
-     selectLinks = data.links.map(d => ({...d}) ) ; 
-     selectNodes = data.nodes.map(d => ({...d}) );
-     
-  } else {
-  
-    selectLinks = data.links.filter(d => d.source == filterId || d.target == filterId).map(d => ({...d}));
-    const otherPersons = selectLinks.map(d => d.source !== filterId ? d.source : d.target)
-    selectNodes = data.nodes.filter(d => d.id == filterId || otherPersons.indexOf(d.id) >= 0).map(d => ({...d}));
-  }
-  
-  const selectData = {nodes: selectNodes, links: selectLinks};
-```
-
 
 
 
 ```js
+function chartHighlight() {
 
-function chartHighlight(chartData) {
+const height = 900
 
-const height = 800;
+	  const links = weightData.links.map(d => Object.create(d));
+	  const nodes = weightData.nodes.map(d => Object.create(d));
 
-  const links = chartData.links.map(d => Object.create(d));
-  const nodes = chartData.nodes.map(d => Object.create(d));
-  
-    // Create the SVG container.
+  //const links = data.links.map(d => Object.create(d));
+  //const nodes = data.nodes.map(d => Object.create(d));
   
   const svg = d3.create("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .attr("viewBox", [-width / 2, -height / 2, width, height])
-      .attr("style", "max-width: 100%; height: auto;");
+     .attr("viewBox", [-width / 2, -height / 2, width, height]); 
   
   
   // create link reference
   let linkedByIndex = {};
-  chartData.links.forEach(d => {
+  data.links.forEach(d => {
     linkedByIndex[`${d.source},${d.target}`] = true;
   });
   
   // nodes map
   let nodesById = {};
-  chartData.nodes.forEach(d => {
+  data.nodes.forEach(d => {
     nodesById[d.id] = {...d};
   })
 
@@ -160,7 +178,6 @@ const height = 800;
   const isEqual = (a, b) => a === b;
   // todo?
   //const nodeRadius = d => 15 * d.support;
-
 
 
 // not quite sure what the significance of baseGroup is...
@@ -178,23 +195,17 @@ const height = 800;
   
   let ifClicked = false;
 
-// overlap/collide etd: check https://observablehq.com/@d3/collision-detection/2?collection=@d3/d3-force 
-// https://observablehq.com/@d3/forcecenter-strength?collection=@d3/d3-force
-// https://observablehq.com/@d3/clustered-bubbles?collection=@d3/d3-force
-
-// .force("link", d3.forceLink(links).id(d => d.id).distance(30).strength(0.25))
-
   const simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id( function(d) { return d.id; } ).strength(0.3)) 
-		.force("charge", d3.forceManyBody().strength(-400) ) //
+		.force("charge", d3.forceManyBody().strength(-400))
 		.force("center", d3.forceCenter(0,0))
-		
-		// avoid (or reduce) overlap. 
-		.force("collide", d3.forceCollide().radius(d => getRadius(d) + 20).iterations(2))  
-     
+		// avoid (or reduce) overlap.  
+		.force("collide", d3.forceCollide().radius(d => getRadius(d) + 20).iterations(2))  // what exactly is d?
       .force("x", d3.forceX())
       .force("y", d3.forceY());
 		
+		
+  
 
   const link = baseGroup.append("g")
       .selectAll("line")
@@ -202,27 +213,26 @@ const height = 800;
       .join("line")
       //.classed('link', true) // aha now width works.
       .attr("stroke", "#bdbdbd") 
-      .attr("stroke-opacity", 0.4) // is this working? works with attr instead of style
-      .attr("stroke-width", d => d.value) ;
-          
+      .attr("stroke-opacity", 0.5) // is this working?
+      .attr("stroke-width", d => d.weight) ;
       
-  
+
 
   const node = baseGroup.append("g")
       .selectAll("circle")
       .data(nodes)
       .join("circle")
       .classed('node', true)
-      .attr("r", d => getRadius(d.degree/5)) // can tweak this
+      .attr("r", d => getRadius(d.degree))
       .attr("fill", d => color(d.grp_leading_eigen))  
-      .style("fill-opacity", 0.6)  
-      .call(drag(simulation)); // this is what was missing for drag...
+      .style("fill-opacity", 0.5)  
+      .call(drag(simulation)); // this was what was missing for drag...
        
-
-
+  
+  
     
-  // text labels 
-  // stuff has to be added in several places after this to match node and link.
+  // text labels - i think working correctly.
+  // have to be added in several places after this to match node and link.
  
  	const text = baseGroup.append("g")
     //.attr("class", "labels")
@@ -268,7 +278,7 @@ const height = 800;
   const mouseOverFunction = (event, d) => {
     tooltip.style("visibility", "visible")
     .html(() => {
-        const content = `${d.id}<br/>${d.nn} elections`;
+        const content = `${d.id}<br/>${d.nnn} events`;
         return content;
       });
 
@@ -412,28 +422,31 @@ const height = 800;
 
 
 
+
+
+
 ```js
 
-function chartSelect() {
+function chartSelect(chartData) {
 
-const height = 500;
+const height = 500
+
 
   // The force simulation mutates links and nodes, so create a copy
   // so that re-evaluating this cell produces the same result.
-  
-  const links = selectData.links.map(d => Object.create(d)); 
-  const nodes = selectData.nodes.map(d => Object.create(d));
+
+  const links = chartData.links.map(d => Object.create(d)); 
+  const nodes = chartData.nodes.map(d => Object.create(d));
 
 
   // Create a simulation with several forces. 
-  
   const simulation = d3.forceSimulation(nodes)
       .force("link", d3.forceLink(links).id(d => d.id))
       .force("charge", d3.forceManyBody().strength(-400))
       .force("center", d3.forceCenter(0, 0))
       .force("x", d3.forceX())
       .force("y", d3.forceY())
-      .force("collide", d3.forceCollide(40).iterations(2))
+      .force("collide", d3.forceCollide(30))
       ;
      
 
@@ -448,6 +461,7 @@ const height = 500;
       .attr("stroke-opacity", 0.4)
       .selectAll("line")
       .data(links)
+      // https://www.createwithdata.com/d3-has-just-got-easier/
       .join("line")
       
       //.attr("stroke-width", d => Math.sqrt(d.value));
@@ -461,7 +475,7 @@ const height = 500;
       .selectAll("circle")
       .data(nodes)
       .join("circle")
-      .attr("r", d => getRadius(d.degree/5)) // tweak
+      .attr("r", d => getRadius(d.nnn)) // tweak
       .attr("fill", d => color(d.grp_leading_eigen))  
       .style("fill-opacity", 0.6)
       .attr("stroke", "black")
@@ -535,31 +549,33 @@ const height = 500;
 
 
 
+
+
+
+
 ```js
-// shared between the charts
+// data for individuals dropdown (with "All"; it's irrelevant here, but might not always be). output = selectData.
 
-
-function getRadius(useCasesCount){
-		var	m=useCasesCount/1.5
-		var d=3/useCasesCount
-  if(useCasesCount>=9){   
-  	var radius = m+d  
-    return radius
+// apparently these are necessary in this if/else setup, though idk why
+  let selectLinks = []
+  let selectNodes = []
+  
+  if(filterId === "All"){
+     selectLinks = data.links.map(d => ({...d}) ) ; 
+     selectNodes = data.nodes.map(d => ({...d}) );
+     
+  } else {
+  
+    selectLinks = data.links.filter(d => d.source == filterId || d.target == filterId).map(d => ({...d}));
+    const otherPersons = selectLinks.map(d => d.source !== filterId ? d.source : d.target)
+    selectNodes = data.nodes.filter(d => d.id == filterId || otherPersons.indexOf(d.id) >= 0).map(d => ({...d}));
   }
-  return 8
-}
-
-const color = d3.scaleOrdinal(d3.schemeCategory10);
+  
+  const selectData = {nodes: selectNodes, links: selectLinks};
 ```
 
 
 
-
-
-
-```js
-//function drag(simulation) {}
-```
 
 
 ```js
@@ -574,7 +590,27 @@ const tooltip = d3.select("body").append("div")
 
 
 
+```js
 
+function getRadius(useCasesCount){
+		var	m=useCasesCount/3
+		var d=3/useCasesCount
+  if(useCasesCount>=6){   
+  	var radius = m+d  
+    return radius
+  }
+  return 6
+}
+
+
+const color = d3.scaleOrdinal(d3.schemeCategory10);
+```
+
+
+
+```js
+//function drag(simulation) {}
+```
 
 
 
@@ -584,7 +620,7 @@ html
 `<style>         
     .node {
         stroke: #f0f0f0;
-        stroke-width: 1px;
+        stroke-width: 0px;
     }
 
     .link {
@@ -624,16 +660,10 @@ html
 
 
 
-
-
-
-
 ```js
-// data
-const data = FileAttachment("./data/l_networks_sal_elections_v2/bn-sal-elections_v2.json").json();
-
+// events data. 
+const data = FileAttachment("./data/l_networks_grouped/bn-grouped-network.json").json();
 ```
-
 
 
 
@@ -644,3 +674,41 @@ import {drag} from "./components/networks.js";
 ```
 
 
+
+
+ 
+```js 
+// = agents `data` from `raw`. may need this if meta gets more complex, but dont at the moment. keep for reference...
+/*Normalise the data
+* Transform person {config.title.toLowerCase()} with no gender into unknown gender.
+* Flatten the meta information. agents has different types of meta, which you don't at the moment
+* Remove nodes with no links.
+* Copy the meta information into the links for easier filtering. - do that in R if you want it.
+
+const newnodes = data.nodes
+    .map((n) => {
+      
+      n.meta =
+        n.meta !== undefined ? Object.values(n.meta).flatMap((m) => m) : [];
+
+      return n;
+    })
+    .filter((n) =>
+      data.links.some((e) => e.source === n.id || e.target == n.id)
+    );
+
+  const newlinks = data.links
+  .map( (e) => {
+    const nodes = data.nodes.filter(
+      (n) => n.id === e.source || n.id === e.target
+    );
+    e.meta = nodes.flatMap((n) => (n.meta !== undefined ? n.meta : []));
+
+    return e;
+  });
+
+  const newdata = {nodes:newnodes, links:newlinks};
+*/
+
+
+```
