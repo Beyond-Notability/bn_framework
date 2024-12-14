@@ -8,15 +8,20 @@ toc: false
 # SAL Elections Networks
 
 
-Connections between FSA candidates, proposers and (personal) signers. Read alongside [analyses at the other blog](https://beyond-notability.github.io/bn_notes/blog.html#category=SAL).
-
-- size of node reflects level of connectedness (degree)
-- width of edges reflects number of times a pair appeared together (link weight)
-- colour of nodes for auto-detected clusters
-
-Removed individuals who only appear in one election. It's still a very dense network, so a slider has been added to filter by link weight, with default view set at minimum 2 to make the chart more readable.
+Explore connections between FSA candidates, proposers and (personal) signers. Read alongside [analyses at the other blog](https://beyond-notability.github.io/bn_notes/blog.html#category=SAL).
 
 
+<div class="card">
+${importantNote()}
+</div>
+
+
+The complete network contains 439 people (nodes) and 4468 pairs, which makes it very difficult to read. But many of those people appeared in only one election, so the default view for the minimum link weight slider has been set at 2. This will effectively remove anyone who was only involved in one election as well as single occurrence pairs.
+
+It's an *association network*: a connection is assumed when two people appear in the same election as candidate, proposer or signers. There might not be any direct connection between signers in particular. However, they are linked by knowing the candidate, and including them can help to tease out less visible connections. This is another reason to filter out pairs that co-occur only once; the more often a pair co-occur the more likely it is that there's a significant link between them. 
+
+(Also note that it's an "undirected" network, meaning that all links are treated as equal. I'd like to have made it a *directed* network that would better reflect the differences in the relationships, but unfortunately my skill levels weren't quite up to that yet.)
+  
 
 Overview
 -------
@@ -52,7 +57,6 @@ const weightConnections = view(
 
 
 
-
 ```js
 chartHighlight(weightData)
 ```
@@ -70,7 +74,7 @@ Select names in the dropdown to see their personal networks.
 const filterId = view(
 		Inputs.select(
 				//["All"].concat(data.nodes.map(d => d.id)),
-				data.nodes.map((d) => d.id ),
+				weightData.nodes.map((d) => d.id ),
 				{
 				label: "node", 
 				//sort: true, 
@@ -81,44 +85,196 @@ const filterId = view(
 ```
 
 
-```js
-chartSelect()
+
+```js 
+//slider2 - link weights. 
+// problem with doing weight first: this is always for the network, not the individual
+
+// get min and max for slider range
+const minWeight2 = d3.min(data.links.map(d => d.weight));
+const maxWeight2 = d3.max(data.links.map(d => d.weight))
+
+const weightConnections2 = view(
+	Inputs.range(
+		[minWeight2, maxWeight2], {
+  		label: "minimum link weight",
+  		step: 1,
+  		value: 2 // default to min 2
+		}
+	)
+)
 ```
 
 
 
 
-```js
-// data for chartHighlight. slider.  output = weightData
 
-const weightLinks = data.links.filter(l => l.weight >= weightConnections);
-const weightNodes = data.nodes.filter((n) =>
-    weightLinks.some((l) => l.source === n.id || l.target === n.id)
+```js
+chartSelect(selectData)
+```
+
+
+
+
+
+```js
+  
+// data for chartSelect. 
+
+// try to start with weight filter then > select...
+// what if you made this an appearances filter rather than weight? would be a node filter though
+
+const weightLinks2 = data.links.filter(l => l.weight >= weightConnections2);
+const weightNodes2 = data.nodes.filter((n) =>
+    weightLinks2.some((l) => l.source === n.id || l.target === n.id)
   );
-const weightData = {nodes: weightNodes, links: weightLinks}
-```
+const weightData2 = {nodes: weightNodes2, links: weightLinks2};
 
 
-```js
-// data for chartSelect. individuals dropdown (with "All"; it's irrelevant here, but might not always be). output = selectData.
 
-// apparently these are necessary in this if/else setup, though idk why
+//individuals dropdown (with "All"; it's irrelevant here, but might not always be). output = selectData.
+
   let selectLinks = []
   let selectNodes = []
   
   if(filterId === "All"){
   
-     selectLinks = data.links.map(d => ({...d}) ) ; 
-     selectNodes = data.nodes.map(d => ({...d}) );
+     selectLinks = weightData2.links.map(d => ({...d}) ) ; 
+     selectNodes = weightData2.nodes.map(d => ({...d}) );
      
   } else {
   
-    selectLinks = data.links.filter(d => d.source == filterId || d.target == filterId).map(d => ({...d}));
+    selectLinks = weightData2.links.filter(d => d.source == filterId || d.target == filterId).map(d => ({...d}));
     const otherPersons = selectLinks.map(d => d.source !== filterId ? d.source : d.target)
-    selectNodes = data.nodes.filter(d => d.id == filterId || otherPersons.indexOf(d.id) >= 0).map(d => ({...d}));
+    selectNodes = weightData2.nodes.filter(d => d.id == filterId || otherPersons.indexOf(d.id) >= 0).map(d => ({...d}));
   }
   
   const selectData = {nodes: selectNodes, links: selectLinks};
+  
+```
+
+
+
+
+
+```js
+
+function chartSelect(chartSelectData) {
+
+const height = 500;
+
+  // The force simulation mutates links and nodes, so create a copy
+  // so that re-evaluating this cell produces the same result.
+  
+  const links = chartSelectData.links.map(d => Object.create(d)); 
+  const nodes = chartSelectData.nodes.map(d => Object.create(d));
+
+
+  // Create a simulation with several forces. 
+  
+  const simulation = d3.forceSimulation(nodes)
+      .force("link", d3.forceLink(links).id(d => d.id))
+      .force("charge", d3.forceManyBody().strength(-300))
+      .force("center", d3.forceCenter(0, 0))
+      .force("x", d3.forceX())
+      .force("y", d3.forceY())
+      .force("collide", d3.forceCollide(40).iterations(2))
+      ;
+     
+
+  // Create the SVG container. 
+  const svg = d3.create("svg")
+      .attr("viewBox", [-width / 2, -height / 2, width, height]);
+
+
+  // Add a line for each link, and a circle for each node.
+  const link = svg.append("g")
+      .attr("stroke", "#999")
+      .attr("stroke-opacity", 0.4)
+      .selectAll("line")
+      .data(links)
+      .join("line")
+      
+      //.attr("stroke-width", d => Math.sqrt(d.value));
+      .attr("stroke-width", d => d.weight); // width of lines
+
+
+	// circles
+  const node = svg.append("g")
+      .attr("stroke", "#fff")
+      .attr("stroke-width", 1)
+      .selectAll("circle")
+      .data(nodes)
+      .join("circle")
+      .attr("r", d => getRadius(d.degree/5)) // tweak
+      .attr("fill", d => color(d.grp_leading_eigen))  
+      .style("fill-opacity", 0.6)
+      .attr("stroke", "black")
+      .style("stroke-width", 1)
+        
+      .call(drag(simulation));
+  
+  
+  // labels
+  var text = svg.append("g")
+    .attr("class", "labels")
+    .selectAll("text")
+    .data(nodes)
+    .enter().append("text")
+    .attr("dx", d => d.x)
+    .attr("dy", d => d.y)
+    
+    .attr("opacity", 0.8)
+    .attr("font-family", "Arial")
+    .style("font-size","14px")
+    .text(function(d) { return d.id })
+
+    .call(drag(simulation));
+
+  
+  
+  node.append("title")
+      .text(d => d.id);
+      
+  
+
+  simulation.on("tick", () => {
+    link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+
+    node
+        .attr("cx", d => d.x)
+        .attr("cy", d => d.y);
+    
+    text
+        .attr("dx", d => d.x)
+        .attr("dy", d => d.y);
+  });
+  
+
+  invalidation.then(() => simulation.stop());
+
+  svg.call(d3.zoom()
+      .extent([[0, 0], [width, height]])
+      .scaleExtent([0.2, 10])
+      .on("zoom", zoomed));
+
+// https://stackoverflow.com/a/71011116/7281022
+// zoomTransform(this) rather than transform 
+  function zoomed() {
+  	//svg.attr("transform", d3.zoomTransform(this));
+    node.attr("transform", d3.zoomTransform(this));
+    link.attr("transform", d3.zoomTransform(this));
+    text.attr("transform", d3.zoomTransform(this));
+  }  
+  
+  return svg.node();
+
+}
+
 ```
 
 
@@ -411,130 +567,6 @@ const height = 800;
 
 
 
-
-```js
-
-function chartSelect() {
-
-const height = 500;
-
-  // The force simulation mutates links and nodes, so create a copy
-  // so that re-evaluating this cell produces the same result.
-  
-  const links = selectData.links.map(d => Object.create(d)); 
-  const nodes = selectData.nodes.map(d => Object.create(d));
-
-
-  // Create a simulation with several forces. 
-  
-  const simulation = d3.forceSimulation(nodes)
-      .force("link", d3.forceLink(links).id(d => d.id))
-      .force("charge", d3.forceManyBody().strength(-400))
-      .force("center", d3.forceCenter(0, 0))
-      .force("x", d3.forceX())
-      .force("y", d3.forceY())
-      .force("collide", d3.forceCollide(40).iterations(2))
-      ;
-     
-
-  // Create the SVG container. 
-  const svg = d3.create("svg")
-      .attr("viewBox", [-width / 2, -height / 2, width, height]);
-
-
-  // Add a line for each link, and a circle for each node.
-  const link = svg.append("g")
-      .attr("stroke", "#999")
-      .attr("stroke-opacity", 0.4)
-      .selectAll("line")
-      .data(links)
-      .join("line")
-      
-      //.attr("stroke-width", d => Math.sqrt(d.value));
-      .attr("stroke-width", d => d.weight); // width of lines
-
-
-	// circles
-  const node = svg.append("g")
-      .attr("stroke", "#fff")
-      .attr("stroke-width", 1)
-      .selectAll("circle")
-      .data(nodes)
-      .join("circle")
-      .attr("r", d => getRadius(d.degree/5)) // tweak
-      .attr("fill", d => color(d.grp_leading_eigen))  
-      .style("fill-opacity", 0.6)
-      .attr("stroke", "black")
-      .style("stroke-width", 1)
-        
-      .call(drag(simulation));
-  
-  
-  // labels
-  var text = svg.append("g")
-    .attr("class", "labels")
-    .selectAll("text")
-    .data(nodes)
-    .enter().append("text")
-    .attr("dx", d => d.x)
-    .attr("dy", d => d.y)
-    
-    .attr("opacity", 0.8)
-    .attr("font-family", "Arial")
-    .style("font-size","14px")
-    .text(function(d) { return d.id })
-
-    .call(drag(simulation));
-
-  
-  
-  node.append("title")
-      .text(d => d.id);
-      
-  
-
-  simulation.on("tick", () => {
-    link
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y);
-
-    node
-        .attr("cx", d => d.x)
-        .attr("cy", d => d.y);
-    
-    text
-        .attr("dx", d => d.x)
-        .attr("dy", d => d.y);
-  });
-  
-
-  invalidation.then(() => simulation.stop());
-
-  svg.call(d3.zoom()
-      .extent([[0, 0], [width, height]])
-      .scaleExtent([0.2, 10])
-      .on("zoom", zoomed));
-
-// https://stackoverflow.com/a/71011116/7281022
-// zoomTransform(this) rather than transform 
-  function zoomed() {
-  	//svg.attr("transform", d3.zoomTransform(this));
-    node.attr("transform", d3.zoomTransform(this));
-    link.attr("transform", d3.zoomTransform(this));
-    text.attr("transform", d3.zoomTransform(this));
-  }  
-  
-  return svg.node();
-
-}
-
-```
-
-
-
-
 ```js
 // shared between the charts
 
@@ -625,6 +657,18 @@ html
 
 
 
+```js
+// data for chartHighlight. slider.  output = weightData
+
+const weightLinks = data.links.filter(l => l.weight >= weightConnections);
+const weightNodes = data.nodes.filter((n) =>
+    weightLinks.some((l) => l.source === n.id || l.target === n.id)
+  );
+const weightData = {nodes: weightNodes, links: weightLinks}
+```
+
+
+
 
 
 
@@ -640,7 +684,13 @@ const data = FileAttachment("./data/l_networks_sal_elections_v2/bn-sal-elections
 
 ```js
 // Import components
-import {drag} from "./components/networks.js";
+import {drag, importantNote} from "./components/networks.js";
 ```
 
+
+```js
+
+
+
+```
 

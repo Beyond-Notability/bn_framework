@@ -9,13 +9,16 @@ toc: false
 
 An interactive network graph created from the events data at [BN Notes events analysis](https://beyond-notability.github.io/bn_notes/posts/events-2024-02-26/).
 
+
+<div class="card">
+${importantNote()}
+</div>
+
+
 Links have been created between women on the basis of attendance *at the same event* instance (fuller explanation at the linked post but this meant a one-off event like a named conference or one dated occurrence of a recurring event like an annual meeting). This is an "association network", which is slightly different from an "interaction network" (of which the classic example is senders and recipients of letters). That can make risky assumptions - just because two people went to the same conference doesn't necessasrily mean they even knew each other, though it does imply shared interests and likely associations.
 
 
-- Size of nodes reflects a person's connectedness (degree) 
-- Width of connecting lines reflects the number of connections between a pair (link weight)
-- Node colours represent automatically-detected clusters.
-	- (It's worth looking out for people who have links to more than one cluster even if they don't have many links, eg Alice Edleston.)
+(It's worth looking out for people who have links to more than one cluster even if they don't have many links, eg Alice Edleston.)
 
 
 ## Overview
@@ -591,6 +594,6 @@ const data = FileAttachment("data/l_networks_events/bn-events.json").json();
 
 ```js
 // Import components
-import {drag} from "./components/networks.js";
+import {drag, importantNote} from "./components/networks.js";
 ```
 

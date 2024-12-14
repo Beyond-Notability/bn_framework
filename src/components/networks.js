@@ -1,5 +1,21 @@
 import * as Plot from "npm:@observablehq/plot";
 import * as d3 from "npm:d3";
+import {html} from "npm:htl";
+
+
+export function importantNote() {
+  return html`
+<p>This type of chart is exploratory and probabilistic rather than definitive: it can suggest connections and groupings among individuals for further investigation. It can be particularly useful for bringing less obvious connections to the surface. But it comes with the risk that apparent links may be illusory. </p>
+<p>Various features of the charts are intended to help to assess the significance of such links:
+<ul>
+<li>the size of circles (aka nodes) reflects how many connections an individual has overall ("degree")</li>
+<li>the width of the lines connecting nodes (aka links or edges) reflects the number of times a pair of individuals appeared together ("link weight")</li>
+<li>the colour of nodes groups together algorithmically detected "clusters" (but has no other significance)</li>
+<li>in the main chart, further information such as number of appearances can be viewed on hovering/clicking a node</li>
+</ul>
+</p>
+ `;
+}
 
 
 // this one seems to be pretty much identical across charts

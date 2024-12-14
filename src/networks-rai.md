@@ -9,9 +9,12 @@ toc: false
 
 Connections between RAI fellows, their proposers and seconders. Read alongside [post at BN Notes](https://beyond-notability.github.io/bn_notes/posts/rai-2023-10-14/).
 
-- size of node reflects level of connectedness
-- width of edges reflects number of links between the pair
-- colour for auto-detected clusters
+
+<div class="card">
+${importantNote()}
+</div>
+
+
 
 an interesting thing to look for is individuals who are connected to several different colour nodes: it may suggest they're good "bridges" between groups in the network (also might reflect longevity since the RAI data covers a long period of time).
 
@@ -598,7 +601,7 @@ const data = FileAttachment("./data/l_networks_rai_elections/bn-rai-elections.js
 
 ```js
 // Import components
-import {drag} from "./components/networks.js";
+import {drag, importantNote} from "./components/networks.js";
 ```
 
 

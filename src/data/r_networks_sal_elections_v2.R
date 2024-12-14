@@ -1,7 +1,63 @@
 # general functions for network analysis ####
-
 # moved
 
+
+# family/teacher connections
+# should this include men as well? perhaps should in case any reciprocation has been overlooked? but prioritise women.
+# leave it for now.
+
+connections_sparql <- 
+'select distinct ?personLabel ?toLabel ?to_prop  ?p ?person ?to  ?s
+where
+{
+  ?person bnwdt:P3 bnwd:Q3 .
+  {
+  ?person ?p ?s .
+   ?s ( bnpq:P41 | bnpq:P42 | bnpq:P43 | bnpq:P44 | bnpq:P45 | bnpq:P46 | bnpq:P154 | bnpq:P137 | bnpq:P95 ) ?to . 
+   ?s ?to_prop ?to .
+  }
+  union
+  {
+  ?person ( bnp:P41 | bnp:P42 | bnp:P43 | bnp:P44 | bnp:P45 | bnp:P46 | bnp:P154 | bnp:P137 | bnp:P95 ) ?s .
+    ?s ( bnps:P41 | bnps:P42 | bnps:P43 | bnps:P44 | bnps:P45 | bnps:P46 | bnps:P154 | bnps:P137 | bnps:P95 ) ?to . 
+    ?s ?to_prop ?to .
+  }
+   
+  # drop unnamed spouses
+  filter not exists { ?s ?to_prop bnwd:Q2753 .  }
+  
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en,en-gb". }
+}'
+  
+connections_query <-
+  bn_std_query(connections_sparql) |>
+  make_bn_ids(c(person, to, to_prop, p, s)) |>
+  mutate(p = na_if(p, "")) |>
+  left_join(bn_properties |> select(bn_prop_id, connection=propertyLabel), by=c("to_prop"="bn_prop_id"))
+
+connections <-
+connections_query |>
+  mutate(connection_type=case_when(
+    connection=="student of" ~ "teaching",
+    connection %in% c("child", "father", "mother", "spouse", "sibling") ~ "family", 
+    .default = "family_2"
+  ))  
+
+
+connections_pairs <-
+  connections |>
+  # dedup to distinct pairs
+  mutate(from=person) |>
+  make_edge_ids() |>
+  distinct(edge1, edge2, connection_type) |>
+  # top_n for a pair with mroe than one connection type
+  group_by(edge1, edge2) |>
+  # this should prefer family
+  arrange(connection_type, .by_group = T) |>
+  top_n(-1, row_number()) |>
+  ungroup() |>
+  arrange(edge1, edge2)
+  
 
 
 # network specifics
@@ -140,7 +196,8 @@ bn_sal_election_network_v2 <-
 bn_tbl_graph(bn_sal_election_nodes_v2, bn_sal_election_edges_v2) |>
   # adjusted to filter by number of elections rather than degree. this drops at least half the people.
   # but keep women
-  filter(nn>1  | gender=="woman") |>
+  # try again without the filter.
+  #filter(nn>1  | gender=="woman") |>
   bn_centrality() |>
   bn_clusters()
 
@@ -163,7 +220,7 @@ bn_sal_election_network_v2 |>
   mutate(
     name_label = if_else(degree>3, id, ""), 
   	full_name=id) |>
-  arrange(id)
+  arrange(id)  
 
 
 
@@ -174,7 +231,8 @@ bn_sal_election_network_v2 |>
   select(from=edge1, to=edge2, weight, edge_start_year, edge_end_year) |>
   left_join(bn_sal_nodes_d3 |> distinct(source=id, from=person), by="from") |>
   left_join(bn_sal_nodes_d3 |> distinct(target=id, to=person), by="to") |>
-  relocate(source, target, from, to)
+  relocate(source, target, from, to)  |>
+  left_join(connections_pairs, by=c("from"="edge1", "to"= "edge2"))
 
   
 # put in named list ready to write_json  

@@ -7,16 +7,18 @@ toc: false
 
 # Education Networks
 
+
+<div class="card">
+${importantNote()}
+</div>
+
+
 Here I've taken the education ["cohorts" I analysed early on in the project](https://beyond-notability.github.io/bn_notes/posts/education-2023-09-22/) to connect women by institution and overlapping years (UCL students also had to share subjects). So pairs who were at a college together for three years have wider edges than, say, women who only overlapped for a year. 
 
 If we have only a start date or end date for a woman, I've made the (perhaps risky) assumption that she attended for three years. (The extent of inference varied quite a bit for different colleges which can be seen in the dumbbell charts in the linked post.)
 
 As a lot of women only attended one college, this particular network has some very clear clusters. I've added a second filtered chart with dropdown for colleges.
 
-- size of node reflects level of connectedness (degree) 
-	- (in this case, large nodes may indicate longer than usual periods in education, like Annie Abram at LSE)
-- width of edges reflects number of links between the pair (link weight)
-- colour for auto-detected clusters
 
 
 ## Overview
@@ -644,5 +646,5 @@ const data = FileAttachment("./data/l_networks_education/bn-education.json").jso
 
 ```js
 // Import components
-import {drag} from "./components/networks.js";
+import {drag, importantNote} from "./components/networks.js";
 ```

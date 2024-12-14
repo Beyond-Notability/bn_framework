@@ -7,6 +7,12 @@ toc: false
 
 # Membership Networks
 
+
+<div class="card">
+${importantNote()}
+</div>
+
+
 People have been linked by organisation and recorded date of membership grouped by *decade*. So eg people with dates 1891, 1896 and 1898 would all be linked as 1890s. If it feels a bit too broad I could narrow it down to, say, 2 or 3 years before and after the recorded date.
 
 At present only includes `member of` (P67). It could also include `fellow of` (P75)? 
@@ -20,9 +26,7 @@ In both cases I can put them back in but would probably handle dates with more p
 
 Completely undated memberships (there are not that many) have also been removed.
 
-- size of node reflects level of connectedness (degree)
-- width of edges reflects number of links between a pair (link weight)
-- colour for auto-detected clusters
+
 
 
 
@@ -608,7 +612,7 @@ const data = FileAttachment("./data/l_networks_members/bn-members.json").json();
 
 ```js
 // Import components
-import {drag} from "./components/networks.js";
+import {drag, importantNote} from "./components/networks.js";
 ```
 
 

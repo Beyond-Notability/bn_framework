@@ -9,9 +9,12 @@ toc: false
 
 Read alongside [analysis at BN Notes](https://beyond-notability.github.io/bn_notes/posts/excavations-2024-07-10/).
 
-- size of node reflects level of connectedness (degree)
-- width of edges reflects number of links between a pair (link weight)
-- colour for auto-detected clusters
+
+<div class="card">
+${importantNote()}
+</div>
+
+
 
 NB that there are quite a few individuals who only appear in one or two excavations but if the excavation group is very large that can make them look more significant than they perhaps really are. I've added excavation count to tooltips and I may well change the variable for sizing nodes.
 
@@ -604,7 +607,7 @@ const data = FileAttachment("./data/l_networks_excavations/bn-excavations.json")
 
 ```js
 // Import components
-import {drag} from "./components/networks.js";
+import {drag, importantNote} from "./components/networks.js";
 ```
 
 
