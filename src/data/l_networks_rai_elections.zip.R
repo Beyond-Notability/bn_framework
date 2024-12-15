@@ -5,6 +5,8 @@ source("./src/data/shared.R")
 
 source("./src/data/r_networks_general.R")
 
+source("./src/data/r_networks_personal.R")
+
 source("./src/data/r_networks_rai_elections.R")
   
 ## make a zip with several objects
@@ -13,3 +15,4 @@ source("./src/data/r_networks_rai_elections.R")
 setwd(tempdir())
 write_json(bn_rai_elections_json, "bn-rai-elections.json")
 system("zip - -r .")
+

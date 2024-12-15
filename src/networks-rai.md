@@ -12,6 +12,8 @@ Connections between RAI fellows, their proposers and seconders. Read alongside [
 
 <div class="card">
 ${importantNote()}
+
+Where recorded in the wikibase, family relationships and educational teacher-student links are highlighted in the larger chart: ${linkLegend} 
 </div>
 
 
@@ -162,8 +164,9 @@ const height = 800;
       .data(links)
       .join("line")
       //.classed('link', true) // aha now width works.
-      .attr("stroke", "#bdbdbd") 
-      .attr("stroke-opacity", 0.4) // is this working? works with attr instead of style
+      //.attr("stroke", "#bdbdbd") 
+      .attr("stroke", d => colourConnections(d.connection_type)) 
+      .attr("stroke-opacity", 0.5) 
       .attr("stroke-width", d => d.value) ;
           
       
@@ -493,6 +496,36 @@ const height = 500;
 
 ```
 
+
+
+
+
+```js 
+// set up colour for edge connection types
+// family, family2, teaching, other
+// adjust the actual colours once it's working.'#BB5566','#F1932D', '#77AADD'
+// other to be same as now. family and family2 the same.
+
+const  colourDomain = ["family", "education", "other"];
+const  colourRange = ["purple", "orange", "#bdbdbd"];
+
+const colourConnections = d3.scaleOrdinal(colourDomain, colourRange);
+```
+
+```js
+// code for standalone legend
+//https://observablehq.com/d/a23f6e59f1380df0
+
+const linkLegend = Plot.legend({
+  color: {
+    domain: colourDomain, 
+    range: colourRange ,
+    alpha: 0.8
+  },
+  //swatchSize: 15,
+  //label: "label?" // doesn't work.ffs.
+})
+```
 
 
 

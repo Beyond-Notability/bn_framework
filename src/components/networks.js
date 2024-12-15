@@ -14,11 +14,12 @@ export function importantNote() {
 <li>in the main chart, further information such as number of appearances can be viewed on hovering/clicking a node</li>
 </ul>
 </p>
+<p>The smaller chart is currently not quite working as intended. It doesn't show the selected node's network as such, only its own links. Secondly, I'm not certain that everyone in the network appears in the dropdown. I don't know if I'll have time to fix this.</p>
  `;
 }
 
 
-// this one seems to be pretty much identical across charts
+// this seems to be pretty much identical across charts
 export function drag(simulation) {
 
   function dragstarted(event) {

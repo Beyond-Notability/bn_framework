@@ -235,6 +235,10 @@ date_property_labels <- function(v) {
 }
 
 
+# turn NAs (probably after a left join) into "other" string inside a mutate
+na_to_other <- function(v, other="other") {
+  if_else(is.na({{v}}), other, v)
+}
 
 
 #mutate(across(c(a, b), ~str_extract(., "([^/]*$)") )) 

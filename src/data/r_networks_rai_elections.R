@@ -186,7 +186,10 @@ bn_rai_election_network_v2 |>
   select(from=edge1, to=edge2, weight, edge_start_year, edge_end_year) |>
   left_join(bn_rai_nodes_d3 |> distinct(source=id, from=person), by="from") |>
   left_join(bn_rai_nodes_d3 |> distinct(target=id, to=person), by="to") |>
-  relocate(source, target, from, to)
+  relocate(source, target, from, to) |>
+  left_join(connections_pairs, by=c("from"="edge1", "to"= "edge2")) |>
+  # new function to make NAs "other"
+  mutate(connection_type = na_to_other(connection_type))
 
   
 

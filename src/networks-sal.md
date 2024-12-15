@@ -13,14 +13,16 @@ Explore connections between FSA candidates, proposers and (personal) signers. Re
 
 <div class="card">
 ${importantNote()}
+
+Where recorded in the wikibase, family relationships and educational teacher-student links are highlighted in the larger chart (NB there's only one teacher-student link and it doesn't show up in the default view): ${linkLegend} 
 </div>
 
 
-The complete network contains 439 people (nodes) and 4468 pairs, which makes it very difficult to read. But many of those people appeared in only one election, so the default view for the minimum link weight slider has been set at 2. This will effectively remove anyone who was only involved in one election as well as single occurrence pairs.
+The complete network contains 439 people (nodes) and 4468 pairs, which makes it very difficult to read. But many of those people appeared in only one election, so the link weight slider defaults to show only pairs with at least two links. This will effectively remove anyone who was only involved in one election as well as single co-occurrence pairs.
 
 It's an *association network*: a connection is assumed when two people appear in the same election as candidate, proposer or signers. There might not be any direct connection between signers in particular. However, they are linked by knowing the candidate, and including them can help to tease out less visible connections. This is another reason to filter out pairs that co-occur only once; the more often a pair co-occur the more likely it is that there's a significant link between them. 
 
-(Also note that it's an "undirected" network, meaning that all links are treated as equal. I'd like to have made it a *directed* network that would better reflect the differences in the relationships, but unfortunately my skill levels weren't quite up to that yet.)
+(Also note that it's an "undirected" network, meaning that all links are treated as equal. I'd like to have made it a *directed* network that would better reflect the differences between relationships, but unfortunately my skill levels weren't quite up to that yet.)
   
 
 Overview
@@ -32,7 +34,7 @@ interactions:
 - click on node to fix highlighting
 - click outside nodes to reset
 
-hover/click can be a bit temperamental, but they do work in this version!
+hover/click can be a bit temperamental, but they do work!
 
 
 
@@ -63,9 +65,12 @@ chartHighlight(weightData)
 
 
 
+
+
+
 ## Individuals
 
-Select names in the dropdown to see their personal networks.
+Select names in the dropdown to see their personal links.
 
 
 ```js 
@@ -91,7 +96,7 @@ const filterId = view(
 // problem with doing weight first: this is always for the network, not the individual
 
 // get min and max for slider range
-const minWeight2 = d3.min(data.links.map(d => d.weight));
+const minWeight2 = 1; // d3.min(data.links.map(d => d.weight));
 const maxWeight2 = d3.max(data.links.map(d => d.weight))
 
 const weightConnections2 = view(
@@ -122,6 +127,7 @@ chartSelect(selectData)
 // data for chartSelect. 
 
 // try to start with weight filter then > select...
+// this just isn't working properly.
 // what if you made this an appearances filter rather than weight? would be a node filter though
 
 const weightLinks2 = data.links.filter(l => l.weight >= weightConnections2);
@@ -188,9 +194,12 @@ const height = 500;
 
 
   // Add a line for each link, and a circle for each node.
+  
+  // links
   const link = svg.append("g")
-      .attr("stroke", "#999")
-      .attr("stroke-opacity", 0.4)
+  		 //.attr("stroke", d => colourConnections(d.connection_type)) // this doesn't work here, idk why. 
+     .attr("stroke", "#999")
+      .attr("stroke-opacity", 0.5)
       .selectAll("line")
       .data(links)
       .join("line")
@@ -357,8 +366,9 @@ const height = 800;
       .data(links)
       .join("line")
       //.classed('link', true) // aha now width works.
-      .attr("stroke", "#bdbdbd") 
-      .attr("stroke-opacity", 0.4) // is this working? works with attr instead of style
+      //.attr("stroke", "#bdbdbd") 
+      .attr("stroke", d => colourConnections(d.connection_type)) 
+      .attr("stroke-opacity", 0.5) // is this working? works with attr instead of style
       .attr("stroke-width", d => d.value) ;
           
       
@@ -565,6 +575,35 @@ const height = 800;
 ```
 
 
+
+
+```js 
+// set up colour for edge connection types
+// family, family2, teaching, other
+// adjust the actual colours once it's working.'#BB5566','#F1932D', '#77AADD'
+// other to be same as now. family and family2 the same.
+
+const  colourDomain = ["family", "education", "other"];
+const  colourRange = ["purple", "orange", "#bdbdbd"];
+
+const colourConnections = d3.scaleOrdinal(colourDomain, colourRange);
+```
+
+
+```js
+// code for standalone legend
+//https://observablehq.com/d/a23f6e59f1380df0
+
+const linkLegend = Plot.legend({
+  color: {
+    domain: colourDomain, 
+    range: colourRange ,
+    alpha: 0.8
+  },
+  //swatchSize: 15,
+  //label: "label?" // doesn't work.ffs.
+})
+```
 
 
 ```js
